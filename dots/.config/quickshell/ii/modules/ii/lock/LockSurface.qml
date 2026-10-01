@@ -14,6 +14,7 @@ import Quickshell.Services.SystemTray
 
 MouseArea {
     id: root
+    focus: true
     required property LockContext context
     property bool active: false
     property bool showInputField: active || context.currentText.length > 0
@@ -21,7 +22,9 @@ MouseArea {
 
     // Force focus on entry
     function forceFieldFocus() {
-        passwordBox.forceActiveFocus();
+        if (!passwordBox.activeFocus) {
+            passwordBox.forceActiveFocus();
+        }
     }
     Connections {
         target: context
@@ -29,6 +32,22 @@ MouseArea {
             forceFieldFocus();
         }
     }
+
+    Timer {
+        id: initialFocusTimer
+        interval: 50
+        repeat: true
+        running: GlobalStates.screenLocked && !passwordBox.activeFocus
+        property int attempts: 0
+        onTriggered: {
+            forceFieldFocus();
+            attempts++;
+            if (passwordBox.activeFocus || attempts > 30) {
+                running = false;
+            }
+        }
+    }
+
     hoverEnabled: true
     acceptedButtons: Qt.LeftButton
     onPressed: mouse => {
@@ -130,6 +149,7 @@ MouseArea {
 
         ToolbarTextField {
             id: passwordBox
+            focus: true
             Layout.rightMargin: -Layout.leftMargin
             placeholderText: GlobalStates.screenUnlockFailed ? Translation.tr("Incorrect password") : Translation.tr("Enter password")
 

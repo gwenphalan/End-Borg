@@ -643,18 +643,6 @@ ContentPage {
                         text: Translation.tr("Place the corners to trigger at the bottom")
                     }
                 }
-                ConfigSwitch {
-                    buttonIcon: "unfold_more_double"
-                    text: Translation.tr("Value scroll")
-                    checked: Config.options.sidebar.cornerOpen.valueScroll
-                    onCheckedChanged: {
-                        Config.options.sidebar.cornerOpen.valueScroll = checked;
-                    }
-
-                    StyledToolTip {
-                        text: Translation.tr("Brightness and volume")
-                    }
-                }
             }
             ConfigSwitch {
                 buttonIcon: "visibility"

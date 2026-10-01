@@ -24,9 +24,10 @@ Item {
         if (unpinnedItems.length == 0) root.closeOverflowMenu();
     }
 
-    function grabFocus() {
-        focusGrab.active = true;
-    }
+    // Window of the overflow popup, once the lazy loader has actually created it.
+    // Bound through the loader instead of the reparented content item so the focus
+    // grab activates as soon as the window exists.
+    property var overflowWindow: root.trayOverflowOpen ? (overflowPopup.item ?? null) : null
 
     function setExtraWindowAndGrabFocus(window) {
         if (root.activeMenu && root.activeMenu !== window) {
@@ -35,31 +36,25 @@ Item {
             root.activeMenu = null;
         }
         root.activeMenu = window;
-        root.grabFocus();
     }
 
     function releaseFocus() {
-        focusGrab.active = false;
+        root.activeMenu = null;
     }
 
     function closeOverflowMenu() {
-        focusGrab.active = false;
-    }
-
-    onTrayOverflowOpenChanged: {
-        if (root.trayOverflowOpen) {
-            root.grabFocus();
-        }
+        root.trayOverflowOpen = false;
     }
 
     HyprlandFocusGrab {
         id: focusGrab
-        active: false
-        windows: [trayOverflowLayout.QsWindow?.window, root.activeMenu]
+        windows: [root.overflowWindow, root.activeMenu].filter(w => w)
+        active: !!root.overflowWindow || !!root.activeMenu
         onCleared: {
             root.trayOverflowOpen = false;
             if (root.activeMenu) {
-                root.activeMenu.close();
+                if (typeof root.activeMenu.close === "function")
+                    root.activeMenu.close();
                 root.activeMenu = null;
             }
         }

@@ -18,6 +18,7 @@ Scope {
         id: sessionLockSurface
         color: "transparent"
         Loader {
+            focus: true
             active: GlobalStates.screenLocked
             anchors.fill: parent
             opacity: active ? 1 : 0
@@ -25,6 +26,15 @@ Scope {
                 animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)
             }
             sourceComponent: root.lockSurface
+        }
+    }
+
+    Timer {
+        id: lockFocusTimer
+        interval: 60
+        repeat: false
+        onTriggered: {
+            lockContext.shouldReFocus();
         }
     }
 
@@ -54,6 +64,8 @@ Scope {
                 if (GlobalStates.screenLocked) {
                     lockContext.reset();
                     lockContext.tryFingerUnlock();
+                    Quickshell.execDetached(["bash", "-c", "ydotool mousemove -- 1 0 && ydotool mousemove -- -1 0"]);
+                    lockFocusTimer.restart();
                 }
             }
         }
@@ -108,6 +120,13 @@ Scope {
         }
         function focus(): void {
             lockContext.shouldReFocus();
+        }
+        function unlock(): void {
+            GlobalStates.screenLocked = false;
+            lockContext.reset();
+        }
+        function getLength(): int {
+            return lockContext.currentText.length;
         }
     }
 

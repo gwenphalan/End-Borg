@@ -46,7 +46,7 @@ Item { // Bar content region
         border.color: Appearance.colors.colLayer0Border
     }
 
-    FocusedScrollMouseArea { // Top section | scroll to change brightness
+    MouseArea { // Top section
         id: barTopSectionMouseArea
         anchors.top: parent.top
         implicitHeight: topSectionColumnLayout.implicitHeight
@@ -54,9 +54,9 @@ Item { // Bar content region
         height: (root.height - middleSection.height) / 2
         width: Appearance.sizes.verticalBarWidth
 
-        onScrollDown: Brightness.decreaseBrightness()
-        onScrollUp: Brightness.increaseBrightness()
-        onMovedAway: GlobalStates.osdBrightnessOpen = false
+        acceptedButtons: Qt.LeftButton
+        hoverEnabled: true
+
         onPressed: event => {
             if (event.button === Qt.LeftButton)
                 GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen;
@@ -70,7 +70,7 @@ Item { // Bar content region
             Bar.LeftSidebarButton { // Left sidebar button
                 Layout.alignment: Qt.AlignHCenter
                 Layout.topMargin: (Appearance.sizes.baseVerticalBarWidth - implicitWidth) / 2 + Appearance.sizes.hyprlandGapsOut
-                colBackground: barTopSectionMouseArea.hovered ? Appearance.colors.colLayer1Hover : ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 1)
+                colBackground: barTopSectionMouseArea.containsMouse ? Appearance.colors.colLayer1Hover : ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 1)
             }
 
             Item {
@@ -153,7 +153,7 @@ Item { // Bar content region
         }
     }
 
-    FocusedScrollMouseArea { // Bottom section | scroll to change volume
+    MouseArea { // Bottom section
         id: barBottomSectionMouseArea
 
         anchors {
@@ -163,10 +163,10 @@ Item { // Bar content region
         }
         implicitWidth: Appearance.sizes.baseVerticalBarWidth
         implicitHeight: bottomSectionColumnLayout.implicitHeight
-        
-        onScrollDown: Audio.decrementVolume();
-        onScrollUp: Audio.incrementVolume();
-        onMovedAway: GlobalStates.osdVolumeOpen = false;
+
+        acceptedButtons: Qt.LeftButton
+        hoverEnabled: true
+
         onPressed: event => {
             if (event.button === Qt.LeftButton) {
                 GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen;
@@ -201,7 +201,7 @@ Item { // Bar content region
                 implicitWidth: indicatorsColumnLayout.implicitWidth + 6 * 2
 
                 buttonRadius: Appearance.rounding.full
-                colBackground: barBottomSectionMouseArea.hovered ? Appearance.colors.colLayer1Hover : ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 1)
+                colBackground: barBottomSectionMouseArea.containsMouse ? Appearance.colors.colLayer1Hover : ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 1)
                 colBackgroundHover: Appearance.colors.colLayer1Hover
                 colRipple: Appearance.colors.colLayer1Active
                 colBackgroundToggled: Appearance.colors.colSecondaryContainer

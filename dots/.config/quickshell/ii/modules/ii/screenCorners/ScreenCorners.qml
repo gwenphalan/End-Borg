@@ -73,7 +73,7 @@ Scope {
                     right: (cornerWidget.isTopRight || cornerWidget.isBottomRight) ? parent.right : undefined
                 }
 
-                sourceComponent: FocusedScrollMouseArea {
+                sourceComponent: MouseArea {
                     id: mouseArea
                     implicitWidth: Config.options.sidebar.cornerOpen.cornerRegionWidth
                     implicitHeight: Config.options.sidebar.cornerOpen.cornerRegionHeight
@@ -93,37 +93,6 @@ Scope {
                     onPressed: {
                         screenCorners.actionForCorner[cornerPanelWindow.corner]();
                     }
-                    onScrollDown: {
-                        if (!Config.options.sidebar.cornerOpen.valueScroll)
-                            return;
-                        if (cornerWidget.isLeft)
-                            Brightness.decreaseBrightness()
-                        else {
-                            const currentVolume = Audio.value;
-                            const step = currentVolume < 0.1 ? 0.01 : 0.02 || 0.2;
-                            Audio.sink.audio.volume -= step;
-                        }
-                    }
-                    onScrollUp: {
-                        if (!Config.options.sidebar.cornerOpen.valueScroll)
-                            return;
-                        if (cornerWidget.isLeft)
-                            Brightness.increaseBrightness()
-                        else {
-                            const currentVolume = Audio.value;
-                            const step = currentVolume < 0.1 ? 0.01 : 0.02 || 0.2;
-                            Audio.sink.audio.volume = Math.min(1, Audio.sink.audio.volume + step);
-                        }
-                    }
-                    onMovedAway: {
-                        if (!Config.options.sidebar.cornerOpen.valueScroll)
-                            return;
-                        if (cornerWidget.isLeft)
-                            GlobalStates.osdBrightnessOpen = false;
-                        else
-                            GlobalStates.osdVolumeOpen = false;
-                    }
-
                     Loader {
                         active: Config.options.sidebar.cornerOpen.visualize
                         anchors.fill: parent

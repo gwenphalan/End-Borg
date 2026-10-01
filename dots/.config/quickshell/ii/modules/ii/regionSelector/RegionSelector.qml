@@ -57,7 +57,6 @@ Scope {
     function record() {
         root.action = RegionSelection.SnipAction.Record
         root.selectionMode = RegionSelection.SelectionMode.RectCorners
-        // If already open then re-trigger to stop recording
         if (GlobalStates.regionSelectorOpen) GlobalStates.regionSelectorOpen = false
         GlobalStates.regionSelectorOpen = true
     }
@@ -65,7 +64,6 @@ Scope {
     function recordWithSound() {
         root.action = RegionSelection.SnipAction.RecordWithSound
         root.selectionMode = RegionSelection.SelectionMode.RectCorners
-        // If already open then re-trigger to stop recording
         if (GlobalStates.regionSelectorOpen) GlobalStates.regionSelectorOpen = false
         GlobalStates.regionSelectorOpen = true
     }

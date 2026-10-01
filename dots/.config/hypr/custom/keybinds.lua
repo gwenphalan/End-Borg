@@ -1,1 +1,5 @@
-hl.bind("CTRL+SUPER+ALT+Slash", hl.dsp.exec_cmd("xdg-open ~/.config/hypr/custom/keybinds.lua"), {description = "Edit user keybinds"} )
+hl.bind("CTRL + SUPER + Slash", hl.dsp.exec_cmd("xdg-open ~/.config/illogical-impulse/config.json"), {description = "Edit shell config"})
+hl.bind("CTRL + SUPER + ALT + Slash", hl.dsp.exec_cmd("xdg-open ~/.config/hypr/custom/keybinds.lua"), {description = "Edit user keybinds"})
+hl.bind("XF86Calculator", hl.dsp.exec_cmd("gnome-calculator"), {description = "Launch calculator"})
+hl.bind("CTRL + SUPER + M", hl.dsp.exec_cmd(HOME .. "/.config/hypr/custom/scripts/toggle-dp3-mirror.sh"), {description = "Screen: Toggle DP-3 mirror (HDMI-A-1 <-> DP-2)"})
+hl.bind("CTRL + SUPER + B", hl.dsp.exec_cmd(HOME .. "/.config/hypr/custom/scripts/toggle-bed-mode.sh"), {description = "Audio: Toggle bed mode (swap stereo channels)"})

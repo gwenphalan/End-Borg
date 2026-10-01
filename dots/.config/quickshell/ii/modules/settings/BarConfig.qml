@@ -235,6 +235,14 @@ ContentPage {
                     Config.options.bar.utilButtons.showScreenRecord = checked;
                 }
             }
+            ConfigSwitch {
+                buttonIcon: "bed"
+                text: Translation.tr("Bed mode")
+                checked: Config.options.bar.utilButtons.showBedModeToggle
+                onCheckedChanged: {
+                    Config.options.bar.utilButtons.showBedModeToggle = checked;
+                }
+            }
         }
     }
 

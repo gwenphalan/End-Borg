@@ -308,7 +308,7 @@ ButtonMouseArea {
             StyledText {
                 id: specialWsText
                 anchors.centerIn: parent
-                text: (!root.vertical ? wsModel.specialWorkspaceName : "S")
+                text: (!root.vertical ? (wsModel.specialWorkspaceName === "special" ? "Scratchpad" : wsModel.specialWorkspaceName) : "S")
                 color: Appearance.colors.colOnPrimary
                 font.pixelSize: root.specialTextSize
             }
