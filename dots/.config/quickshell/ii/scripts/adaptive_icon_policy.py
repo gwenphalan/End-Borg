@@ -1,39 +1,11 @@
 """Pure, offline adaptive icon policy. Originals are never modified."""
-import colorsys
 import hashlib
-import json
-from pathlib import Path
+from functools import lru_cache
 
 import numpy as np
 from PIL import Image, ImageDraw
 
-POLICY_VERSION = 16
-NEUTRAL = "#40404A"
-
-
-def theme_colors(path):
-    try:
-        data = json.loads(Path(path).read_text())
-    except (OSError, ValueError):
-        return {"neutral": NEUTRAL}
-    colors = {}
-    for role, keys in {
-        "accent": ("primary",),
-        "drawer": ("surface_container", "surfaceContainer", "surface"),
-        "primary": ("primary_container", "primaryContainer"),
-        "secondary": ("secondary_container", "secondaryContainer"),
-        "tertiary": ("tertiary_container", "tertiaryContainer"),
-        "neutral": ("surface_container_high", "surfaceContainerHigh", "surface"),
-    }.items():
-        color = next((data[k] for k in keys if k in data), None)
-        if isinstance(color, str) and len(color) == 7 and color[0] == "#":
-            try:
-                bytes.fromhex(color[1:])
-                colors[role] = color.upper()
-            except ValueError:
-                pass
-    colors.setdefault("neutral", NEUTRAL)
-    return colors
+POLICY_VERSION = 18
 
 
 def trim_visible(image):
@@ -64,7 +36,7 @@ def classify(image, override=None):
     alpha = np.asarray(image.getchannel("A").resize((64, 64))) > 245
     edge = np.concatenate((alpha[0], alpha[-1], alpha[:, 0], alpha[:, -1]))
     if edge.mean() > .98 and alpha.mean() > .995:
-        return "fill", .98, "opaque square illustration"
+        return "fit", .65, "opaque square; meaningful edge content may be clipped"
     if rounded_tile(image):
         return "fill", .9, "rounded square artwork clipped to outer squircle"
     return "fit", .65, "transparent or uncertain silhouette"
@@ -166,131 +138,6 @@ def extend_rounded_square(image):
     return filled
 
 
-def choose_background(image, colors):
-    arr = np.asarray(image.convert("RGBA").resize((64, 64)), dtype=np.float32)
-    pixels = arr[:, :, :3][arr[:, :, 3] > 100]
-    if len(pixels) < 10:
-        return colors["neutral"], "neutral"
-    pixels = pixels[::max(1, len(pixels) // 900)]
-    anchor = np.array(list(bytes.fromhex(colors.get("primary", colors["neutral"])[1:])), dtype=np.float32)
-    candidates = {role: value for role, value in colors.items()
-                  if role in ("primary", "secondary", "tertiary", "neutral")}
-    light = .28 * anchor + .72 * np.array([201, 196, 186])
-    candidates["light"] = "#" + "".join(f"{round(v):02X}" for v in light)
-    for role in ("primary", "tertiary"):
-        if role in colors:
-            base = np.array(list(bytes.fromhex(colors[role][1:])), dtype=np.float32)
-            neutral = np.array(list(bytes.fromhex(colors["neutral"][1:])), dtype=np.float32)
-            mixed = .48 * base + .52 * neutral
-            candidates[role + "-muted"] = "#" + "".join(f"{round(v):02X}" for v in mixed)
-    if "accent" in colors:
-        accent_rgb = [channel / 255 for channel in bytes.fromhex(colors["accent"][1:])]
-        accent_hue = colorsys.rgb_to_hsv(*accent_rgb)[0]
-        for label, offset in (("analogous-cool", -.12), ("analogous-warm", .12),
-                              ("complement", .5), ("split-cool", .38), ("split-warm", -.38)):
-            rgb = colorsys.hsv_to_rgb((accent_hue + offset) % 1, .40, .41)
-            candidates[label] = "#" + "".join(f"{round(v * 255):02X}" for v in rgb)
-
-    def linear(rgb):
-        normalized = rgb / 255
-        return np.where(normalized <= .04045, normalized / 12.92,
-                        ((normalized + .055) / 1.055) ** 2.4)
-
-    foreground = linear(pixels) @ np.array([.2126, .7152, .0722])
-    drawer_rgb = np.array(list(bytes.fromhex(colors.get("drawer", colors["neutral"])[1:])), dtype=np.float32)
-    drawer_luminance = float(linear(drawer_rgb) @ np.array([.2126, .7152, .0722]))
-    # Prioritize the least contrasted fifth of the visible artwork.
-    def score(item):
-        role, value = item
-        rgb = np.array(list(bytes.fromhex(value[1:])), dtype=np.float32)
-        luminance = float(linear(rgb) @ np.array([.2126, .7152, .0722]))
-        contrast = (np.maximum(foreground, luminance) + .05) / (np.minimum(foreground, luminance) + .05)
-        legibility = float(np.percentile(contrast, 20))
-        drawer_contrast = ((max(luminance, drawer_luminance) + .05)
-                           / (min(luminance, drawer_luminance) + .05))
-        # Once a glyph is clearly readable, additional raw contrast should
-        # not force every bright icon onto the same darkest neutral surface.
-        return (min(legibility, 3.2) - 2 * max(0, 3.3 - legibility)
-                + .55 * min(drawer_contrast, 2.2)
-                - 3 * max(0, 1.7 - drawer_contrast)
-                - (.45 if role == "light" else 0)
-                - (.30 if role == "neutral" else 0)
-                + (.20 if role in ("primary", "secondary", "tertiary") else 0)
-                + (.08 if role.endswith("-muted") else 0))
-    role, color = max(candidates.items(), key=score)
-    return color, role
-def contrast_surface(base, drawer, accent):
-    """Lighten or darken a theme backplate just enough to separate from its drawer."""
-    def channels(hex_color):
-        return np.array(list(bytes.fromhex(hex_color[1:])), dtype=np.float32)
-    def luminance(rgb):
-        scaled = rgb / 255
-        linear = np.where(scaled <= .04045, scaled / 12.92, ((scaled + .055) / 1.055) ** 2.4)
-        return float(linear @ np.array([.2126, .7152, .0722]))
-    backdrop = luminance(channels(drawer))
-    start = channels(base)
-    target = channels(accent) if backdrop < .25 else np.zeros(3, dtype=np.float32)
-    for mix in np.linspace(0, 1, 21):
-        candidate = np.round(start * (1 - mix) + target * mix)
-        level = luminance(candidate)
-        if (max(level, backdrop) + .05) / (min(level, backdrop) + .05) >= 3.0:
-            return "#" + "".join(f"{int(value):02X}" for value in candidate)
-    return "#" + "".join(f"{int(value):02X}" for value in target)
-
-
-def harmonize_fit(image, colors):
-    """Tint neutral glyphs toward the theme; preserve artwork, alpha and dark outlines."""
-    if "primary" not in colors:
-        return image
-    rgba = np.array(image.convert("RGBA"))
-    opaque = rgba[:, :, 3] > 180
-    coverage = opaque.mean()
-    if not (16 < opaque.sum() and .02 < coverage < .78):
-        return image
-    sample = rgba[:, :, :3][opaque].astype(np.float32)
-    saturation = (sample.max(axis=1) - sample.min(axis=1)) / np.maximum(32, sample.max(axis=1))
-    if np.percentile(saturation, 85) > .13:
-        return image
-    target = np.array(list(bytes.fromhex(colors.get("accent", colors["primary"])[1:])), dtype=np.float32)
-    brightness = sample.mean(axis=1)
-    strength = np.clip((brightness - 28) / 135, 0, .82) * np.clip((.20 - saturation) / .20, 0, 1)
-    rgba[:, :, :3][opaque] = np.clip(sample * (1 - strength[:, None])
-                                    + target * strength[:, None], 0, 255).astype(np.uint8)
-    return Image.fromarray(rgba, "RGBA")
-
-
-def harmonize_color(image, colors):
-    """Rotate branded hues together, retaining each icon's relative hue and alpha."""
-    if "accent" not in colors:
-        return image
-    original = image.convert("RGBA")
-    rgba = np.array(original)
-    hsv = np.array(original.convert("RGB").convert("HSV"))
-    visible = rgba[:, :, 3] > 180
-    colorful = visible & (hsv[:, :, 1] > 52) & (hsv[:, :, 2] > 65)
-    if colorful.sum() < 40 or colorful.sum() < visible.sum() * .15:
-        return image
-    histogram = np.bincount((hsv[:, :, 0][colorful] // 16).astype(np.int32), minlength=16)
-    occupied = histogram >= max(20, int(colorful.sum() * .035))
-    # Adjacent hue bins form one gradient. Up to five separate solid hues
-    # retain their relative spacing under the same bounded rotation.
-    hue_groups = sum(bool(occupied[i] and not occupied[(i - 1) % 16]) for i in range(16))
-    if occupied.sum() > 12 or hue_groups > 5:
-        return image
-    accent = Image.new("RGB", (1, 1), colors["accent"]).convert("HSV").getpixel((0, 0))[0]
-    # Rotate the full wheel toward the theme, then gently bias neighboring
-    # hues toward its analogous/complementary spokes. The mapping is shared by
-    # every icon, so red/green/blue distinctions and family identities remain.
-    rotation = int(np.clip(((accent - 155 + 128) % 256 - 128) * .23, -18, 18))
-    hue = hsv[:, :, 0][colorful].astype(np.float32)
-    warp = 4 * np.sin(2 * np.pi * (hue - accent) / 256)
-    hsv[:, :, 0][colorful] = np.mod(hue + rotation + warp, 256).astype(np.uint8)
-    hsv[:, :, 1][colorful] = np.clip(hsv[:, :, 1][colorful].astype(np.float32) * .91, 0, 255).astype(np.uint8)
-    rgb = np.asarray(Image.fromarray(hsv, "HSV").convert("RGB"))
-    rgba[:, :, :3][colorful] = rgb[colorful]
-    return Image.fromarray(rgba, "RGBA")
-
-
 def extend_exterior_edges(image):
     """Extend only border-connected transparency, retaining holes inside logos."""
     image = contain(image)
@@ -325,8 +172,7 @@ def extend_exterior_edges(image):
 
 
 def render_adaptive(image, presentation, colors, is_game=False, adjustments=None):
-    """Render both generated artwork and instant editor previews identically."""
-    adjustments = adjustments or {}
+    """Preserve source colors while applying only structural presentation rules."""
     transformed = (extend_rounded_square(image) if presentation == "extend" else
                    remove_border_background(image) if presentation == "remove-background" else None)
     if presentation in ("extend", "remove-background") and transformed is None:
@@ -335,25 +181,121 @@ def render_adaptive(image, presentation, colors, is_game=False, adjustments=None
                transformed if presentation == "extend" else contain(image))
     if presentation == "fill" and adapted.getchannel("A").getextrema()[0] < 255:
         adapted = extend_exterior_edges(adapted)
-    if not is_game:
-        original = adapted
-        if presentation == "fit":
-            adapted = harmonize_fit(adapted, colors)
-        adapted = harmonize_color(adapted, colors)
-        strength = max(0, min(1, float(adjustments.get("strength", 1))))
-        if strength != 1:
-            adapted = Image.blend(original, adapted, strength)
-    hue_shift = int(adjustments.get("hue_shift", 0))
-    saturation = float(adjustments.get("saturation", 1))
-    if hue_shift or saturation != 1:
-        rgba = np.array(adapted)
-        hsv = np.array(adapted.convert("RGB").convert("HSV"))
-        colored = (rgba[:, :, 3] > 8) & (hsv[:, :, 1] > 28)
-        hsv[:, :, 0][colored] = (hsv[:, :, 0][colored].astype(np.int16) + round(hue_shift * 256 / 360)) % 256
-        hsv[:, :, 1][colored] = np.clip(hsv[:, :, 1][colored].astype(np.float32) * saturation, 0, 255).astype(np.uint8)
-        rgba[:, :, :3][colored] = np.asarray(Image.fromarray(hsv, "HSV").convert("RGB"))[colored]
-        adapted = Image.fromarray(rgba, "RGBA")
     return adapted, presentation
+
+
+def icon_backplates(image):
+    return {mode: choose_backplate([image], mode) for mode in ("light", "dark")}
+
+
+def _oklab(rgb):
+    rgb = np.asarray(rgb, dtype=np.float64) / 255
+    linear = np.where(rgb <= .04045, rgb / 12.92, ((rgb + .055) / 1.055) ** 2.4)
+    lms = np.cbrt(linear @ np.array([[.4122214708, .5363325363, .0514459929],
+                                     [.2119034982, .6806995451, .1073969566],
+                                     [.0883024619, .2817188376, .6299787005]]).T)
+    return lms @ np.array([[.2104542553, .7936177850, -.0040720468],
+                           [1.9779984951, -2.4285922050, .4505937099],
+                           [.0259040371, .7827717662, -.8086757660]]).T
+
+
+def _srgb(lab):
+    lms = np.asarray(lab) @ np.linalg.inv(np.array(
+        [[.2104542553, .7936177850, -.0040720468],
+         [1.9779984951, -2.4285922050, .4505937099],
+         [.0259040371, .7827717662, -.8086757660]])).T
+    linear = lms ** 3 @ np.linalg.inv(np.array(
+        [[.4122214708, .5363325363, .0514459929],
+         [.2119034982, .6806995451, .1073969566],
+         [.0883024619, .2817188376, .6299787005]])).T
+    rgb = np.where(linear <= .0031308, 12.92 * linear,
+                   1.055 * np.maximum(linear, 0) ** (1 / 2.4) - .055)
+    return np.clip(np.rint(rgb * 255), 0, 255).astype(np.uint8)
+
+
+def _luminance(rgb):
+    rgb = np.asarray(rgb, dtype=np.float64) / 255
+    linear = np.where(rgb <= .04045, rgb / 12.92, ((rgb + .055) / 1.055) ** 2.4)
+    return linear @ np.array([.2126, .7152, .0722])
+
+
+def _artwork_regions(image):
+    """Collect opaque colors adjoining the exterior, plus salient small areas."""
+    from scipy.ndimage import binary_dilation
+    rgba = np.asarray(image.convert("RGBA").resize((64, 64), Image.Resampling.LANCZOS))
+    alpha = rgba[:, :, 3] > 200
+    if not alpha.any():
+        return np.empty((0, 3), dtype=np.uint8)
+    boundary = alpha & binary_dilation(~alpha, iterations=2)
+    boundary[0] |= alpha[0]
+    boundary[-1] |= alpha[-1]
+    boundary[:, 0] |= alpha[:, 0]
+    boundary[:, -1] |= alpha[:, -1]
+    pixels = rgba[:, :, :3]
+    return np.concatenate((pixels[boundary][::2], pixels[alpha][::12]))
+
+
+def backplate_candidates(images, mode):
+    regions = [_artwork_regions(image) for image in images]
+    if not any(len(region) for region in regions):
+        return regions, [(245, 245, 245) if mode == "light" else (20, 20, 20)]
+    colors = np.concatenate([region for region in regions if len(region)])
+    labs = _oklab(colors)
+    # Anchor hue and chroma exclusively to visible artwork; achromatic art stays neutral.
+    chromatic = labs[np.linalg.norm(labs[:, 1:], axis=1) > .025]
+    anchors = chromatic if len(chromatic) else labs
+    vectors = [np.median(anchors, axis=0)]
+    for index in np.linspace(0, len(anchors) - 1, min(12, len(anchors)), dtype=int):
+        vectors.append(anchors[index])
+    candidates = set()
+    for anchor in vectors:
+        for lightness in (np.linspace(.73, .97, 9) if mode == "light"
+                          else np.linspace(.10, .36, 9)):
+            for factor in (0, .25, .5, .8):
+                lab = (lightness, anchor[1] * factor, anchor[2] * factor)
+                rgb = tuple(int(x) for x in _srgb(lab))
+                candidates.add(rgb)
+    return regions, sorted(candidates)
+
+
+def choose_backplate(images, mode):
+    regions, candidates = backplate_candidates(images, mode)
+    luminances = [_luminance(region) for region in regions if len(region)]
+    def score(candidate):
+        background = _luminance(candidate)
+        contrasts = []
+        for foreground in luminances:
+            contrast = (np.maximum(foreground, background) + .05) / (
+                np.minimum(foreground, background) + .05)
+            contrasts.append(float(np.percentile(contrast, 10)))
+        return min(contrasts) if contrasts else 0
+    chosen = max(candidates, key=lambda color: (score(color), color))
+    return "#" + "".join(f"{channel:02X}" for channel in chosen)
+
+
+@lru_cache(maxsize=8)
+def squircle_mask(size=256, supersample=4):
+    """Superellipse exponent 4: zero curvature at the side junctions (G2)."""
+    extent = size * supersample
+    axis = (np.arange(extent, dtype=np.float32) + .5 - extent / 2) / (extent / 2)
+    inside = np.abs(axis[:, None]) ** 4 + np.abs(axis[None, :]) ** 4 <= 1
+    return Image.fromarray((inside * 255).astype("uint8"), "L").resize(
+        (size, size), Image.Resampling.LANCZOS)
+
+
+def compose_icon(artwork, backplate, presentation):
+    tile = Image.new("RGBA", artwork.size, backplate)
+    foreground = artwork
+    if presentation in ("fit", "remove-background"):
+        foreground = contain(artwork, round(artwork.width * .80))
+        padded = Image.new("RGBA", artwork.size)
+        padded.alpha_composite(foreground, ((artwork.width - foreground.width) // 2,
+                                            (artwork.height - foreground.height) // 2))
+        foreground = padded
+    tile.alpha_composite(foreground)
+    alpha = squircle_mask(artwork.width)
+    tile.putalpha(alpha)
+    return tile
 
 
 def source_key(source, theme, presentation):

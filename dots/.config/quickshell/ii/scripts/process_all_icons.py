@@ -2,7 +2,6 @@
 """Offline launcher icon cache builder; --cache-dir permits safe staging and previews."""
 import argparse
 import configparser
-from collections import defaultdict
 import fcntl
 import glob
 import hashlib
@@ -16,10 +15,11 @@ import tempfile
 import time
 
 from PIL import Image
+import numpy as np
 
-from adaptive_icon_policy import (POLICY_VERSION, choose_background, classify, contrast_surface,
-                                  extend_rounded_square, full_bleed_tile, render_adaptive,
-                                  source_key, theme_colors, trim_visible)
+from adaptive_icon_policy import (POLICY_VERSION, classify, compose_icon,
+                                  choose_backplate, extend_rounded_square, full_bleed_tile, icon_backplates,
+                                  render_adaptive, source_key, trim_visible)
 
 try:
     import gi
@@ -63,15 +63,23 @@ def atomic_bytes(path, data):
             os.unlink(temp)
 
 
-def desktop_entries(directories):
+def desktop_entries(directories, manifest=None):
     entries = {}
+    try:
+        originals = json.loads((manifest or DEFAULT_CACHE / "global-icons.json").read_text())
+    except (OSError, ValueError):
+        originals = {}
     for folder in directories:
         for filename in sorted(glob.glob(str(folder / "*.desktop"))):
             parser = configparser.ConfigParser(interpolation=None, strict=False)
             try:
-                parser.read(filename, encoding="utf-8")
+                app_id = Path(filename).stem
+                text = Path(filename).read_text(encoding="utf-8")
+                if text.startswith("# Managed by global_app_icons.py;") and app_id in originals:
+                    text = originals[app_id]["original"]
+                parser.read_string(text)
                 if parser.has_section("Desktop Entry"):
-                    entries[Path(filename).stem] = dict(parser["Desktop Entry"])
+                    entries[app_id] = dict(parser["Desktop Entry"])
             except (OSError, configparser.Error):
                 continue
     return entries
@@ -133,8 +141,7 @@ def metadata_for(app_id, desktop, colors, theme_hash, cache, overrides, source_o
     if not isinstance(policy, dict):
         policy = {}
     replacement = policy.get("alternate_icon")
-    if not is_game:
-        source = themed_icon((replacement,)) or identity_icon(app_id, desktop) or source
+    source = themed_icon((replacement,)) or identity_icon(app_id, desktop) or source
     game_tile = None
     if is_game:
         import re
@@ -144,7 +151,7 @@ def metadata_for(app_id, desktop, colors, theme_hash, cache, overrides, source_o
             candidate = DEFAULT_CACHE / (match[1] + ".png")
             if candidate.is_file():
                 game_tile = candidate
-    chosen = Path(source_override) if source_override is not None else game_tile or source
+    chosen = Path(source_override) if source_override is not None else source or game_tile
     if not chosen:
         return None
     try:
@@ -168,72 +175,87 @@ def metadata_for(app_id, desktop, colors, theme_hash, cache, overrides, source_o
     if not requested and presentation in ("fit", "fill") and not is_game and app_id not in FIT_IDS:
         if extend_rounded_square(image) is not None:
             presentation, confidence, reason = "extend", .9, "uniform rounded tile with safe corner extension"
-        elif full_bleed_tile(image) and app_id not in {"org.kde.dolphin", "org.gnome.Nautilus"}:
-            presentation, confidence, reason = "bleed", .9, "near-full square tile clipped by outer squircle"
     if is_game and not requested:
         if (max(image.size) / max(1, min(image.size)) <= 1.08
-                and (chosen.is_relative_to(DEFAULT_CACHE) or presentation == "fill")):
+                and presentation == "fill"):
             presentation, confidence, reason = "fill", 1, "square game icon clipped to squircle"
         else:
             presentation, confidence, reason = "fit", 1, "shaped game launcher icon"
-    adapted, final_presentation = render_adaptive(image, presentation, colors, is_game, policy)
+    adapted, final_presentation = render_adaptive(image, presentation, {}, is_game)
     if final_presentation != presentation:
         confidence, reason = .25, "unsafe border operation; retained original"
         presentation = final_presentation
-    key = source_key(original, theme_hash + json.dumps(
-        {k: policy.get(k) for k in ("hue_shift", "saturation", "strength")}, sort_keys=True), presentation)
+    key = source_key(original, "", presentation)
     processed = cache / "adaptive" / (key + ".png")
     if adapted.getchannel("A").getbbox() is None:
         return None
-    bg, role = choose_background(adapted, colors)
-    if policy.get("bg_color"):
-        supplied = policy["bg_color"]
-        if isinstance(supplied, str) and len(supplied) == 7:
-            try:
-                bytes.fromhex(supplied[1:]) if supplied[0] == "#" else 1 / 0
-                bg, role = supplied.upper(), "override"
-            except (ValueError, ZeroDivisionError):
-                pass
+    backplates = icon_backplates(adapted)
     if not processed.exists():
         buffer = io.BytesIO()
         adapted.save(buffer, format="PNG")
         atomic_bytes(processed, buffer.getvalue())
+    variants = {}
+    for mode, background in backplates.items():
+        target = cache / "adaptive" / (source_key(original, background, presentation) + "-" + mode + ".png")
+        if not target.exists():
+            buffer = io.BytesIO()
+            compose_icon(adapted, background, presentation).save(buffer, format="PNG")
+            atomic_bytes(target, buffer.getvalue())
+        variants[mode] = str(target)
     return {"path": str(processed), "source": str(chosen), "source_hash": hashlib.sha256(original).hexdigest(),
             "source_family": "Papirus" if chosen.is_relative_to(APP_THEME) else "original",
-            "fill": presentation in ("fill", "extend", "bleed"), "presentation": presentation, "bg_color": bg, "bg_role": role,
+            "fill": presentation in ("fill", "extend", "bleed"), "presentation": presentation,
+            "bg_light": backplates["light"], "bg_dark": backplates["dark"],
+            "path_light": variants["light"], "path_dark": variants["dark"],
             "confidence": confidence, "reason": reason, "is_game": is_game, "policy_version": POLICY_VERSION,
             "app_id": app_id, "name": desktop.get("name", app_id)}
 
 
-def harmonize_families(meta, colors):
-    """Use one theme backplate per identifiable software suite."""
-    entries = {entry["app_id"]: entry for entry in meta.values()}
-    ignored = {"desktop", "application", "system", "manager", "gnome", "plasma",
-               "kde", "quickshell", "settings", "freedesktop", "handler", "portal", "mobile"}
-    members = defaultdict(list)
-    for app_id, entry in entries.items():
-        if entry["is_game"] or entry["bg_role"] == "override":
+
+def harmonize_families(meta, cache):
+    entries = {entry["app_id"]: entry for entry in meta.values()
+               if entry.get("path_light") and entry.get("path_dark")}
+    groups = {}
+    for entry in entries.values():
+        app_id = entry["app_id"].lower()
+        # Only a documented suite or an exact vendor/app prefix establishes kinship.
+        family = ("libreoffice" if app_id.startswith("libreoffice-") else
+                  app_id.rsplit(".", 1)[0] if app_id.count(".") >= 2 else
+                  app_id.rsplit("-", 1)[0] if app_id.count("-") >= 2 else None)
+        if family and family not in {"org.gnome", "org.kde", "com.github", "io.github"}:
+            groups.setdefault(family, []).append(entry)
+    assigned = set()
+    for family, members in sorted(groups.items(), key=lambda pair: (-len(pair[1]), -len(pair[0]))):
+        members = [entry for entry in members if entry["app_id"] not in assigned]
+        if len(members) < 2:
             continue
-        for token in set(re.findall(r"[a-z]{6,}", app_id.lower())) - ignored:
-            members[token].append(entry)
-    for family, group in members.items():
-        if len(group) < 3:
-            continue
-        color = contrast_surface(colors.get("secondary", colors["neutral"]),
-                                 colors.get("drawer", colors["neutral"]),
-                                 colors.get("accent", colors["neutral"]))
-        for entry in group:
-            if entry["bg_role"] != "override":
-                entry["bg_color"], entry["bg_role"] = color, "family-" + family
+        images = []
+        for entry in members:
+            with Image.open(entry["path"]) as image:
+                images.append(image.convert("RGBA"))
+        for mode in ("light", "dark"):
+            background = choose_backplate(images, mode)
+            for entry in members:
+                entry["bg_" + mode] = background
+                entry["bg_family"] = family
+                with Image.open(entry["path"]) as image:
+                    buffer = io.BytesIO()
+                    compose_icon(image.convert("RGBA"), background, entry["presentation"]).save(
+                        buffer, format="PNG")
+                variant_key = source_key(bytes.fromhex(entry["source_hash"]), family + background,
+                                         entry["presentation"] + mode)
+                target = cache / "adaptive" / (variant_key + "-" + mode + ".png")
+                if not target.is_file() or target.read_bytes() != buffer.getvalue():
+                    atomic_bytes(target, buffer.getvalue())
+                entry["path_" + mode] = str(target)
+        assigned.update(entry["app_id"] for entry in members)
 
 
 def build(cache, theme, overrides, directories):
     cache.mkdir(parents=True, exist_ok=True)
     with (cache / ".adaptive.lock").open("w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        colors = theme_colors(theme)
-        theme_hash = hashlib.sha256(json.dumps(colors, sort_keys=True).encode()).hexdigest()
-        entries = desktop_entries(directories)
+        entries = desktop_entries(directories, cache / "global-icons.json")
         destination = cache / "app_icons_meta.json"
         try:
             previous = json.loads(destination.read_text())
@@ -245,10 +267,12 @@ def build(cache, theme, overrides, directories):
             icon_counts[name] = icon_counts.get(name, 0) + 1
         meta = {}
         for app_id, desktop in entries.items():
-            entry = metadata_for(app_id, desktop, colors, theme_hash, cache, overrides)
+            entry = metadata_for(app_id, desktop, {}, "", cache, overrides)
             if not entry:
                 old = previous.get(app_id + ".desktop") or previous.get(app_id)
-                if isinstance(old, dict) and isinstance(old.get("path"), str) and old["path"] and Path(old["path"]).is_file():
+                if (isinstance(old, dict) and old.get("policy_version") == POLICY_VERSION
+                        and isinstance(old.get("path"), str) and old["path"]
+                        and Path(old["path"]).is_file()):
                     entry = dict(old, app_id=app_id, name=desktop.get("name", app_id))
                     entry.setdefault("source", old["path"])
                     entry.setdefault("confidence", 0)
@@ -266,11 +290,12 @@ def build(cache, theme, overrides, directories):
                     "steam", "network-wired", "document-new", "application-exit",
                     "window-new", "preferences-system"):
                 meta[icon_name] = entry
-        harmonize_families(meta, colors)
+        harmonize_families(meta, cache)
         encoded = json.dumps(meta, indent=2).encode()
         if not destination.exists() or destination.read_bytes() != encoded:
             atomic_bytes(destination, encoded)
-        keep = {Path(e["path"]).name for e in meta.values()}
+        keep = {Path(e[field]).name for e in meta.values()
+                for field in ("path", "path_light", "path_dark") if e.get(field)}
         stale = sorted((image for image in (cache / "adaptive").glob("*.png")
                         if image.name not in keep), key=lambda image: image.stat().st_mtime)
         max_stale = max(256, len(keep))
@@ -301,6 +326,11 @@ def main():
     folders = args.desktop_dir or [Path("/usr/share/applications"),
                                   Path.home() / ".local/share/applications"]
     meta = build(args.cache_dir, args.theme, overrides, folders)
+    if args.cache_dir == DEFAULT_CACHE:
+        from global_app_icons import export
+        mode_file = args.cache_dir / "appearance-mode"
+        mode = mode_file.read_text().strip() if mode_file.is_file() else "dark"
+        export(meta, mode if mode in ("light", "dark") else "dark")
     print(f"Indexed {len(meta)} aliases for {len({entry['app_id'] for entry in meta.values()})} apps")
 
 

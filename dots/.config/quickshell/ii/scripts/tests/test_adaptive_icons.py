@@ -6,9 +6,10 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from PIL import Image, ImageDraw
-from adaptive_icon_policy import (choose_background, classify, contain, contrast_surface, extend_rounded_square, full_bleed_tile, trim_visible,
-                                  harmonize_color, harmonize_fit, remove_border_background, source_key, theme_colors)
-from process_all_icons import build, harmonize_families, metadata_for, themed_icon
+from adaptive_icon_policy import (classify, compose_icon, contain, extend_rounded_square,
+                                  full_bleed_tile, icon_backplates, remove_border_background,
+                                  render_adaptive, source_key, squircle_mask, trim_visible)
+from process_all_icons import build, metadata_for, themed_icon
 
 
 class AdaptiveIconTests(unittest.TestCase):
@@ -22,8 +23,8 @@ class AdaptiveIconTests(unittest.TestCase):
             self.assertEqual(trim_visible(image).size, (60, 60))
             desktop = {"icon": str(path), "name": "Game", "categories": "Game;"}
             colors = {"primary": "#573A70", "neutral": "#2C292E"}
-            self.assertEqual(metadata_for("test-game", desktop, colors, "theme", root, {})["presentation"], "fill")
-            self.assertEqual(metadata_for("ASTRONEER", desktop, colors, "theme", root, {})["presentation"], "fill")
+            self.assertEqual(metadata_for("test-game", desktop, colors, "theme", root, {})["presentation"], "fit")
+            self.assertEqual(metadata_for("ASTRONEER", desktop, colors, "theme", root, {})["presentation"], "fit")
     def test_safe_bleed_rejects_round_icons_and_shaped_folders(self):
         tile = Image.new("RGBA", (256, 256))
         ImageDraw.Draw(tile).rounded_rectangle((0, 0, 255, 255), radius=28, fill="#7475A0")
@@ -34,46 +35,37 @@ class AdaptiveIconTests(unittest.TestCase):
         folder = Image.new("RGBA", (256, 256))
         ImageDraw.Draw(folder).rectangle((0, 70, 255, 255), fill="blue")
         self.assertFalse(full_bleed_tile(folder))
-    def test_background_tracks_theme_and_contrasts_with_glyph(self):
+    def test_background_is_complementary_and_independent_of_theme(self):
         image = Image.new("RGBA", (64, 64))
-        ImageDraw.Draw(image).ellipse((8, 8, 55, 55), fill="#707070")
-        plum = choose_background(image, {"primary": "#573A70", "neutral": "#2C292E"})
-        green = choose_background(image, {"primary": "#286E51", "neutral": "#282E2B"})
-        self.assertNotEqual(plum[0], green[0])
-        for color, _ in (plum, green):
-            self.assertGreater(max(abs(int(color[i:i + 2], 16) - 112) for i in (1, 3, 5)), 35)
+        ImageDraw.Draw(image).ellipse((8, 8, 55, 55), fill="#C02030")
+        colors = icon_backplates(image)
+        self.assertEqual(colors, icon_backplates(image))
+        self.assertGreater(sum(bytes.fromhex(colors["light"][1:])),
+                           sum(bytes.fromhex(colors["dark"][1:])))
+    def test_neutral_artwork_does_not_invent_a_hue(self):
+        image = Image.new("RGBA", (64, 64))
+        ImageDraw.Draw(image).ellipse((6, 6, 57, 57), fill="#B0B0B0")
+        for color in icon_backplates(image).values():
+            channels = bytes.fromhex(color[1:])
+            self.assertLessEqual(max(channels) - min(channels), 1)
     def test_theme_resolution_is_exact_and_path_bounded(self):
         self.assertIsNotNone(themed_icon(("blender",)))
         self.assertIsNone(themed_icon(("../../private",)))
 
-    def test_monochrome_symbol_gets_visible_tint_without_alpha_damage(self):
+    def test_monochrome_symbol_stays_unmodified(self):
         image = Image.new("RGBA", (64, 64))
         ImageDraw.Draw(image).ellipse((12, 12, 52, 52), fill=(190, 190, 190, 255))
-        recolored = harmonize_fit(image, {"primary": "#D080E0", "neutral": "#242430"})
-        self.assertEqual(recolored.getpixel((0, 0))[3], 0)
-        self.assertNotEqual(recolored.getpixel((32, 32))[:3], image.getpixel((32, 32))[:3])
-    def test_theme_accent_changes_white_symbol_without_recoloring_brand(self):
-        white = Image.new("RGBA", (64, 64))
-        ImageDraw.Draw(white).ellipse((8, 8, 55, 55), fill="white")
-        colors = {"primary": "#573A70", "accent": "#DCB9F8", "neutral": "#2C292E"}
-        output = harmonize_fit(white, colors)
-        self.assertEqual(output.getpixel((0, 0)), white.getpixel((0, 0)))
-        self.assertGreater(output.getpixel((32, 32))[2], output.getpixel((32, 32))[1])
-        brand = Image.new("RGBA", (64, 64))
-        ImageDraw.Draw(brand).ellipse((8, 8, 55, 55), fill="#EE301A")
-        self.assertEqual(harmonize_fit(brand, colors).tobytes(), brand.tobytes())
+        output, _ = render_adaptive(image, "fit", {"accent": "#D080E0"})
+        self.assertEqual(output.getpixel((128, 128)), (190, 190, 190, 255))
 
-    def test_background_keeps_dark_icons_legible_and_palette_cohesive(self):
-        colors = {"primary": "#573A70", "secondary": "#4E4256",
-                  "tertiary": "#653A40", "neutral": "#2C292E", "accent": "#DCB9F8"}
-        dark = Image.new("RGBA", (64, 64))
-        ImageDraw.Draw(dark).ellipse((8, 8, 55, 55), fill="#17131B")
-        light = Image.new("RGBA", (64, 64))
-        ImageDraw.Draw(light).ellipse((8, 8, 55, 55), fill="#EEE1F2")
-        dark_bg, _ = choose_background(dark, colors)
-        light_bg, _ = choose_background(light, colors)
-        self.assertGreater(sum(bytes.fromhex(dark_bg[1:])), sum(bytes.fromhex(light_bg[1:])))
-        self.assertNotEqual(dark_bg, colors["accent"])
+    def test_g2_mask_and_fit_margin(self):
+        mask = squircle_mask()
+        self.assertEqual(mask.getpixel((0, 0)), 0)
+        self.assertGreater(mask.getpixel((128, 2)), 200)
+        image = Image.new("RGBA", (256, 256), "#FF0000")
+        tile = compose_icon(image, "#0000FF", "fit")
+        self.assertEqual(tile.getpixel((128, 128))[:3], (255, 0, 0))
+        self.assertEqual(tile.getpixel((5, 128))[:3], (0, 0, 255))
 
     def test_round_tile_extends_but_circle_does_not(self):
         rounded = Image.new("RGBA", (256, 256))
@@ -106,7 +98,7 @@ class AdaptiveIconTests(unittest.TestCase):
         self.assertEqual(classify(original)[0], "fit")
 
     def test_square_art_and_transparent_folder(self):
-        self.assertEqual(classify(Image.new("RGB", (100, 100), "red"))[0], "fill")
+        self.assertEqual(classify(Image.new("RGB", (100, 100), "red"))[0], "fit")
         icon = Image.new("RGBA", (100, 100))
         icon.paste((255, 255, 255, 255), (10, 25, 90, 75))
         self.assertEqual(classify(icon)[0], "fit")
@@ -131,46 +123,33 @@ class AdaptiveIconTests(unittest.TestCase):
                 self.assertEqual(result["presentation"], "fill" if name == "cover" else "fit")
 
     def test_related_apps_share_surface_without_recoloring_distinct_art(self):
-        entries = {name: {"app_id": name, "is_game": False, "bg_role": "neutral",
-                          "bg_color": "#2C292E"} for name in
-                   ("libreoffice-calc", "libreoffice-writer", "libreoffice-impress")}
-        other = {"app_id": "other", "is_game": False, "bg_role": "neutral", "bg_color": "#2C292E"}
-        entries["other"] = other
-        colors = {"secondary": "#4E4256", "neutral": "#2C292E",
-                  "accent": "#DCB9F8", "drawer": "#221E24"}
-        harmonize_families(entries, colors)
-        self.assertTrue(all(entries[name]["bg_color"] == contrast_surface(
-                                colors["secondary"], colors["drawer"], colors["accent"])
-                            for name in ("libreoffice-calc", "libreoffice-writer", "libreoffice-impress")))
-        self.assertNotEqual(entries["libreoffice-calc"]["bg_color"], colors["secondary"])
-        self.assertEqual(other["bg_color"], "#2C292E")
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            apps = root / "apps"
+            apps.mkdir()
+            for suffix, color in (("calc", "#2266AA"), ("writer", "#AA6622")):
+                icon = root / (suffix + ".png")
+                Image.new("RGBA", (64, 64), color).save(icon)
+                (apps / ("libreoffice-" + suffix + ".desktop")).write_text(
+                    "[Desktop Entry]\nName=" + suffix + "\nIcon=" + str(icon) + "\n")
+            entries = build(root / "cache", root / "theme", {}, [apps])
+            calc, writer = (entries["libreoffice-" + suffix] for suffix in ("calc", "writer"))
+            self.assertEqual(calc["bg_light"], writer["bg_light"])
+            self.assertEqual(calc["bg_dark"], writer["bg_dark"])
+            self.assertEqual(calc["bg_family"], "libreoffice")
+            self.assertNotEqual(calc["source_hash"], writer["source_hash"])
 
-    def test_colored_circular_icon_gets_distinct_drawer_tile(self):
+    def test_colored_circular_icon_gets_complementary_tile(self):
         icon = Image.new("RGBA", (64, 64))
         ImageDraw.Draw(icon).ellipse((0, 0, 63, 63), fill="#1D93D8")
         ImageDraw.Draw(icon).polygon(((20, 24), (44, 32), (20, 40)), fill="white")
-        colors = {"primary": "#573A70", "secondary": "#4E4256",
-                  "tertiary": "#653A40", "neutral": "#2C292E"}
-        self.assertNotEqual(choose_background(icon, colors)[0], colors["neutral"])
+        self.assertNotEqual(icon_backplates(icon)["dark"], "#1D93D8")
 
-    def test_five_color_logos_rotate_together_and_six_color_art_is_preserved(self):
-        import colorsys
-        colors = {"accent": "#DCB9F8"}
-        def stripes(count):
-            icon = Image.new("RGBA", (60, 60))
-            for index in range(count):
-                hue = (index * (3 if count == 5 else 2) + .5) / 16
-                rgb = tuple(round(c * 255) for c in colorsys.hsv_to_rgb(hue, .85, .9))
-                ImageDraw.Draw(icon).rectangle((index * 10, 0, index * 10 + 9, 59),
-                                               fill=rgb + (255,))
-            return icon
-        five = stripes(5)
-        corrected = harmonize_color(five, colors)
-        self.assertEqual(corrected.getchannel("A").tobytes(), five.getchannel("A").tobytes())
-        self.assertTrue(all(corrected.getpixel((i * 10 + 5, 30)) != five.getpixel((i * 10 + 5, 30))
-                            for i in range(5)))
-        six = stripes(6)
-        self.assertEqual(harmonize_color(six, colors).tobytes(), six.tobytes())
+    def test_no_hue_saturation_or_strength_corrections(self):
+        icon = Image.new("RGBA", (64, 64), "#C02030")
+        corrected, _ = render_adaptive(icon, "fill", {"accent": "#00FF00"}, False,
+                                        {"hue_shift": 180, "saturation": 0, "strength": 0})
+        self.assertEqual(corrected.getpixel((128, 128))[:3], (192, 32, 48))
 
     def test_connected_background_preserves_internal_white(self):
         from PIL import ImageDraw
@@ -183,19 +162,9 @@ class AdaptiveIconTests(unittest.TestCase):
         self.assertEqual(output.getpixel((0, 0))[3], 0)
         self.assertEqual(output.getpixel((30, 30))[3], 255)
 
-    def test_alpha_and_brand_signature(self):
-        icon = Image.new("RGBA", (8, 8), (240, 30, 30, 135))
-        output = harmonize_fit(icon, {"neutral": "#424250", "primary": "#3030D0"})
-        self.assertEqual(output.getpixel((0, 0)), icon.getpixel((0, 0)))
-
-    def test_theme_and_source_invalidate_cache(self):
-        self.assertNotEqual(source_key(b"a", "dark", "fit"), source_key(b"a", "light", "fit"))
-        self.assertNotEqual(source_key(b"a", "dark", "fit"), source_key(b"b", "dark", "fit"))
-        with tempfile.TemporaryDirectory() as folder:
-            theme = Path(folder) / "colors.json"
-            theme.write_text(json.dumps({"primary_container": "#112233", "secondaryContainer": "#667788"}))
-            self.assertEqual(theme_colors(theme)["primary"], "#112233".upper())
-            self.assertEqual(theme_colors(Path(folder) / "absent")["neutral"], "#40404A")
+    def test_source_and_presentation_invalidate_artwork_cache(self):
+        self.assertNotEqual(source_key(b"a", "", "fit"), source_key(b"a", "", "fill"))
+        self.assertNotEqual(source_key(b"a", "", "fit"), source_key(b"b", "", "fit"))
 
     def test_identity_overrides_and_atomic_metadata(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -213,7 +182,7 @@ class AdaptiveIconTests(unittest.TestCase):
             self.assertEqual(entries["org.test.Sample.desktop"]["name"], "Sample")
             self.assertEqual(entries["org.test.Sample"]["presentation"], "fit")
             self.assertTrue((cache / "app_icons_meta.json").is_file())
-            self.assertEqual(len(list((cache / "adaptive").glob("*.png"))), 1)
+            self.assertEqual(len(list((cache / "adaptive").glob("*.png"))), 3)
 
 
 if __name__ == "__main__":
