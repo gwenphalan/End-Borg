@@ -1,12 +1,8 @@
 import qs.modules.common
 import qs.modules.common.widgets
-import qs.services
-import Qt5Compat.GraphicalEffects
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Quickshell.Widgets
-import Quickshell.Services.Pipewire
 
 RadioButton {
     id: root
@@ -19,7 +15,7 @@ RadioButton {
     PointingHandInteraction {}
 
     indicator: Item{}
-    
+
     contentItem: RowLayout {
         id: contentItem
         Layout.fillWidth: true
@@ -48,10 +44,10 @@ RadioButton {
                     animation: Appearance?.animation.elementMoveFast.numberAnimation.createObject(this)
                 }
                 Behavior on width {
-                    animation: Appearance?.animation.elementMove.numberAnimation.createObject(this)
+                    animation: Appearance.animation.elementMoveSmall.numberAnimation.createObject(this)
                 }
                 Behavior on height {
-                    animation: Appearance?.animation.elementMove.numberAnimation.createObject(this)
+                    animation: Appearance.animation.elementMoveSmall.numberAnimation.createObject(this)
                 }
 
             }
@@ -69,10 +65,10 @@ RadioButton {
                     animation: Appearance?.animation.elementMoveFast.numberAnimation.createObject(this)
                 }
                 Behavior on width {
-                    animation: Appearance?.animation.elementMove.numberAnimation.createObject(this)
+                    animation: Appearance.animation.elementMoveSmall.numberAnimation.createObject(this)
                 }
                 Behavior on height {
-                    animation: Appearance?.animation.elementMove.numberAnimation.createObject(this)
+                    animation: Appearance.animation.elementMoveSmall.numberAnimation.createObject(this)
                 }
             }
         }

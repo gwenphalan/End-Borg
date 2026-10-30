@@ -21,7 +21,7 @@ ContentPage {
                 }
                 // Use a nerdfont to see the icons
                 options: ([
-                  "󰖳", "", "󰨡", "", "󰌽", "󰣇", "", "", "", 
+                  "󰖳", "", "󰨡", "", "󰌽", "󰣇", "", "", "",
                   "", "", "󱄛", "", "", "", "⌘", "󰀲", "󰟍", ""
                 ]).map(icon => { return {
                   displayName: icon,
@@ -166,6 +166,16 @@ ContentPage {
             }
         }
 
+        ConfigSwitch {
+            buttonIcon: "bedtime"
+            text: Translation.tr("Lock at bedtime")
+            checked: Config.options.lock.bedtimeEnabled
+            onCheckedChanged: Config.options.lock.bedtimeEnabled = checked
+            StyledToolTip {
+                text: Translation.tr("Lock with Quickshell at the live Home Assistant bedtime. Requires Home Assistant to be connected.")
+            }
+        }
+
         ContentSubsection {
             title: Translation.tr("Security")
 
@@ -269,9 +279,9 @@ ContentPage {
         ConfigSwitch {
             buttonIcon: "monitor"
             text: Translation.tr("Force specific monitor")
-            checked: Config.options.notifications.forceMonitor.enable
+            checked: Config.options.notifications.monitor.enable
             onCheckedChanged: {
-                Config.options.notifications.forceMonitor.enable = checked;
+                Config.options.notifications.monitor.enable = checked;
             }
             StyledToolTip {
                 text: Translation.tr("If you have multiple monitors and want notifications to only show on one of them, enable this and enter the monitor name below (e.g., eDP-1)")
@@ -279,14 +289,14 @@ ContentPage {
         }
 
         ConfigRow {
-            enabled: Config.options.notifications.forceMonitor.enable
+            enabled: Config.options.notifications.monitor.enable
             MaterialTextArea {
                 Layout.fillWidth: true
                 placeholderText: Translation.tr("Monitor name to show notifications on (e.g., eDP-1)")
-                text: Config.options.notifications.forceMonitor.name
+                text: Config.options.notifications.monitor.name
                 wrapMode: TextEdit.Wrap
                 onTextChanged: {
-                    Config.options.notifications.forceMonitor.name = text;
+                    Config.options.notifications.monitor.name = text;
                 }
             }
         }
@@ -404,10 +414,10 @@ ContentPage {
                 }
             }
         }
-        
+
         ContentSubsection {
             title: Translation.tr("Google Lens")
-            
+
             ConfigSelectionArray {
                 currentValue: Config.options.search.imageSearch.useCircleSelection ? "circle" : "rectangles"
                 onSelected: newValue => {
@@ -435,7 +445,7 @@ ContentPage {
 
         ContentSubsection {
             title: Translation.tr("Circle selection")
-            
+
             ConfigSpinBox {
                 icon: "eraser_size_3"
                 text: Translation.tr("Stroke width")
@@ -489,7 +499,7 @@ ContentPage {
 
         ContentSubsection {
             title: Translation.tr("Quick toggles")
-            
+
             ConfigSelectionArray {
                 Layout.fillWidth: false
                 currentValue: Config.options.sidebar.quickToggles.style
@@ -535,7 +545,7 @@ ContentPage {
                     Config.options.sidebar.quickSliders.enable = checked;
                 }
             }
-            
+
             ConfigSwitch {
                 buttonIcon: "brightness_6"
                 text: Translation.tr("Brightness")
@@ -628,7 +638,7 @@ ContentPage {
                     }
                 }
             }
-            
+
             ConfigRow {
                 uniform: true
                 ConfigSwitch {

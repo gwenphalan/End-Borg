@@ -54,7 +54,8 @@ Singleton {
                     saveFileName="screenshot-$(date '+%Y-%m-%d_%H.%M.%S').png" && \
                     savePath="${saveDir}/$saveFileName" && \
                     ${cropToStdout} | tee >(wl-copy) > "$savePath" && \
-                    ${cleanup}`
+                    ${cleanup} && \
+                    '${StringUtils.shellSingleQuoteEscape(Directories.scriptPath)}/images/notify-screenshot.sh' "$savePath"`
                 ]
 
                 break;

@@ -1,0 +1,9 @@
+[Unit]
+Description=Sync Quickshell Material colors to T3 Code
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/quickshell-t3-theme-sync
+
+[Install]
+WantedBy=default.target

@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import qs.services
 import qs.modules.common
+import qs.modules.common.widgets
 import QtQuick
 import QtQuick.Layouts
 
@@ -14,45 +15,36 @@ ColumnLayout {
     property var textHorizontalAlignment: Text.AlignHCenter
 
     // Time
-    ClockText {
+    ClockFace {
         id: timeTextTop
+        Layout.fillWidth: true
         text: clockColumn.isVertical ? DateTime.time.split(":")[0].padStart(2, "0") : DateTime.time
         color: clockColumn.colText
         horizontalAlignment: Text.AlignHCenter
-        font {
-            pixelSize: Config.options.background.widgets.clock.digital.font.size
-            weight: Config.options.background.widgets.clock.digital.font.weight
-            family: Config.options.background.widgets.clock.digital.font.family
-            variableAxes: ({
-                    "wdth": Config.options.background.widgets.clock.digital.font.width,
-                    "ROND": Config.options.background.widgets.clock.digital.font.roundness
-                })
-        }
+        clockFont: Config.options.background.widgets.clock.digital.font
+        animateChange: Config.options.background.widgets.clock.digital.animateChange
     }
 
     Loader {
-        Layout.topMargin: -40
+        Layout.topMargin: clockColumn.isVertical ? -Math.max(0, Math.min(40,
+            timeTextTop.implicitHeight - timeTextTop.inkBounds.height - 8))
+            : 0
         Layout.fillWidth: true
         active: clockColumn.isVertical
         visible: active
-        sourceComponent: ClockText {
-            id: timeTextBottom
-            text: DateTime.time.split(":")[1].split(" ")[0].padStart(2, "0")
+        sourceComponent: ClockFace {
+            // Keep the formatted suffix (am/pm or AM/PM) in vertical mode.
+            text: DateTime.time.split(":").slice(1).join(":").trim()
             color: clockColumn.colText
             horizontalAlignment: clockColumn.textHorizontalAlignment
-            font {
-                pixelSize: timeTextTop.font.pixelSize
-                weight: timeTextTop.font.weight
-                family: timeTextTop.font.family
-                variableAxes: timeTextTop.font.variableAxes
-            }
+            clockFont: timeTextTop.clockFont
+            animateChange: Config.options.background.widgets.clock.digital.animateChange
         }
     }
 
     // Date
     ClockText {
         visible: Config.options.background.widgets.clock.digital.showDate
-        Layout.topMargin: -20
         Layout.fillWidth: true
         text: DateTime.longDate
         color: clockColumn.colText

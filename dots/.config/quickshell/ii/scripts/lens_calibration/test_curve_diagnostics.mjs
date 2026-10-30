@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+const source=fs.readFileSync(new URL('../../modules/lensCalibration/CurveDiagnostics.js',import.meta.url),'utf8').replace(/^\.pragma library\s*/,'');
+const api=vm.runInNewContext(source+';({normalized,forCurve,description,summary})');
+const input=[{curve:2,status:'error',code:'degenerate',message:'Points repeat.'},{curve:0,status:'warning',message:'Residual is high.'},{curve:2,status:'ignored',message:'Add distinct points.'},{curve:9,status:'error',message:'Invalid index'},{curve:1,status:'ok',message:'Healthy'},{curve:1,status:'error',message:''}];
+const entries=api.normalized(input,3);
+assert.equal(entries.length,3);
+assert.equal(api.description(entries,2),'Trace 3: Points repeat. · Add distinct points.');
+assert.equal(api.description(entries,1),'');
+assert.equal(api.summary(entries),'Trace 3: Points repeat. · Add distinct points.\nTrace 1: Residual is high.');
+assert.equal(api.normalized(undefined,3).length,0);
+assert.equal(api.normalized(input,0).length,0);
+entries[0].message='Changed';assert.equal(input[0].message,'Points repeat.');
+assert.equal(api.description([{curve:0,message:'Check placement.',rms:12.345,othersRms:.598}],0),'Trace 1: Check placement. (12.35 px RMS; other traces 0.60 px)');
+console.log('Curve diagnostics: passed validation, trace indexing, summary, immutable input');

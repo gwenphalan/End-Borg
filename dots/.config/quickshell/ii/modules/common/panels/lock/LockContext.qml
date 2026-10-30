@@ -8,6 +8,10 @@ import Quickshell.Services.Pam
 Scope {
     id: root
 
+    // A visual-only preview may reuse the real lock surface without starting
+    // fingerprint discovery or password authentication.
+    property bool previewMode: false
+
     enum ActionEnum { Unlock, Poweroff, Reboot }
 
     signal shouldReFocus()
@@ -60,12 +64,14 @@ Scope {
     }
 
     function tryUnlock(alsoInhibitIdle = false) {
+        if (root.previewMode) return;
         root.alsoInhibitIdle = alsoInhibitIdle;
         root.unlockInProgress = true;
         pam.start();
     }
 
     function tryFingerUnlock() {
+        if (root.previewMode) return;
         if (root.fingerprintsConfigured) {
             fingerPam.start();
         }
@@ -79,7 +85,7 @@ Scope {
 
     Process {
         id: fingerprintCheckProc
-        running: true
+        running: !root.previewMode
         command: ["bash", "-c", "fprintd-list $(whoami)"]
         stdout: StdioCollector {
             id: fingerprintOutputCollector
@@ -94,7 +100,7 @@ Scope {
             }
         }
     }
-    
+
     PamContext {
         id: pam
 

@@ -1,0 +1,68 @@
+[
+  {
+    "slug": "googlesansflex",
+    "name": "Round",
+    "family": "Google Sans Flex",
+    "italic": false,
+    "filename": "GoogleSansFlex[ROND,opsz,slnt,wdth,wght].ttf",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/googlesansflex/GoogleSansFlex%5BROND%2Copsz%2Cslnt%2Cwdth%2Cwght%5D.ttf",
+    "bytes": 3910784,
+    "sha256": "a9ac770798857d5e8ac593ced42b22e40a7c08cec98319f92b0eccc2783a77ba",
+    "license": "SIL Open Font License 1.1"
+  },
+  {
+    "slug": "kodemono",
+    "name": "Mono",
+    "family": "Kode Mono",
+    "italic": false,
+    "filename": "KodeMono[ROND,wdth,wght].ttf",
+    "url": "https://raw.githubusercontent.com/isaozler/kode-mono/e406ab730760dcd351f2f8d18764ab41b6eb0ab0/fonts/variable/KodeMono%5BROND%2Cwdth%2Cwght%5D.ttf",
+    "bytes": 261304,
+    "sha256": "52ea3ec57c81019a2e4bbfc7944d7d2ad9d354ef299f82d21b15f88ee32d4106",
+    "license": "SIL Open Font License 1.1"
+  },
+  {
+    "slug": "fraunces",
+    "name": "Soft serif",
+    "family": "Fraunces",
+    "italic": false,
+    "filename": "Fraunces[SOFT,WONK,opsz,wght].ttf",
+    "url": "https://github.com/undercasetype/Fraunces/blob/7ccdec31c6028118dce3e47fe864e3744460371d/fonts/variable/Fraunces%5BSOFT%2CWONK%2Copsz%2Cwght%5D.ttf",
+    "bytes": 384052,
+    "sha256": "0776a870a0856b296e11639505ac0cf9be5e7800bb1849dfa21a1bd182455fc0",
+    "license": "SIL Open Font License 1.1"
+  },
+  {
+    "slug": "monasans",
+    "name": "Geometric",
+    "family": "Mona Sans",
+    "italic": false,
+    "filename": "MonaSans[wdth,wght].ttf",
+    "url": "https://github.com/github/mona-sans/blob/4bc6ba8b354c36b4fb66d32cd67b4c1f2beb0a06/googlefonts/variable/MonaSans%5Bwdth%2Cwght%5D.ttf",
+    "bytes": 348892,
+    "sha256": "54e36a01c4c0e304b00a50effb4780867a18358bed460b636a4c83634d399511",
+    "license": "SIL Open Font License 1.1"
+  },
+  {
+    "slug": "robotoserif",
+    "name": "Serif",
+    "family": "Roboto Serif",
+    "italic": false,
+    "filename": "RobotoSerif[GRAD,opsz,wdth,wght].ttf",
+    "url": "https://github.com/google/fonts/blob/main/ofl/robotoserif/RobotoSerif%5BGRAD%2Copsz%2Cwdth%2Cwght%5D.ttf",
+    "bytes": 3944924,
+    "sha256": "351ced75f3851806aa6d846b669361521eb1925cfc530396df9c1a1b77061ddb",
+    "license": "SIL Open Font License 1.1"
+  },
+  {
+    "slug": "sciencegothic",
+    "name": "Display",
+    "family": "Science Gothic",
+    "italic": false,
+    "filename": "ScienceGothic[CTRS,slnt,wdth,wght].ttf",
+    "url": "https://github.com/google/fonts/blob/main/ofl/sciencegothic/ScienceGothic%5BCTRS%2Cslnt%2Cwdth%2Cwght%5D.ttf",
+    "bytes": 2726388,
+    "sha256": "246e4d33a6fcb3846094e5c4c034616f83e9ae10100316df32e2436362deab3d",
+    "license": "SIL Open Font License 1.1"
+  }
+]

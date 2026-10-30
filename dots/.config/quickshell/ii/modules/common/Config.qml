@@ -10,8 +10,89 @@ Singleton {
     property string filePath: Directories.shellConfigPath
     property alias options: configOptionsJsonAdapter
     property bool ready: false
+    readonly property bool saving: fileWriteTimer.running || writeInFlight
+    property string lastError: ""
+    property bool invalidFile: false
+    function reload() { lastError = ""; configFileView.reload(); }
     property int readWriteDelay: 50 // milliseconds
     property bool blockWrites: false
+    property bool writeInFlight:false
+    property bool writeAgain:false
+    // FileView does not emit saved when writeAdapter has no changed bytes.
+    // Only a confirmed load/save can establish a baseline for that no-op case.
+    property string persistedSnapshot:""
+    property string persistedPath:""
+    property string submittedSnapshot:""
+    property string submittedPath:""
+    // FileView reapplies the submitted bytes before saved; keep later edits.
+    property string queuedSnapshot:""
+    property bool writeCacheFailed:false
+    property bool applyingSnapshot:false
+    function applyOptionsSnapshot(snapshot) {
+        function restore(object,source) {
+            for (const key of Object.keys(source)) {
+                if (key==="objectName") continue;
+                if (Qt.isQtObject(object[key])) restore(object[key],source[key]);
+                else if (JSON.stringify(object[key])!==JSON.stringify(source[key])) object[key]=source[key];
+            }
+        }
+        applyingSnapshot=true;
+        try { restore(root.options,JSON.parse(snapshot)); }
+        finally { applyingSnapshot=false; }
+    }
+    function refreshFailedWriteCache() {
+        // FileView also caches unsuccessful bytes. Reload that cache without
+        // allowing the old file contents to replace edits waiting for a retry.
+        const snapshot=JSON.stringify(root.options);
+        applyingSnapshot=true;
+        try {
+            configFileView.adapter=null;
+            configFileView.reload();
+            configFileView.waitForJob();
+        } finally {
+            configFileView.adapter=configOptionsJsonAdapter;
+            applyOptionsSnapshot(snapshot);
+            applyingSnapshot=false;
+        }
+        writeCacheFailed=false;
+    }
+    property bool restoringOptions:false
+    function restoreOptions(previous,expected) {
+        restoringOptions=true;
+        fileWriteTimer.stop();
+        try {
+            for (const path of Object.keys(previous)) {
+                const keys=path.split(".");let object=root.options;
+                for (let i=0;i<keys.length-1;i++) object=object[keys[i]];
+                const key=keys[keys.length-1];
+                if (!expected || JSON.stringify(object[key])===JSON.stringify(expected[path])) object[key]=JSON.parse(JSON.stringify(previous[path]));
+            }
+        } finally {
+            // Adapter notifications may follow the assignments within this event turn.
+            Qt.callLater(() => { fileWriteTimer.stop();root.restoringOptions=false; });
+        }
+    }
+    signal writeFinished(bool success)
+    function flush() {
+        Qt.callLater(() => {
+            fileWriteTimer.stop(); fileReloadTimer.stop();
+            if (root.invalidFile || root.blockWrites) { root.lastError="Settings writes are temporarily blocked."; root.writeFinished(false); return; }
+            if (root.writeInFlight) { root.writeAgain=true; return; }
+            const snapshot=JSON.stringify(root.options);
+            if (root.ready && root.filePath===root.persistedPath && snapshot===root.persistedSnapshot) {
+                root.writeAgain=false; root.lastError="";
+                root.writeFinished(true);
+                return;
+            }
+            if (root.writeCacheFailed) {
+                root.refreshFailedWriteCache();
+                if (root.invalidFile) { root.writeFinished(false); return; }
+            }
+            root.writeAgain=false; root.queuedSnapshot=""; root.writeInFlight=true;
+            root.submittedSnapshot=JSON.stringify(root.options); root.submittedPath=root.filePath;
+            configFileView.writeAdapter();
+        });
+    }
 
     function setNestedValue(nestedKey, value) {
         let keys = nestedKey.split(".");
@@ -57,7 +138,7 @@ Singleton {
         interval: root.readWriteDelay
         repeat: false
         onTriggered: {
-            configFileView.writeAdapter()
+            root.flush()
         }
     }
 
@@ -65,20 +146,74 @@ Singleton {
         id: configFileView
         path: root.filePath
         watchChanges: true
-        blockWrites: root.blockWrites
-        onFileChanged: fileReloadTimer.restart()
-        onAdapterUpdated: fileWriteTimer.restart()
-        onLoaded: root.ready = true
+        blockWrites: root.blockWrites || root.invalidFile
+        onFileChanged: if (!root.writeInFlight) fileReloadTimer.restart()
+        onAdapterUpdated: {
+            if (root.invalidFile || root.restoringOptions || root.applyingSnapshot) return;
+            if (root.writeInFlight) { root.queuedSnapshot=JSON.stringify(root.options); root.writeAgain=true; }
+            else fileWriteTimer.restart();
+        }
+        onSaved: {
+            root.persistedSnapshot=root.submittedSnapshot;
+            root.persistedPath=root.submittedPath;
+            if (root.queuedSnapshot) { root.applyOptionsSnapshot(root.queuedSnapshot); root.queuedSnapshot=""; }
+            root.writeInFlight=false; root.lastError=""; root.ready=true;
+            if (root.writeAgain) { root.writeAgain=false; root.flush(); }
+            else root.writeFinished(true);
+        }
+        onSaveFailed: error => {
+            if (root.queuedSnapshot) { root.applyOptionsSnapshot(root.queuedSnapshot); root.queuedSnapshot=""; }
+            root.writeCacheFailed=true; root.writeInFlight=false; root.writeAgain=false;
+            root.lastError = "Could not save settings: " + FileViewError.toString(error); root.writeFinished(false);
+        }
+        onLoaded: {
+            try {
+                JSON.parse(configFileView.text());
+                if (!root.applyingSnapshot) { root.persistedSnapshot=JSON.stringify(root.options); root.persistedPath=root.filePath; }
+                root.invalidFile = false; root.ready = true; root.lastError = "";
+            }
+            catch (error) { root.invalidFile = true; root.ready = false; fileWriteTimer.stop(); root.lastError = "The settings file contains invalid data. Restore a valid settings file, then retry."; }
+        }
         onLoadFailed: error => {
             if (error == FileViewError.FileNotFound) {
-                writeAdapter();
-            }
+                if (!root.applyingSnapshot) root.flush();
+            } else { root.lastError = "Could not read settings: " + FileViewError.toString(error); }
         }
 
         JsonAdapter {
             id: configOptionsJsonAdapter
 
-            property string panelFamily: "ii" // "ii", "waffle"
+            property JsonObject borgIntelligence: JsonObject {
+                property bool enabled: false
+                property string endpoint: "https://llm.unimatrix-01.dev/"
+                property string textModel: "seven"
+                property string visionModel: "drone-vision"
+                property int timeoutSeconds: 210
+                property bool iconAssistance: false
+            }
+            property JsonObject musicAssistant: JsonObject {
+                property bool showLibraryButton: true
+                property string defaultPlayerId: ""
+                property int pageSize: 50
+            }
+            property JsonObject homeAssistant: JsonObject {
+                property bool enabled: false
+                property string url: ""
+                property bool showMediaPlayers: true
+                property bool showBarControls: true
+                property bool showBarHomeButton: true
+                property bool suggestQuickControls: true
+                property int quickControlLimit: 4
+                property int barControlLimit: 3
+                property list<string> barControlEntities: []
+                property bool rememberArea: true
+                property string defaultAreaId: ""
+                property int homeColumns: 2
+                property int credentialRevision: 0
+                property list<string> hiddenEntities: []
+                property list<string> favoriteEntities: []
+                property list<string> quickToggleEntities: []
+            }
 
             property JsonObject policies: JsonObject {
                 property int ai: 1 // 0: No | 1: Yes | 2: Local
@@ -105,6 +240,9 @@ Singleton {
             }
 
             property JsonObject appearance: JsonObject {
+                property JsonObject steamGridDb: JsonObject {
+                    property bool enabled: false
+                }
                 property bool extraBackgroundTint: true
                 property int fakeScreenRounding: 2 // 0: None | 1: Always | 2: When not fullscreen
                 property JsonObject fonts: JsonObject {
@@ -156,7 +294,7 @@ Singleton {
                 property string manageUser: "kcmshell6 kcm_users"
                 property string networkEthernet: "kcmshell6 kcm_networkmanagement"
                 property string taskManager: "plasma-systemmonitor --page-name Processes"
-                property string terminal: "kitty -1" // This is only for shell actions
+                property string terminal: "warp-terminal" // This is only for shell actions
                 property string update: "kitty -1 --hold=yes fish -i -c 'pkexec pacman -Syu'"
                 property string volumeMixer: `~/.config/hypr/hyprland/scripts/launch_first_available.sh "pavucontrol-qt" "pavucontrol"`
             }
@@ -192,10 +330,12 @@ Singleton {
                             property bool vertical: false
                             property JsonObject font: JsonObject {
                                 property string family: "Google Sans Flex"
-                                property real weight: 350
+                                property bool italic: false
+                                property real weight: 400
                                 property real width: 100
                                 property real size: 90
                                 property real roundness: 0
+                                property real letterSpacing: 0 // Additional space between digits, in em.
                             }
                         }
                         property JsonObject quote: JsonObject {
@@ -250,6 +390,7 @@ Singleton {
                 }
                 property list<string> screenList: [] // List of names, like "eDP-1", find out with 'hyprctl monitors' command
                 property JsonObject utilButtons: JsonObject {
+                    property list<string> order: ["showScreenSnip", "showScreenRecord", "showColorPicker", "showBedModeToggle", "showKeyboardToggle", "showMicToggle", "showDarkModeToggle", "showPerformanceProfileToggle"]
                     property bool showScreenSnip: true
                     property bool showColorPicker: false
                     property bool showMicToggle: false
@@ -331,7 +472,7 @@ Singleton {
                 property bool pinnedOnStartup: false
                 property bool hoverToReveal: true // When false, only reveals on empty workspace
                 property list<string> pinnedApps: [ // IDs of pinned entries
-                    "org.kde.dolphin", "kitty",]
+                    "org.kde.dolphin", "dev.warp.Warp",]
                 property list<string> ignoredAppRegexes: []
             }
 
@@ -357,7 +498,9 @@ Singleton {
             }
 
             property JsonObject launcher: JsonObject {
-                property list<string> pinnedApps: [ "org.kde.dolphin", "kitty", "cmake-gui"]
+                property list<string> pinnedApps: [ "org.kde.dolphin", "dev.warp.Warp", "cmake-gui"]
+                property list<string> hiddenApps: []
+                property bool reducedMotion: false
             }
 
             property JsonObject light: JsonObject {
@@ -373,8 +516,9 @@ Singleton {
             }
 
             property JsonObject lock: JsonObject {
-                property bool useHyprlock: false
+                property bool useHyprlock: true
                 property bool launchOnStartup: false
+                property bool bedtimeEnabled: false
                 property JsonObject blur: JsonObject {
                     property bool enable: true
                     property real radius: 100
@@ -582,11 +726,11 @@ Singleton {
                 property int adviseUpdateThreshold: 75 // packages
                 property int stronglyAdviseUpdateThreshold: 200 // packages
             }
-            
+
             property JsonObject wallpaperSelector: JsonObject {
                 property bool useSystemFileDialog: false
             }
-            
+
             property JsonObject windows: JsonObject {
                 property bool showTitlebar: true // Client-side decoration for shell apps
                 property bool centerTitle: true
@@ -608,26 +752,6 @@ Singleton {
                 }
             }
 
-            property JsonObject waffles: JsonObject {
-                // Some spots are kinda janky/awkward. Setting the following to
-                // false will make (some) stuff also be like that for accuracy. 
-                // Example: the right-click menu of the Start button
-                property JsonObject tweaks: JsonObject {
-                    property bool switchHandlePositionFix: true
-                    property bool smootherMenuAnimations: true
-                    property bool smootherSearchBar: true
-                }
-                property JsonObject bar: JsonObject {
-                    property bool bottom: true
-                    property bool leftAlignApps: false
-                }
-                property JsonObject actionCenter: JsonObject {
-                    property list<string> toggles: [ "network", "bluetooth", "easyEffects", "powerProfile", "idleInhibitor", "nightLight", "darkMode", "antiFlashbang", "cloudflareWarp", "mic", "musicRecognition", "notifications", "onScreenKeyboard", "gameMode", "screenSnip", "colorPicker" ]
-                }
-                property JsonObject calendar: JsonObject {
-                    property bool force2CharDayOfWeek: true
-                }
-            }
         }
     }
 }

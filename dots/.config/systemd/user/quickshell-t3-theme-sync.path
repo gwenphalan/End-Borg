@@ -1,0 +1,9 @@
+[Unit]
+Description=Watch Quickshell palette for T3 Code theme changes
+
+[Path]
+PathChanged=%h/.local/state/quickshell/user/generated/colors.json
+Unit=quickshell-t3-theme-sync.service
+
+[Install]
+WantedBy=default.target

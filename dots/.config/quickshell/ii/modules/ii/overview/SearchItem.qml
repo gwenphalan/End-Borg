@@ -5,6 +5,7 @@ import qs.modules.common
 import qs.modules.common.models
 import qs.modules.common.widgets
 import qs.modules.common.functions
+import Qt5Compat.GraphicalEffects
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -34,30 +35,45 @@ RippleButton {
     property string materialSymbol: entry.iconType === LauncherSearchResult.IconType.Material ? entry?.iconName ?? "" : ""
     property string cliphistRawString: entry?.rawValue ?? ""
     property bool blurImage: entry?.blurImage ?? false
-    
+
     visible: root.entryShown
     property int horizontalMargin: 10
     property int buttonHorizontalPadding: 10
+    property int rightContentMargin: horizontalMargin + buttonHorizontalPadding
     property int buttonVerticalPadding: 6
     property bool keyboardDown: false
-    readonly property bool selected: (root.hovered || root.focus)
+    property bool keyboardSelected: false
+    property bool reducedMotion: false
+    property bool contextMenuOpen: false
+    signal contextRequested(point position)
+    readonly property bool isApp: root.entry?.type === Translation.tr("App") && !!root.entry?.id
+    altAction: event => {
+        if (root.isApp) root.contextRequested(Qt.point(event.x, event.y));
+    }
+    readonly property bool selected: (root.hovered || root.focus || keyboardSelected)
+    property real engagement: selected ? 1 : 0
+    Behavior on engagement {
+        NumberAnimation {
+            duration: root.reducedMotion ? 0 : Appearance.animation.elementMoveSmall.duration
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Appearance.animation.elementMoveSmall.bezierCurve
+        }
+    }
 
     implicitHeight: rowLayout.implicitHeight + root.buttonVerticalPadding * 2
     implicitWidth: rowLayout.implicitWidth + root.buttonHorizontalPadding * 2
     buttonRadius: Appearance.rounding.normal
-    colBackground: (root.down || root.keyboardDown) ? Appearance.colors.colPrimaryContainerActive : 
-        (selected ? Appearance.colors.colPrimaryContainer : 
-        ColorUtils.transparentize(Appearance.colors.colPrimaryContainer, 1))
-    colBackgroundHover: Appearance.colors.colPrimaryContainer
-    colRipple: Appearance.colors.colPrimaryContainerActive
-    property color colForeground: selected ? Appearance.colors.colOnPrimaryContainer : Appearance.m3colors.m3onSurface
+    colBackground: "transparent"
+    colBackgroundHover: "transparent"
+    colRipple: "transparent"
+    property color colForeground: Appearance.colors.colOnSurface
 
     readonly property string highlightPrefix: `<u><font color="${Appearance.colors.colPrimary}">`
     readonly property string highlightSuffix: `</font></u>`
     // Note that this highlighting is independent from the search
     // It's close, but does not accurately represent how the fuzzy algorithm works
     function highlightContent(content, query) {
-        if (!query || query.length === 0 || content == query || fontType === "monospace")
+        if (!query || query.length === 0 || fontType === "monospace")
             return StringUtils.escapeHtml(content);
 
         let contentLower = content.toLowerCase();
@@ -94,7 +110,7 @@ RippleButton {
             ?.filter(url => !url.includes("…")) // Elided = invalid
         return matches ? matches : [];
     }
-    
+
     PointingHandInteraction {}
 
     background {
@@ -108,11 +124,15 @@ RippleButton {
         root.itemExecute()
     }
     Keys.onPressed: (event) => {
-        if (event.key === Qt.Key_Delete && event.modifiers === Qt.ShiftModifier) {
-            const deleteAction = root.entry.actions.find(action => action.name == Translation.tr("Delete"));
+        if (root.isApp && (event.key === Qt.Key_Menu || (event.key === Qt.Key_F10 && event.modifiers === Qt.ShiftModifier))) {
+            root.contextRequested(Qt.point(width / 2, height / 2));
+            event.accepted = true;
+        } else if (event.key === Qt.Key_Delete && event.modifiers === Qt.ShiftModifier) {
+            const deleteAction = (root.entry?.actions ?? []).find(action => action.name == Translation.tr("Delete"));
 
             if (deleteAction) {
                 deleteAction.execute()
+                event.accepted = true;
             }
         } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
             root.keyboardDown = true
@@ -129,14 +149,16 @@ RippleButton {
 
     RowLayout {
         id: rowLayout
+        transform: Translate { x: 4 * root.engagement }
         spacing: iconLoader.sourceComponent === null ? 0 : 10
         anchors.fill: parent
         anchors.leftMargin: root.horizontalMargin + root.buttonHorizontalPadding
-        anchors.rightMargin: root.horizontalMargin + root.buttonHorizontalPadding
+        anchors.rightMargin: root.rightContentMargin
 
         // Icon
         Loader {
             id: iconLoader
+            transform: Translate { y: -3 * root.engagement }
             active: true
             sourceComponent: switch(root.iconType) {
                 case LauncherSearchResult.IconType.Material:
@@ -154,10 +176,15 @@ RippleButton {
 
         Component {
             id: iconImageComponent
-            IconImage {
-                source: Quickshell.iconPath(root.iconName, "image-missing")
-                width: 35
-                height: 35
+            AdaptiveAppIcon {
+                implicitSize: 36
+                appId: root.entry?.id || ""
+                appName: root.entry?.name || ""
+                iconName: root.iconName
+                hovered: root.hovered
+                selected: root.selected
+                pressed: root.down || root.keyboardDown
+                contextMenuOpen: root.contextMenuOpen
             }
         }
 
@@ -187,28 +214,11 @@ RippleButton {
             spacing: 0
             StyledText {
                 font.pixelSize: Appearance.font.pixelSize.smaller
-                color: root.selected ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colSubtext
+                color: Appearance.colors.colSubtext
                 visible: root.itemType && root.itemType != Translation.tr("App")
                 text: root.itemType
             }
             RowLayout {
-                Loader { // Checkmark for copied clipboard entry
-                    visible: itemName == Quickshell.clipboardText && root.cliphistRawString
-                    active: itemName == Quickshell.clipboardText && root.cliphistRawString
-                    sourceComponent: Rectangle {
-                        implicitWidth: activeText.implicitHeight
-                        implicitHeight: activeText.implicitHeight
-                        radius: Appearance.rounding.full
-                        color: Appearance.colors.colPrimary
-                        MaterialSymbol {
-                            id: activeText
-                            anchors.centerIn: parent
-                            text: "check"
-                            font.pixelSize: Appearance.font.pixelSize.normal
-                            color: Appearance.m3colors.m3onPrimary
-                        }
-                    }
-                }
                 Repeater { // Favicons for links
                     model: root.query == root.itemName ? [] : root.urls
                     Favicon {
@@ -223,10 +233,11 @@ RippleButton {
                     textFormat: Text.StyledText // RichText also works, but StyledText ensures elide work
                     font.pixelSize: Appearance.font.pixelSize.small
                     font.family: Appearance.font.family[root.fontType]
+                    font.weight: root.selected ? Font.Bold : Font.Normal
                     color: root.colForeground
                     horizontalAlignment: Text.AlignLeft
                     elide: Text.ElideRight
-                    text: root.selected ? StringUtils.escapeHtml(root.itemName) : root.displayContent
+                    text: root.displayContent
                 }
             }
             Loader { // Clipboard image preview
@@ -244,10 +255,13 @@ RippleButton {
         // Action text
         StyledText {
             Layout.fillWidth: false
-            visible: root.selected
+            visible: root.engagement > 0
+            Layout.preferredWidth: implicitWidth * Math.max(0, root.engagement)
+            opacity: Math.max(0, Math.min(1, root.engagement))
+            clip: true
             id: clickAction
             font.pixelSize: Appearance.font.pixelSize.normal
-            color: Appearance.colors.colOnPrimaryContainer
+            color: Appearance.colors.colOnSurface
             horizontalAlignment: Text.AlignRight
             text: root.itemClickActionName
         }
@@ -272,6 +286,14 @@ RippleButton {
 
                     contentItem: Item {
                         id: actionContentItem
+                        scale: actionButton.down ? 0.88 : 1
+                        Behavior on scale {
+                            NumberAnimation {
+                                duration: root.reducedMotion ? 0 : Appearance.animation.clickBounce.duration
+                                easing.type: Easing.BezierSpline
+                                easing.bezierCurve: Appearance.animation.clickBounce.bezierCurve
+                            }
+                        }
                         anchors.centerIn: parent
                         Loader {
                             anchors.centerIn: parent

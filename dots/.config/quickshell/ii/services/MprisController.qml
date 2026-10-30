@@ -18,7 +18,7 @@ Singleton {
 	id: root;
 	property list<MprisPlayer> players: Mpris.players.values.filter(player => isRealPlayer(player));
 	property MprisPlayer trackedPlayer: null;
-	property MprisPlayer activePlayer: trackedPlayer ?? Mpris.players.values[0] ?? null;
+	property MprisPlayer activePlayer: trackedPlayer ?? players[0] ?? null;
 	signal trackChanged(reverse: bool);
 
 	property bool __reverse: false;
@@ -50,28 +50,20 @@ Singleton {
 			target: modelData;
 
 			Component.onCompleted: {
-				if (root.trackedPlayer == null || modelData.isPlaying) {
+				if (root.isRealPlayer(modelData) && (root.trackedPlayer == null || modelData.isPlaying)) {
 					root.trackedPlayer = modelData;
 				}
 			}
 
 			Component.onDestruction: {
-				if (root.trackedPlayer == null || !root.trackedPlayer.isPlaying) {
-					for (const player of Mpris.players.values) {
-						if (player.playbackState.isPlaying) {
-							root.trackedPlayer = player;
-							break;
-						}
-					}
-
-					if (trackedPlayer == null && Mpris.players.values.length != 0) {
-						trackedPlayer = Mpris.players.values[0];
-					}
-				}
-			}
+                if (root.trackedPlayer === modelData || !root.trackedPlayer?.isPlaying) {
+                    root.trackedPlayer = root.players.find(player => player !== modelData && player.isPlaying)
+                        || root.players.find(player => player !== modelData) || null;
+                }
+            }
 
 			function onPlaybackStateChanged() {
-				if (root.trackedPlayer !== modelData) root.trackedPlayer = modelData;
+				if (root.isRealPlayer(modelData) && modelData.isPlaying && root.trackedPlayer !== modelData) root.trackedPlayer = modelData;
 			}
 		}
 	}
@@ -86,7 +78,7 @@ Singleton {
 		function onTrackArtUrlChanged() {
 			// console.log("arturl:", activePlayer.trackArtUrl)
 			// root.updateTrack();
-			if (root.activePlayer.uniqueId == root.activeTrack.uniqueId && root.activePlayer.trackArtUrl != root.activeTrack.artUrl) {
+			if (root.activePlayer?.uniqueId == root.activeTrack?.uniqueId && root.activePlayer.trackArtUrl != root.activeTrack.artUrl) {
 				// cantata likes to send cover updates *BEFORE* updating the track info.
 				// as such, art url changes shouldn't be able to break the reverse animation
 				const r = root.__reverse;

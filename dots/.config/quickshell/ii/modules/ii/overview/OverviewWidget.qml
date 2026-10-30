@@ -14,6 +14,17 @@ import Quickshell.Hyprland
 Item {
     id: root
     required property var screen
+    required property var controller
+    property real availableWidth: 1000
+    property real availableHeight: 1000
+    property real contentOpacity: 1
+    property bool captureEnabled: false
+    property bool contentShown: false
+    SpotlightContentMotion {
+        id: contentMotion
+        shown: root.contentShown
+        reducedMotion: root.controller.reducedMotion ?? false
+    }
     readonly property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
     readonly property var toplevels: ToplevelManager.toplevels
     // Clamp to avoid lock-screen temp workspace (2147483647 - N) leaking into UI
@@ -25,15 +36,19 @@ Item {
     property var windowByAddress: HyprlandData.windowByAddress
     property var windowAddresses: HyprlandData.addresses
     property var monitorData: HyprlandData.monitors.find(m => m.id === root.monitor?.id)
-    property real scale: Config.options.overview.scale
+    property real previewScale: Math.min(Config.options.overview.scale,
+        Math.max(0.025, (availableWidth - Appearance.sizes.elevationMargin * 2 - 20 - workspaceSpacing * (Config.options.overview.columns - 1))
+            / (Math.max(1, screen?.width ?? 1920) * Config.options.overview.columns)),
+        Math.max(0.025, (availableHeight - Appearance.sizes.elevationMargin * 2 - 20 - workspaceSpacing * (Config.options.overview.rows - 1))
+            / (Math.max(1, screen?.height ?? 1080) * Config.options.overview.rows)))
     property color activeBorderColor: Appearance.colors.colSecondary
 
-    property real workspaceImplicitWidth: (monitorData?.transform % 2 === 1) ? 
-        ((monitor.height - monitorData?.reserved[0] - monitorData?.reserved[2]) * root.scale / monitor.scale) :
-        ((monitor.width - monitorData?.reserved[0] - monitorData?.reserved[2]) * root.scale / monitor.scale)
-    property real workspaceImplicitHeight: (monitorData?.transform % 2 === 1) ? 
-        ((monitor.width - monitorData?.reserved[1] - monitorData?.reserved[3]) * root.scale / monitor.scale) :
-        ((monitor.height - monitorData?.reserved[1] - monitorData?.reserved[3]) * root.scale / monitor.scale)
+    property real workspaceImplicitWidth: (monitorData?.transform % 2 === 1) ?
+        ((monitor.height - monitorData?.reserved[0] - monitorData?.reserved[2]) * root.previewScale / monitor.scale) :
+        ((monitor.width - monitorData?.reserved[0] - monitorData?.reserved[2]) * root.previewScale / monitor.scale)
+    property real workspaceImplicitHeight: (monitorData?.transform % 2 === 1) ?
+        ((monitor.width - monitorData?.reserved[1] - monitorData?.reserved[3]) * root.previewScale / monitor.scale) :
+        ((monitor.height - monitorData?.reserved[1] - monitorData?.reserved[3]) * root.previewScale / monitor.scale)
     property real largeWorkspaceRadius: Appearance.rounding.large
     property real smallWorkspaceRadius: Appearance.rounding.verysmall
 
@@ -47,12 +62,29 @@ Item {
     property int draggingFromWorkspace: -1
     property int draggingTargetWorkspace: -1
 
-    implicitWidth: overviewBackground.implicitWidth + Appearance.sizes.elevationMargin * 2
-    implicitHeight: overviewBackground.implicitHeight + Appearance.sizes.elevationMargin * 2
+    implicitWidth: overviewBackground.implicitWidth
+    implicitHeight: overviewBackground.implicitHeight
 
     property Component windowComponent: OverviewWindow {}
     property list<OverviewWindow> windowWidgets: []
-    
+    function inspect() {
+        const origin = windowSpace.mapToItem(null, 0, 0);
+        return {scale: previewScale, x: origin.x, y: origin.y,
+            cellWidth: workspaceImplicitWidth, cellHeight: workspaceImplicitHeight,
+            spacing: workspaceSpacing, group: workspaceGroup, count: workspacesShown,
+            draggingFrom: draggingFromWorkspace, draggingTarget: draggingTargetWorkspace,
+            contentOffset: contentMotion.offset,
+            outline: {x: focusedWorkspaceIndicator.x, y: focusedWorkspaceIndicator.y,
+                width: focusedWorkspaceIndicator.width, height: focusedWorkspaceIndicator.height},
+            windows: Array.from(windowSpace.children).filter(item => item.windowData)
+                .map(item => {
+                    const point = item.mapToItem(null, item.width / 2, item.height / 2);
+                    return {address: item.windowData.address, workspace: item.windowData.workspace.id,
+                        x: point.x, y: point.y, captureEnabled: item.captureEnabled,
+                        hasContent: item.previewHasContent, width: item.width, height: item.height};
+                })};
+    }
+
     function getWsRow(ws) {
         // 1-indexed workspace, 0-indexed row
         var normalRow = Math.floor((ws - 1) / Config.options.overview.columns) % Config.options.overview.rows;
@@ -68,27 +100,23 @@ Item {
         return (Config.options.overview.orderBottomUp ? Config.options.overview.rows - ri - 1 : ri) * Config.options.overview.columns + (Config.options.overview.orderRightLeft ? Config.options.overview.columns - ci - 1 : ci) + 1
     }
 
-    StyledRectangularShadow {
-        target: overviewBackground
-    }
-    Rectangle { // Background
+    Item { // Grid layout; the shared Spotlight surface owns the material.
         id: overviewBackground
         property real padding: 10
         anchors.fill: parent
-        anchors.margins: Appearance.sizes.elevationMargin
 
         implicitWidth: workspaceColumnLayout.implicitWidth + padding * 2
         implicitHeight: workspaceColumnLayout.implicitHeight + padding * 2
-        radius: root.largeWorkspaceRadius + padding
-        color: Appearance.colors.colBackgroundSurfaceContainer
 
         Column { // Workspaces
             id: workspaceColumnLayout
+            opacity: root.contentOpacity
+            transform: Translate { y: contentMotion.offset }
 
             z: root.workspaceZ
             anchors.centerIn: parent
             spacing: workspaceSpacing
-            
+
             Repeater {
                 model: Config.options.overview.rows
                 delegate: Row {
@@ -107,10 +135,16 @@ Item {
                             property color hoveredWorkspaceColor: ColorUtils.mix(defaultWorkspaceColor, Appearance.colors.colLayer1Hover, 0.1)
                             property color hoveredBorderColor: Appearance.colors.colLayer2Hover
                             property bool hoveredWhileDragging: false
+                            property bool pointerHovered: workspaceArea.containsMouse
 
                             implicitWidth: root.workspaceImplicitWidth
                             implicitHeight: root.workspaceImplicitHeight
-                            color: hoveredWhileDragging ? hoveredWorkspaceColor : defaultWorkspaceColor
+                            color: hoveredWhileDragging || pointerHovered ? hoveredWorkspaceColor : defaultWorkspaceColor
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: root.controller.reducedMotion ? 0 : Appearance.animation.elementMoveFast.duration
+                                }
+                            }
                             property bool workspaceAtLeft: colIndex === 0
                             property bool workspaceAtRight: colIndex === Config.options.overview.columns - 1
                             property bool workspaceAtTop: row.index === 0
@@ -126,7 +160,7 @@ Item {
                                 anchors.centerIn: parent
                                 text: workspace.workspaceValue
                                 font {
-                                    pixelSize: root.workspaceNumberSize * root.scale
+                                    pixelSize: root.workspaceNumberSize * root.previewScale
                                     weight: Font.DemiBold
                                     family: Appearance.font.family.expressive
                                 }
@@ -139,6 +173,7 @@ Item {
                                 id: workspaceArea
                                 anchors.fill: parent
                                 acceptedButtons: Qt.LeftButton
+                                hoverEnabled: true
                                 onPressed: {
                                     if (root.draggingTargetWorkspace === -1) {
                                         GlobalStates.overviewOpen = false
@@ -168,6 +203,8 @@ Item {
 
         Item { // Windows & focused workspace indicator
             id: windowSpace
+            opacity: root.contentOpacity
+            transform: Translate { y: contentMotion.offset }
             anchors.centerIn: parent
             implicitWidth: workspaceColumnLayout.implicitWidth
             implicitHeight: workspaceColumnLayout.implicitHeight
@@ -192,7 +229,9 @@ Item {
                     property var address: `0x${modelData.HyprlandToplevel.address}`
                     toplevel: modelData
                     monitorData: this.monitor
-                    scale: root.scale
+                    previewScale: root.previewScale
+                    captureEnabled: root.captureEnabled
+                    reducedMotion: root.controller.reducedMotion ?? false
                     widgetMonitor: HyprlandData.monitors.find(m => m.id == root.monitor.id)
                     windowData: windowByAddress[address]
 
@@ -203,8 +242,8 @@ Item {
                     property int workspaceRowIndex: getWsRow(windowData?.workspace.id)
                     xOffset: (root.workspaceImplicitWidth + workspaceSpacing) * workspaceColIndex
                     yOffset: (root.workspaceImplicitHeight + workspaceSpacing) * workspaceRowIndex
-                    property real xWithinWorkspaceWidget: Math.max((windowData?.at[0] - (monitor?.x ?? 0) - monitorData?.reserved[0]) * root.scale, 0)
-                    property real yWithinWorkspaceWidget: Math.max((windowData?.at[1] - (monitor?.y ?? 0) - monitorData?.reserved[1]) * root.scale, 0)
+                    property real xWithinWorkspaceWidget: Math.max((windowData?.at[0] - (monitor?.x ?? 0) - monitorData?.reserved[0]) * root.previewScale, 0)
+                    property real yWithinWorkspaceWidget: Math.max((windowData?.at[1] - (monitor?.y ?? 0) - monitorData?.reserved[1]) * root.previewScale, 0)
 
                     // Radius
                     property real minRadius: Appearance.rounding.small
@@ -212,10 +251,10 @@ Item {
                     property bool workspaceAtRight: workspaceColIndex === Config.options.overview.columns - 1
                     property bool workspaceAtTop: workspaceRowIndex === 0
                     property bool workspaceAtBottom: workspaceRowIndex === Config.options.overview.rows - 1
-                    property bool workspaceAtTopLeft: (workspaceAtLeft && workspaceAtTop) 
-                    property bool workspaceAtTopRight: (workspaceAtRight && workspaceAtTop) 
-                    property bool workspaceAtBottomLeft: (workspaceAtLeft && workspaceAtBottom) 
-                    property bool workspaceAtBottomRight: (workspaceAtRight && workspaceAtBottom) 
+                    property bool workspaceAtTopLeft: (workspaceAtLeft && workspaceAtTop)
+                    property bool workspaceAtTopRight: (workspaceAtRight && workspaceAtTop)
+                    property bool workspaceAtBottomLeft: (workspaceAtLeft && workspaceAtBottom)
+                    property bool workspaceAtBottomRight: (workspaceAtRight && workspaceAtBottom)
                     property real distanceFromLeftEdge: xWithinWorkspaceWidget
                     property real distanceFromRightEdge: root.workspaceImplicitWidth - (xWithinWorkspaceWidget + targetWindowWidth)
                     property real distanceFromTopEdge: yWithinWorkspaceWidget
@@ -250,6 +289,7 @@ Item {
                         onEntered: hovered = true // For hover color change
                         onExited: hovered = false // For hover color change
                         acceptedButtons: Qt.LeftButton | Qt.MiddleButton
+                        preventStealing: true
                         drag.target: parent
                         onPressed: (mouse) => {
                             root.draggingFromWorkspace = windowData?.workspace.id
@@ -305,11 +345,17 @@ Item {
                 id: focusedWorkspaceIndicator
                 property int rowIndex: getWsRow(root.effectiveActiveWorkspaceId)
                 property int colIndex: getWsColumn(root.effectiveActiveWorkspaceId)
-                x: (root.workspaceImplicitWidth + workspaceSpacing) * colIndex
-                y: (root.workspaceImplicitHeight + workspaceSpacing) * rowIndex
+                readonly property real targetX: (root.workspaceImplicitWidth + workspaceSpacing) * colIndex
+                readonly property real targetY: (root.workspaceImplicitHeight + workspaceSpacing) * rowIndex
+                property real leadingX: targetX
+                property real trailingX: targetX
+                property real leadingY: targetY
+                property real trailingY: targetY
+                x: Math.min(leadingX, trailingX)
+                y: Math.min(leadingY, trailingY)
                 z: root.windowZ
-                width: root.workspaceImplicitWidth
-                height: root.workspaceImplicitHeight
+                width: root.workspaceImplicitWidth + Math.abs(leadingX - trailingX)
+                height: root.workspaceImplicitHeight + Math.abs(leadingY - trailingY)
                 color: "transparent"
                 property bool workspaceAtLeft: colIndex === 0
                 property bool workspaceAtRight: colIndex === Config.options.overview.columns - 1
@@ -321,11 +367,33 @@ Item {
                 bottomRightRadius: (workspaceAtRight && workspaceAtBottom) ? root.largeWorkspaceRadius : root.smallWorkspaceRadius
                 border.width: 2
                 border.color: root.activeBorderColor
-                Behavior on x {
-                    animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
+                Behavior on leadingX {
+                    NumberAnimation {
+                        duration: root.controller.reducedMotion ? 0 : Appearance.animation.elementMoveFast.duration
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Appearance.animation.elementMoveEnter.bezierCurve
+                    }
                 }
-                Behavior on y {
-                    animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
+                Behavior on leadingY {
+                    NumberAnimation {
+                        duration: root.controller.reducedMotion ? 0 : Appearance.animation.elementMoveFast.duration
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Appearance.animation.elementMoveEnter.bezierCurve
+                    }
+                }
+                Behavior on trailingX {
+                    NumberAnimation {
+                        duration: root.controller.reducedMotion ? 0 : Appearance.animation.elementMoveSmall.duration
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Appearance.animation.elementMoveSmall.bezierCurve
+                    }
+                }
+                Behavior on trailingY {
+                    NumberAnimation {
+                        duration: root.controller.reducedMotion ? 0 : Appearance.animation.elementMoveSmall.duration
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Appearance.animation.elementMoveSmall.bezierCurve
+                    }
                 }
                 Behavior on topLeftRadius {
                     animation: Appearance.animation.elementMoveEnter.numberAnimation.createObject(this)

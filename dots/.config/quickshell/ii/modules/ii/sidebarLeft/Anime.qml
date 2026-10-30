@@ -73,14 +73,14 @@ Item {
             name: "safe",
             description: Translation.tr("Disable NSFW content"),
             execute: () => {
-                Persistent.states.booru.allowNsfw = false;
+                Config.options.sidebar.booru.allowNsfw = false;
             }
         },
         {
             name: "lewd",
             description: Translation.tr("Allow NSFW content"),
             execute: () => {
-                Persistent.states.booru.allowNsfw = true;
+                Config.options.sidebar.booru.allowNsfw = true;
             }
         },
     ]
@@ -111,7 +111,7 @@ Item {
                     break;
                 }
             }
-            Booru.makeRequest(tagList, Persistent.states.booru.allowNsfw, Config.options.sidebar.booru.limit, pageIndex);
+            Booru.makeRequest(tagList, Config.options.sidebar.booru.allowNsfw, Config.options.sidebar.booru.limit, pageIndex);
         }
     }
 
@@ -173,7 +173,7 @@ Item {
                 z: 0
                 anchors.fill: parent
                 spacing: 10
-                
+
                 touchpadScrollFactor: Config.options.interactions.scrolling.touchpadScrollFactor * 1.4
                 mouseScrollFactor: Config.options.interactions.scrolling.mouseScrollFactor * 1.4
 
@@ -326,7 +326,7 @@ Item {
             radius: Appearance.rounding.normal - root.padding
             color: Appearance.colors.colLayer2
             implicitWidth: tagInputField.implicitWidth
-            implicitHeight: Math.max(inputFieldRowLayout.implicitHeight + inputFieldRowLayout.anchors.topMargin 
+            implicitHeight: Math.max(inputFieldRowLayout.implicitHeight + inputFieldRowLayout.anchors.topMargin
                 + commandButtonsRow.implicitHeight + commandButtonsRow.anchors.bottomMargin + columnSpacing, 45)
             clip: true
 
@@ -485,7 +485,7 @@ Item {
                     {
                         name: "clear",
                         sendDirectly: true,
-                    }, 
+                    },
                 ]
 
                 ApiInputBoxIndicator { // Tool indicator
@@ -531,10 +531,10 @@ Item {
                             enabled: Booru.currentProvider !== "zerochan"
                             scale: 0.6
                             Layout.alignment: Qt.AlignVCenter
-                            checked: (Persistent.states.booru.allowNsfw && Booru.currentProvider !== "zerochan")
+                            checked: (Config.options.sidebar.booru.allowNsfw && Booru.currentProvider !== "zerochan")
                             onCheckedChanged: {
                                 if (!nsfwSwitch.enabled) return;
-                                Persistent.states.booru.allowNsfw = checked;
+                                Config.options.sidebar.booru.allowNsfw = checked;
                             }
                         }
                     }

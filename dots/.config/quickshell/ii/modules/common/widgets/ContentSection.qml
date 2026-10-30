@@ -8,12 +8,14 @@ ColumnLayout {
     id: root
     property string title
     property string icon: ""
+    property real headerInset: 0
     default property alias contentData: sectionContent.data
 
     Layout.fillWidth: true
     spacing: 6
 
     RowLayout {
+        Layout.leftMargin: root.headerInset
         spacing: 6
         OptionalMaterialSymbol {
             icon: root.icon

@@ -13,11 +13,26 @@ Rectangle {
     radius: Appearance.rounding.normal
     color: Appearance.colors.colLayer1
     clip: true
-    implicitHeight: collapsed ? collapsedBottomWidgetGroupRow.implicitHeight : 350
-    property int selectedTab: Persistent.states.sidebar.bottomGroup.tab
+    implicitHeight: collapsed ? collapsedBottomWidgetGroupRow.implicitHeight : (currentTabIndex === 0 ? 430 : 350)
+    readonly property bool homeExpanded:!collapsed && currentTabIndex===0
+    property int selectedTab: Math.max(0,Math.min(3,Persistent.states.sidebar.bottomGroup.tab))
+    readonly property int currentTabIndex: selectedTab === 0 && !Config.options.homeAssistant.enabled ? 1 : selectedTab
+    readonly property var visibleTabs: tabs.map((tab,index) => Object.assign({tabIndex:index},tab)).filter(tab => tab.type !== "home" || Config.options.homeAssistant.enabled)
+    readonly property int visibleTabIndex: Math.max(0,visibleTabs.findIndex(tab => tab.tabIndex === currentTabIndex))
+    onSelectedTabChanged: Persistent.states.sidebar.bottomGroup.tab = selectedTab
+    Connections {
+        target: Persistent.states.sidebar.bottomGroup
+        function onTabChanged() { root.selectedTab = Persistent.states.sidebar.bottomGroup.tab; }
+    }
     property int previousIndex: -1
     property bool collapsed: Persistent.states.sidebar.bottomGroup.collapsed
     property var tabs: [
+        {
+            "type": "home",
+            "name": Translation.tr("Home"),
+            "icon": "home",
+            "widget": "home/HomeWidget.qml"
+        },
         {
             "type": "calendar",
             "name": Translation.tr("Calendar"),
@@ -71,9 +86,9 @@ Rectangle {
     Keys.onPressed: event => {
         if ((event.key === Qt.Key_PageDown || event.key === Qt.Key_PageUp) && event.modifiers === Qt.ControlModifier) {
             if (event.key === Qt.Key_PageDown) {
-                root.selectedTab = Math.min(root.selectedTab + 1, root.tabs.length - 1);
+                root.selectedTab = root.visibleTabs[Math.min(root.visibleTabIndex + 1, root.visibleTabs.length - 1)].tabIndex;
             } else if (event.key === Qt.Key_PageUp) {
-                root.selectedTab = Math.max(root.selectedTab - 1, 0);
+                root.selectedTab = root.visibleTabs[Math.max(root.visibleTabIndex - 1, 0)].tabIndex;
             }
             event.accepted = true;
         }
@@ -153,20 +168,20 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
                 anchors.leftMargin: 5
-                currentIndex: root.selectedTab
+                currentIndex: root.visibleTabIndex
                 expanded: false
                 Repeater {
-                    model: root.tabs
+                    model: root.visibleTabs
                     NavigationRailButton {
                         required property int index
                         required property var modelData
                         showToggledHighlight: false
-                        toggled: root.selectedTab == index
+                        toggled: root.currentTabIndex === modelData.tabIndex
                         buttonText: modelData.name
                         buttonIcon: modelData.icon
                         onPressed: {
-                            root.selectedTab = index;
-                            Persistent.states.sidebar.bottomGroup.tab = index;
+                            root.selectedTab = modelData.tabIndex;
+                            Persistent.states.sidebar.bottomGroup.tab = modelData.tabIndex;
                         }
                     }
                 }
@@ -200,17 +215,17 @@ Rectangle {
                 anchors.bottomMargin: -anchors.topMargin
 
                 Component.onCompleted: {
-                    tabStack.source = root.tabs[root.selectedTab].widget;
+                    tabStack.source = root.tabs[root.currentTabIndex].widget;
                 }
 
                 Connections {
                     target: root
-                    function onSelectedTabChanged() {
-                        if (root.currentTab > root.previousIndex)
+                    function onCurrentTabIndexChanged() {
+                        if (root.selectedTab > root.previousIndex)
                             tabSwitchBehavior.animation.down = true;
-                        else if (root.currentTab < root.previousIndex)
+                        else if (root.selectedTab < root.previousIndex)
                             tabSwitchBehavior.animation.down = false;
-                        tabStack.source = root.tabs[root.selectedTab].widget;
+                        tabStack.source = root.tabs[root.currentTabIndex].widget;
                     }
                 }
 
@@ -229,27 +244,21 @@ Rectangle {
         id: switchAnim
         property bool down: false
         ParallelAnimation {
-            PropertyAnimation {
+            FastPropertyAnimation {
                 target: tabStack
                 properties: "opacity"
                 to: 0
-                duration: Appearance.animation.elementMoveFast.duration
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve
             }
-            PropertyAnimation {
+            FastPropertyAnimation {
                 target: tabStack.anchors
                 properties: "topMargin"
                 to: 10 * (switchAnim.down ? -1 : 1)
-                duration: Appearance.animation.elementMoveFast.duration
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve
             }
         }
         PropertyAction {
             target: tabStack
             property: "source"
-            value: root.tabs[root.selectedTab].widget
+            value: root.tabs[root.currentTabIndex].widget
         } // The source change happens here
         ParallelAnimation {
             PropertyAnimation {

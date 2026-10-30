@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
-import cv2
 import numpy as np
+from PIL import Image, UnidentifiedImageError
 
 # Allowed scheme types
 SCHEMES = [
@@ -16,34 +16,49 @@ SCHEMES = [
 ]
 
 def image_colorfulness(image):
-    # Based on Hasler and Süsstrunk's colorfulness metric
-    (B, G, R) = cv2.split(image.astype("float"))
-    rg = np.absolute(R - G)
-    yb = np.absolute(0.5 * (R + G) - B)
-    std_rg = np.std(rg)
-    std_yb = np.std(yb)
-    mean_rg = np.mean(rg)
-    mean_yb = np.mean(yb)
-    colorfulness = np.sqrt(std_rg ** 2 + std_yb ** 2) + (0.3 * np.sqrt(mean_rg ** 2 + mean_yb ** 2))
-    return colorfulness
+    """Retain the numeric diagnostic exposed by --colorfulness (RGB input)."""
+    red, green, blue = np.moveaxis(image.astype(np.float64), -1, 0)
+    rg = np.abs(red - green)
+    yb = np.abs((red + green) / 2 - blue)
+    return float(np.hypot(np.std(rg), np.std(yb)) +
+                 0.3 * np.hypot(np.mean(rg), np.mean(yb)))
 
-# scheme-content respects the image's colors very well, but it might
-# look too saturated, so we only use it for not very colorful images to be safe
-def pick_scheme(colorfulness):
-    if colorfulness < 40:
+def pick_scheme(image):
+    pixels = image.reshape(-1, 3).astype(np.float32) / 255
+    highest = pixels.max(axis=1)
+    lowest = pixels.min(axis=1)
+    chroma = highest - lowest
+    saturation = chroma / np.maximum(highest, 1 / 255)
+    colorful = (saturation >= 0.18) & (chroma >= 0.07)
+
+    # A dark but strongly tinted image is not grayscale: compare channel
+    # separation relative to brightness, not only absolute colorfulness.
+    if np.mean(saturation >= 0.08) < 0.05:
+        return "scheme-monochrome"
+    if np.mean(colorful) < 0.12:
         return "scheme-neutral"
-    else:
-        return "scheme-tonal-spot"
+
+    # Content can amplify saturation. Reserve it for moderately colored,
+    # predominantly single-hue images; mixed or vivid images keep tonal spot.
+    if np.mean(colorful) >= 0.35 and np.median(saturation[colorful]) < 0.55:
+        selected = pixels[colorful]
+        weights = chroma[colorful]
+        red, green, blue = selected.T
+        hue_x = 2 * red - green - blue
+        hue_y = np.sqrt(3) * (green - blue)
+        coherence = np.hypot(np.sum(hue_x * weights), np.sum(hue_y * weights))
+        total = np.sum(np.hypot(hue_x, hue_y) * weights)
+        if total > 0 and coherence / total >= 0.8:
+            return "scheme-content"
+    return "scheme-tonal-spot"
 
 def load_and_resize_image(img_path, max_dim=128):
-    img = cv2.imread(img_path)
-    if img is None:
+    try:
+        with Image.open(img_path) as source:
+            source.thumbnail((max_dim, max_dim), Image.Resampling.BOX)
+            return np.asarray(source.convert("RGB"))
+    except (OSError, ValueError, UnidentifiedImageError):
         return None
-    h, w = img.shape[:2]
-    if max(h, w) > max_dim:
-        scale = max_dim / max(h, w)
-        img = cv2.resize(img, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
-    return img
 
 def main():
     colorfulness_mode = False
@@ -63,7 +78,7 @@ def main():
     if colorfulness_mode:
         print(f"{colorfulness}")
     else:
-        scheme = pick_scheme(colorfulness)
+        scheme = pick_scheme(img)
         print(scheme)
 
 if __name__ == "__main__":

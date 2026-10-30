@@ -52,12 +52,8 @@ Singleton {
     }
 
     function copy(entry) {
-        if (root.cliphistBinary.includes("cliphist")) // Classic cliphist
-            Quickshell.execDetached(["bash", "-c", `printf '${StringUtils.shellSingleQuoteEscape(entry)}' | ${root.cliphistBinary} decode | wl-copy`]);
-        else { // Stash
-            const entryNumber = entry.split("\t")[0];
-            Quickshell.execDetached(["bash", "-c", `${root.cliphistBinary} decode ${entryNumber} | wl-copy`]);
-        }
+        copyProc.pending.push(entry);
+        if (!copyProc.running) copyProc.startNext();
     }
 
     function paste(entry) {
@@ -81,16 +77,51 @@ Singleton {
     }
 
     Process {
+        id: copyProc
+        property var pending: []
+        property string currentEntry: ""
+        stdinEnabled: true
+        command: ["bash", "-o", "pipefail", "-c", "\"$1\" decode | wl-copy", "clipboard-copy", root.cliphistBinary]
+        function startNext() {
+            if (running || pending.length === 0) return;
+            currentEntry = pending.shift();
+            running = true;
+        }
+        onStarted: {
+            write(currentEntry + "\n");
+            stdinEnabled = false;
+            currentEntry = "";
+        }
+        onExited: {
+            stdinEnabled = true;
+            Qt.callLater(startNext);
+        }
+    }
+
+    Process {
         id: deleteProc
-        property string entry: ""
-        command: ["bash", "-c", `echo '${StringUtils.shellSingleQuoteEscape(deleteProc.entry)}' | ${root.cliphistBinary} delete`]
+        property var pending: []
+        property string currentEntry: ""
+        stdinEnabled: true
+        command: ["bash", "-c", "\"$1\" delete", "clipboard-delete", root.cliphistBinary]
         function deleteEntry(entry) {
-            deleteProc.entry = entry;
-            deleteProc.running = true;
-            deleteProc.entry = "";
+            pending.push(entry);
+            if (!running) startNext();
+        }
+        function startNext() {
+            if (running || pending.length === 0) return;
+            currentEntry = pending.shift();
+            running = true;
+        }
+        onStarted: {
+            write(currentEntry + "\n");
+            stdinEnabled = false;
+            currentEntry = "";
         }
         onExited: (exitCode, exitStatus) => {
+            deleteProc.stdinEnabled = true;
             root.refresh();
+            Qt.callLater(deleteProc.startNext);
         }
     }
 

@@ -105,7 +105,7 @@ Item {
                     colRipple: Appearance.colors.colLayer2Active
 
                     onClicked: { root.collapsed = !root.collapsed }
-                    
+
                     contentItem: MaterialSymbol {
                         anchors.centerIn: parent
                         text: "keyboard_arrow_down"
@@ -115,16 +115,12 @@ Item {
                         color: Appearance.colors.colOnLayer2
                         rotation: root.collapsed ? 0 : 180
                         Behavior on rotation {
-                            NumberAnimation {
-                                duration: Appearance.animation.elementMoveFast.duration
-                                easing.type: Appearance.animation.elementMoveFast.type
-                                easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve
-                            }
+                            FastNumberAnimation {}
                         }
                     }
 
                 }
-                
+
             }
 
         }

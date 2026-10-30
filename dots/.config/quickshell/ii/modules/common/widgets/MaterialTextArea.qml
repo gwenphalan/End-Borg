@@ -1,53 +1,41 @@
-import qs.modules.common
 import QtQuick
-import QtQuick.Controls.Material
-import QtQuick.Controls
+import QtQuick.Controls.Basic as Basic
+import qs.modules.common
 
-/**
- * Material 3 styled TextArea (filled style)
- * https://m3.material.io/components/text-fields/overview
- * Note: We don't use NativeRendering because it makes the small placeholder text look weird
- */
-TextArea {
+// Multiline editors use the same quiet tonal surface as other form controls.
+// Basic preserves text editing, selection, wrapping and the native context menu
+// without inheriting a Material underline or a second floating label.
+Basic.TextArea {
     id: root
-    Material.theme: Material.System
-    Material.accent: Appearance.m3colors.m3primary
-    Material.primary: Appearance.m3colors.m3primary
-    Material.background: Appearance.m3colors.m3surface
-    Material.foreground: Appearance.m3colors.m3onSurface
-    Material.containerStyle: Material.Filled
+    implicitWidth: 240
+    implicitHeight: Math.max(72, contentHeight + topPadding + bottomPadding)
+    leftPadding: 14
+    rightPadding: 14
+    topPadding: 12
+    bottomPadding: 12
+    wrapMode: TextEdit.Wrap
+    verticalAlignment: TextEdit.AlignTop
+    selectByMouse: true
+    clip: true
     renderType: Text.QtRendering
-
-    selectedTextColor: Appearance.m3colors.m3onSecondaryContainer
+    color: Appearance.colors.colOnLayer2
+    selectedTextColor: Appearance.colors.colOnSecondaryContainer
     selectionColor: Appearance.colors.colSecondaryContainer
-    placeholderTextColor: Appearance.m3colors.m3outline
-
-    background: Rectangle {
-        implicitHeight: 56
-        color: Appearance.m3colors.m3surface
-        topLeftRadius: 4
-        topRightRadius: 4
-        Rectangle {
-            anchors {
-                left: parent.left
-                right: parent.right
-                bottom: parent.bottom
-            }
-            height: 1
-            color: root.focus ? Appearance.m3colors.m3primary : 
-                root.hovered ? Appearance.m3colors.m3outline : Appearance.m3colors.m3outlineVariant
-
-            Behavior on color {
-                animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)
-            }
-        }
-    }
-
+    placeholderTextColor: Appearance.colors.colSubtext
+    opacity: enabled ? 1 : 0.5
     font {
         family: Appearance.font.family.main
-        pixelSize: Appearance?.font.pixelSize.small ?? 15
+        pixelSize: Appearance.font.pixelSize.small
         hintingPreference: Font.PreferFullHinting
         variableAxes: Appearance.font.variableAxes.main
     }
-    wrapMode: TextEdit.Wrap
+
+    background: Rectangle {
+        implicitWidth: 240
+        implicitHeight: 72
+        radius: Appearance.rounding.small
+        color: Appearance.colors.colLayer3
+        border.width: root.activeFocus ? 2 : 0
+        border.color: Appearance.m3colors.m3secondary
+    }
 }

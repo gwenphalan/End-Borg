@@ -12,6 +12,9 @@ Item {
     property real implicitSize: 48
     property bool hovered: false
     property bool selected: false
+    property bool selectionOutline:false
+    property real selectionWidth:3.5
+    property color selectionColor:Appearance.colors.colPrimary
     property bool pressed: false
     property bool contextMenuOpen: false
     readonly property var policy: AppSearch.resolveAdaptiveIcon(appId, iconName, appName)
@@ -31,6 +34,13 @@ Item {
             }
         }
 
+        Loader {
+            anchors.fill:parent
+            anchors.margins:-root.selectionWidth
+            active:root.selectionOutline
+            z:10
+            sourceComponent:G2Squircle { borderWidth:root.selectionWidth; borderColor:root.selectionColor }
+        }
         Image {
             id: adaptedImage
             anchors.fill: parent

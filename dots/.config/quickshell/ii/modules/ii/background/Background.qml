@@ -27,6 +27,19 @@ Variants {
 
         required property var modelData
 
+        Connections {
+            target: GlobalStates
+            function onLockSnapshotDirectoryChanged() {
+                const directory = GlobalStates.lockSnapshotDirectory;
+                if (!directory || !GlobalStates.screenLocked) return;
+                const name = bgRoot.screen.name.replace(/[^a-zA-Z0-9_-]/g, "_");
+                if (!backgroundScene.grabToImage(result => {
+                    if (!result.saveToFile(`${directory}/${name}-background.png`))
+                        console.warn(`Lock snapshot: failed to save background for ${name}`);
+                })) console.warn(`Lock snapshot: failed to start background grab for ${name}`);
+            }
+        }
+
         // Hide when fullscreen
         property list<HyprlandWorkspace> workspacesForMonitor: Hyprland.workspaces.values.filter(workspace => workspace.monitor && workspace.monitor.name == monitor.name)
         property var activeWorkspaceWithFullscreen: workspacesForMonitor.filter(workspace => ((workspace.toplevels.values.filter(window => window.wayland?.fullscreen)[0] != undefined) && workspace.active))[0]
@@ -124,6 +137,7 @@ Variants {
         }
 
         Item {
+            id: backgroundScene
             anchors.fill: parent
 
             // Wallpaper
@@ -219,6 +233,20 @@ Variants {
                         opacity: GlobalStates.screenLocked ? 1 : 0
                         anchors.fill: parent
                         color: CF.ColorUtils.transparentize(Appearance.colors.colLayer0, 0.7)
+                    }
+                }
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                color: "#58000000"
+                opacity: GlobalStates.screenLocked && GlobalStates.bedtimeLockActive
+                         && !GlobalStates.bedtimePasswordRevealed ? 1 : 0
+                visible: opacity > 0
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Appearance.animation.elementMoveSmall.duration
+                        easing.type: Easing.InOutCubic
                     }
                 }
             }

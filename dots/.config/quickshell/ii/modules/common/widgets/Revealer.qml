@@ -8,6 +8,7 @@ Item {
     id: root
     property bool reveal
     property bool vertical: false
+    property bool reducedMotion: false
     clip: true
 
     implicitWidth: (reveal || vertical) ? childrenRect.width : 0
@@ -15,11 +16,11 @@ Item {
     visible: reveal || (implicitWidth > 0 && !vertical) || (implicitHeight > 0 && vertical)
 
     Behavior on implicitWidth {
-        enabled: !vertical
+        enabled: !vertical && !root.reducedMotion
         animation: Appearance.animation.elementMoveEnter.numberAnimation.createObject(this)
     }
     Behavior on implicitHeight {
-        enabled: vertical
+        enabled: vertical && !root.reducedMotion
         animation: Appearance.animation.elementMoveEnter.numberAnimation.createObject(this)
     }
 }

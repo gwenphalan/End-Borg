@@ -13,13 +13,23 @@ Singleton {
     id: root
 
     property string query: ""
+    property string contextMode: "apps"
+    property bool includeHiddenApps: false
+    readonly property string effectiveQuery: contextMode === "clipboard"
+        && ![Config.options.search.prefix.clipboard, Config.options.search.prefix.emojis,
+            Config.options.search.prefix.action, Config.options.search.prefix.math,
+            Config.options.search.prefix.shellCommand, Config.options.search.prefix.webSearch,
+            Config.options.search.prefix.app].some(prefix => prefix && query.startsWith(prefix))
+        ? Config.options.search.prefix.clipboard + query : query
 
     function ensurePrefix(prefix) {
-        if ([Config.options.search.prefix.action, Config.options.search.prefix.app, Config.options.search.prefix.clipboard, Config.options.search.prefix.emojis, Config.options.search.prefix.math, Config.options.search.prefix.shellCommand, Config.options.search.prefix.webSearch,].some(i => root.query.startsWith(i))) {
-            root.query = prefix + root.query.slice(1);
-        } else {
-            root.query = prefix + root.query;
-        }
+        const prefixes = [Config.options.search.prefix.action, Config.options.search.prefix.app,
+            Config.options.search.prefix.clipboard, Config.options.search.prefix.emojis,
+            Config.options.search.prefix.math, Config.options.search.prefix.shellCommand,
+            Config.options.search.prefix.webSearch].filter(value => value && value.length)
+            .sort((a, b) => b.length - a.length);
+        const previous = prefixes.find(value => root.query.startsWith(value));
+        root.query = prefix + (previous ? root.query.slice(previous.length) : root.query);
     }
 
     // https://specifications.freedesktop.org/menu/latest/category-registry.html
@@ -167,13 +177,13 @@ Singleton {
     property list<var> results: {
         // Search results are handled here
         ////////////////// Skip? //////////////////
-        if (root.query == "")
+        if (root.effectiveQuery == "")
             return [];
 
         ///////////// Special cases ///////////////
-        if (root.query.startsWith(Config.options.search.prefix.clipboard)) {
+        if (root.effectiveQuery.startsWith(Config.options.search.prefix.clipboard)) {
             // Clipboard
-            const searchString = StringUtils.cleanPrefix(root.query, Config.options.search.prefix.clipboard);
+            const searchString = StringUtils.cleanPrefix(root.effectiveQuery, Config.options.search.prefix.clipboard);
             return Cliphist.fuzzyQuery(searchString).map((entry, index, array) => {
                 const mightBlurImage = Cliphist.entryIsImage(entry) && root.clipboardWorkSafetyActive;
                 let shouldBlurImage = mightBlurImage;
@@ -239,7 +249,8 @@ Singleton {
                 Quickshell.clipboardText = root.mathResult;
             }
         });
-        const appResultObjects = AppSearch.fuzzyQuery(StringUtils.cleanPrefix(root.query, Config.options.search.prefix.app)).map(entry => {
+        const appResultObjects = AppSearch.fuzzyQuery(StringUtils.cleanPrefix(root.query, Config.options.search.prefix.app))
+        .map(entry => {
             return resultComp.createObject(null, {
                 type: Translation.tr("App"),
                 id: entry.id,

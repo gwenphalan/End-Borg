@@ -14,6 +14,26 @@ RowLayout {
     property bool animateWidth: false
     property alias searchInput: searchInput
     property string searchingText
+    property bool syncingText: false
+    property string hiddenPrefix: ""
+
+    function setQueryText(query) {
+        syncingText = true;
+        const clipboardPrefix = Config.options.search.prefix.clipboard;
+        hiddenPrefix = clipboardPrefix && query.startsWith(clipboardPrefix) ? clipboardPrefix : "";
+        searchInput.text = hiddenPrefix ? query.slice(hiddenPrefix.length) : query;
+        syncingText = false;
+    }
+
+    Connections {
+        target: LauncherSearch
+        function onQueryChanged() { root.setQueryText(LauncherSearch.query); }
+    }
+    Component.onCompleted: setQueryText(LauncherSearch.query)
+
+    signal moveFocusDown()
+    signal showClipboard()
+    signal showWorkspaces()
 
     function forceFocus() {
         searchInput.forceActiveFocus();
@@ -31,7 +51,7 @@ RowLayout {
         if (root.searchingText.startsWith(Config.options.search.prefix.webSearch)) return SearchBar.SearchPrefixType.WebSearch;
         return SearchBar.SearchPrefixType.DefaultSearch;
     }
-    
+
     MaterialShapeWrappedMaterialSymbol {
         id: searchIcon
         Layout.alignment: Qt.AlignVCenter
@@ -65,27 +85,29 @@ RowLayout {
         implicitHeight: 40
         focus: GlobalStates.overviewOpen
         font.pixelSize: Appearance.font.pixelSize.small
-        placeholderText: Translation.tr("Search, calculate or run")
+        placeholderText: root.hiddenPrefix ? Translation.tr("Search clipboard") : Translation.tr("Search, calculate or run")
         implicitWidth: root.searchingText == "" ? Appearance.sizes.searchWidthCollapsed : Appearance.sizes.searchWidth
 
         Behavior on implicitWidth {
             id: searchWidthBehavior
             enabled: root.animateWidth
             NumberAnimation {
-                duration: 300
-                easing.type: Appearance.animation.elementMove.type
-                easing.bezierCurve: Appearance.animation.elementMove.bezierCurve
+                duration: 180
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.animationCurves.expressiveDefaultSpatial
             }
         }
 
-        onTextChanged: LauncherSearch.query = text
+        onTextChanged: {
+            if (!root.syncingText) LauncherSearch.query = root.hiddenPrefix + text;
+        }
 
         onAccepted: {
-            if (appResults.count > 0) {
-                // Get the first visible delegate and trigger its click
-                let firstItem = appResults.itemAtIndex(0);
-                if (firstItem && firstItem.clicked) {
-                    firstItem.clicked();
+            if (LauncherSearch.results && LauncherSearch.results.length > 0) {
+                let firstItem = LauncherSearch.results[0];
+                if (firstItem && firstItem.execute) {
+                    GlobalStates.overviewOpen = false;
+                    firstItem.execute();
                 }
             }
         }
@@ -97,6 +119,12 @@ RowLayout {
                 LauncherSearch.query = tabbedText;
                 searchInput.text = tabbedText;
                 event.accepted = true;
+            } else if (event.key === Qt.Key_Down || event.key === Qt.Key_PageDown) {
+                root.moveFocusDown();
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Escape) {
+                GlobalStates.overviewOpen = false;
+                event.accepted = true;
             }
         }
     }
@@ -105,32 +133,31 @@ RowLayout {
         Layout.topMargin: 4
         Layout.bottomMargin: 4
         onClicked: {
-            GlobalStates.overviewOpen = false;
-            Quickshell.execDetached(["qs", "-p", Quickshell.shellPath(""), "ipc", "call", "region", "search"]);
+            root.showWorkspaces();
         }
-        text: "image_search"
+        text: "view_cozy"
         StyledToolTip {
-            text: Translation.tr("Google Lens")
+            text: Translation.tr("Workspaces")
         }
     }
 
     IconToolbarButton {
-        id: songRecButton
+        id: clipboardButton
         Layout.topMargin: 4
         Layout.bottomMargin: 4
         Layout.rightMargin: 4
-        toggled: SongRec.running
-        onClicked: SongRec.toggleRunning()
-        text: "music_cast"
+        toggled: root.searchPrefixType === SearchBar.SearchPrefixType.Clipboard
+        onClicked: root.showClipboard()
+        text: "content_paste"
 
         StyledToolTip {
-            text: Translation.tr("Recognize music")
+            text: Translation.tr("Clipboard")
         }
 
         colText: toggled ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSurfaceVariant
         background: MaterialShape {
             RotationAnimation on rotation {
-                running: songRecButton.toggled
+                running: false
                 duration: 12000
                 easing.type: Easing.Linear
                 loops: Animation.Infinite
@@ -138,17 +165,17 @@ RowLayout {
                 to: 360
             }
             shape: {
-                if (songRecButton.down) {
-                    return songRecButton.toggled ? MaterialShape.Shape.Circle : MaterialShape.Shape.Square
+                if (clipboardButton.down) {
+                    return clipboardButton.toggled ? MaterialShape.Shape.Circle : MaterialShape.Shape.Square
                 } else {
-                    return songRecButton.toggled ? MaterialShape.Shape.SoftBurst : MaterialShape.Shape.Circle
+                    return clipboardButton.toggled ? MaterialShape.Shape.SoftBurst : MaterialShape.Shape.Circle
                 }
             }
             color: {
-                if (songRecButton.toggled) {
-                    return songRecButton.hovered ? Appearance.colors.colPrimaryHover : Appearance.colors.colPrimary
+                if (clipboardButton.toggled) {
+                    return clipboardButton.hovered ? Appearance.colors.colPrimaryHover : Appearance.colors.colPrimary
                 } else {
-                    return songRecButton.hovered ? Appearance.colors.colSurfaceContainerHigh : ColorUtils.transparentize(Appearance.colors.colSurfaceContainerHigh)
+                    return clipboardButton.hovered ? Appearance.colors.colSurfaceContainerHigh : ColorUtils.transparentize(Appearance.colors.colSurfaceContainerHigh)
                 }
             }
             Behavior on color {

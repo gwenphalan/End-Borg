@@ -13,5 +13,11 @@ LockScreen {
 
     lockSurface: LockSurface {
         context: root.context
+        bedtimeActive: root.bedtimeActive
+        bedtimeDeadlineText: root.bedtimeDeadlineText
+        bedtimeDelayUntilText: root.bedtimeDelayUntilText
+        bedtimeDelaysRemaining: root.bedtimeDelaysRemaining
+        bedtimeDelayAllowed: root.bedtimeDelayAllowed
+        onBedtimeDelayRequested: root.requestBedtimeDelay()
     }
 }

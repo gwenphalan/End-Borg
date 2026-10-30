@@ -97,14 +97,18 @@ Item {
             }
 
             CenterWidgetGroup {
+                objectName:"notificationSection"
+                visible:!bottomGroup.homeExpanded
                 Layout.alignment: Qt.AlignHCenter
                 Layout.fillHeight: true
                 Layout.fillWidth: true
             }
 
             BottomWidgetGroup {
+                id:bottomGroup
+                objectName:"homeTabSection"
                 Layout.alignment: Qt.AlignHCenter
-                Layout.fillHeight: false
+                Layout.fillHeight:homeExpanded
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
             }
@@ -221,7 +225,7 @@ Item {
             radius: height / 2
             implicitWidth: uptimeRow.implicitWidth + 24
             implicitHeight: uptimeRow.implicitHeight + 8
-            
+
             Row {
                 id: uptimeRow
                 anchors.centerIn: parent

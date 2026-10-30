@@ -56,6 +56,11 @@ Singleton {
         adapter: JsonAdapter {
             id: persistentStatesJsonAdapter
 
+            property JsonObject settingsApp: JsonObject {
+                property string category: "appearance"
+                property string subsection: ""
+            }
+
             property string hyprlandInstanceSignature: ""
 
             property JsonObject ai: JsonObject {
@@ -65,6 +70,36 @@ Singleton {
 
             property JsonObject cheatsheet: JsonObject {
                 property int tabIndex: 0
+            }
+
+            property JsonObject lock: JsonObject {
+                property string lastBedtimeIso: ""
+            }
+
+            property JsonObject homeAssistant: JsonObject {
+                property string areaId: ""
+                property string mediaEntityId: ""
+                // Nonsecret bedtime state survives a Quickshell restart while the
+                // login keyring (and therefore the HA token) is unavailable.
+                property real sleepNightStartEpoch: 0
+                property real sleepBedtimeEpoch: 0
+                property real sleepWakeEpoch: 0
+                property string sleepScheduleJson: ""
+                property int sleepDelaysRemaining: 0
+                property int sleepDelaysUsed: 0
+                property int sleepMaxDelays: 0
+                property int sleepDelayMinutes: 0
+                property int sleepPendingDelayCount: 0
+                property real sleepCacheUpdatedEpoch: 0
+                // Public LAN endpoint is the sole schedule source for Bed Lock.
+                property real bedLockNightStartEpoch: 0
+                property real bedLockBedtimeEpoch: 0
+                property real bedLockWakeEpoch: 0
+                property int bedLockDelaysRemaining: 0
+                property int bedLockDelaysUsed: 0
+                property int bedLockMaxDelays: 0
+                property int bedLockDelayMinutes: 0
+                property real bedLockCacheUpdatedEpoch: 0
             }
 
             property JsonObject sidebar: JsonObject {

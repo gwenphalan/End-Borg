@@ -17,7 +17,7 @@ Singleton {
     }
 
     function lock() {
-        Quickshell.execDetached(["loginctl", "lock-session"]);
+        Quickshell.execDetached(["qs", "-c", "ii", "ipc", "call", "lock", "activate"]);
     }
 
     function suspend() {

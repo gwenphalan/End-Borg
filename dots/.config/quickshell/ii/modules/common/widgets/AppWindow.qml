@@ -11,7 +11,7 @@ ApplicationWindow {
     property var closeHandler:null
     property string appTitle: ""
     property bool showWindowChrome:true
-    property real contentPadding: 12
+    property real contentPadding: 0
     property alias appBody:body
     default property alias appContent: body.data
     minimumWidth:640

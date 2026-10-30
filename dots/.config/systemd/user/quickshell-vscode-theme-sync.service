@@ -1,0 +1,11 @@
+[Unit]
+Description=Sync Quickshell Material palette to VS Code
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/quickshell/ii/scripts/colors/code/material-code-set-color.sh
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target

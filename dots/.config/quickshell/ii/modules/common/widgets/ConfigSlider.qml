@@ -15,8 +15,8 @@ RowLayout {
     property alias value: slider.value
     property alias stopIndicatorValues: slider.stopIndicatorValues
     property bool usePercentTooltip: true
-    property real from: slider.from
-    property real to: slider.to
+    property alias from: slider.from
+    property alias to: slider.to
     property real textWidth: 120
 
     RowLayout {
@@ -35,13 +35,10 @@ RowLayout {
             color: Appearance.colors.colOnSecondaryContainer
         }
     }
-    
+
     StyledSlider {
         id: slider
         configuration: StyledSlider.Configuration.XS
         usePercentTooltip: root.usePercentTooltip
-        value: root.value
-        from: root.from
-        to: root.to
     }
 }

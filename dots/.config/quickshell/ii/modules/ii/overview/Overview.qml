@@ -1,214 +1,259 @@
 import qs
 import qs.services
 import qs.modules.common
-import qs.modules.common.widgets
-import Qt.labs.synchronizer
 import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
 
 Scope {
-    id: overviewScope
-    property bool dontAutoCancelSearch: false
+    id: root
+    SpotlightController {
+        id: state
+        keyRouter: keyboardRoot
+        onFocusRequested: intentional => {
+            if (intentional) searchBar.focusInput();
+            else keyboardRoot.forceActiveFocus();
+        }
+    }
+    Binding { target: LauncherSearch; property: "contextMode"; value: state.mode }
+    Connections {
+        target: GlobalStates
+        function onOverviewOpenChanged() {
+            if (state.open) {
+                panelWindow.screen = Hyprland.focusedMonitor?.name
+                    ? Quickshell.screens.find(screen => screen.name === Hyprland.focusedMonitor.name) ?? Quickshell.screens[0]
+                    : Quickshell.screens[0];
+                focusGrabDelay.restart();
+                Qt.callLater(() => keyboardRoot.forceActiveFocus());
+            } else {
+                focusGrabDelay.stop();
+                focusGrab.active = false;
+            }
+        }
+    }
+    Timer {
+        id: focusGrabDelay
+        interval: 16
+        onTriggered: if (state.open) focusGrab.active = true
+    }
+    HyprlandFocusGrab {
+        id: focusGrab
+        windows: [panelWindow]
+        onCleared: if (state.open) state.close()
+    }
 
     PanelWindow {
         id: panelWindow
-        property string searchingText: ""
-        readonly property HyprlandMonitor monitor: Hyprland.monitorFor(panelWindow.screen)
-        property bool monitorIsFocused: (Hyprland.focusedMonitor?.id == monitor?.id)
-        visible: GlobalStates.overviewOpen
-
+        visible: state.presented
+        color: "transparent"
+        anchors { top: true; bottom: true; left: true; right: true }
         WlrLayershell.namespace: "quickshell:overview"
         WlrLayershell.layer: WlrLayer.Top
-        WlrLayershell.keyboardFocus: GlobalStates.overviewOpen ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
-        color: "transparent"
-
-        mask: Region {
-            item: GlobalStates.overviewOpen ? columnLayout : null
-        }
-
-        anchors {
-            top: true
-            bottom: true
-            left: true
-            right: true
-        }
-
-        Connections {
-            target: GlobalStates
-            function onOverviewOpenChanged() {
-                if (!GlobalStates.overviewOpen) {
-                    searchWidget.disableExpandAnimation();
-                    overviewScope.dontAutoCancelSearch = false;
-                    GlobalFocusGrab.dismiss();
-                } else {
-                    if (!overviewScope.dontAutoCancelSearch) {
-                        searchWidget.cancelSearch();
+        WlrLayershell.keyboardFocus: state.presented ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+        MouseArea { anchors.fill: parent; onClicked: state.close() }
+        FocusScope {
+            id: keyboardRoot
+            anchors.fill: parent
+            focus: true
+            function routeKey(event) {
+                if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
+                    if (event.modifiers & Qt.MetaModifier)
+                        state.toggle("overview");
+                    else if (!GlobalStates.superDown)
+                        state.cycleMode();
+                    event.accepted = true;
+                } else if (event.key === Qt.Key_Escape) {
+                    if (state.menuOpen) state.dismissMenus();
+                    else state.close();
+                    event.accepted = true;
+                } else if (!searchBar.input.activeFocus && !(event.modifiers & (Qt.ControlModifier | Qt.AltModifier | Qt.MetaModifier))
+                           && event.text && event.text.charCodeAt(0) >= 32) {
+                    searchBar.insertText(event.text);
+                    event.accepted = true;
+                } else if (!searchBar.input.activeFocus && event.key === Qt.Key_Backspace) {
+                    searchBar.focusInput();
+                    searchBar.input.remove(Math.max(0, searchBar.input.cursorPosition - 1), searchBar.input.cursorPosition);
+                    state.edit(searchBar.input.text);
+                    event.accepted = true;
+                } else if (event.key === Qt.Key_Down && !searchBar.input.activeFocus
+                           && !apps.navigationActive && !results.navigationActive) {
+                    focusLower();
+                    event.accepted = true;
+                }
+            }
+            function focusLower() {
+                if (state.resultsExpanded || state.mode === "clipboard") results.focusFirst();
+                else if (state.mode === "apps") apps.focusFirst();
+            }
+            Keys.priority: Keys.BeforeItem
+            Keys.onPressed: event => routeKey(event)
+            // ShortcutOverride precedes TextInput, Button, and result-item key handlers.
+            Keys.onShortcutOverride: event => {
+                if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab || event.key === Qt.Key_Escape)
+                    event.accepted = true;
+            }
+            Column {
+                id: content
+                anchors.top: parent.top
+                anchors.topMargin: 0
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: panelWindow.width - 32
+                SpotlightSearchBar {
+                    id: searchBar
+                    z: 2
+                    controller: state
+                    availableWidth: content.width
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    onMoveFocusDown: keyboardRoot.focusLower()
+                }
+                Item {
+                    id: viewHost
+                    clip: true
+                    width: content.width
+                    height: Math.max(120, panelWindow.height - content.y - searchBar.height - 32)
+                    readonly property real drawerWidth: Math.min(600, width)
+                    readonly property real drawerHeight: Math.min(560, height)
+                    readonly property bool overviewActive: state.mode === "overview" && !state.resultsExpanded
+                    readonly property bool appsActive: state.mode === "apps" && !state.resultsExpanded
+                    readonly property bool resultsActive: state.resultsExpanded || state.mode === "clipboard"
+                    SpotlightSurface {
+                        id: lowerSurface
+                        controller: state
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        targetWidth: viewHost.overviewActive && overviewLoader.item
+                            ? overviewLoader.item.implicitWidth : viewHost.drawerWidth
+                        targetHeight: viewHost.overviewActive && overviewLoader.item
+                            ? overviewLoader.item.implicitHeight : viewHost.drawerHeight
+                        surfaceColor: Appearance.colors.colBackgroundSurfaceContainer
+                        surfaceRadius: Appearance.rounding.large + 10
+                        shown: state.open && state.panelsReady
+                        SpotlightPanel {
+                            id: apps
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            width: viewHost.drawerWidth
+                            height: viewHost.drawerHeight
+                            opacity: viewHost.appsActive ? 1 : 0
+                            visible: opacity > 0
+                            enabled: viewHost.appsActive
+                            Behavior on opacity {
+                                NumberAnimation { duration: state.reducedMotion ? 0 : Appearance.animation.elementMoveFast.duration }
+                            }
+                            controller: state
+                            menuLayer: viewHost
+                        }
+                        SpotlightResults {
+                            id: results
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            width: viewHost.drawerWidth
+                            height: viewHost.drawerHeight
+                            opacity: viewHost.resultsActive ? 1 : 0
+                            visible: opacity > 0
+                            enabled: viewHost.resultsActive
+                            Behavior on opacity {
+                                NumberAnimation { duration: state.reducedMotion ? 0 : Appearance.animation.elementMoveFast.duration }
+                            }
+                            controller: state
+                            menuLayer: viewHost
+                            onMoveFocusUp: searchBar.focusInput()
+                        }
+                        Loader {
+                            id: overviewLoader
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            width: item?.implicitWidth ?? 0
+                            height: item?.implicitHeight ?? 0
+                            opacity: viewHost.overviewActive ? 1 : 0
+                            visible: opacity > 0
+                            enabled: viewHost.overviewActive
+                            Behavior on opacity {
+                                NumberAnimation { duration: state.reducedMotion ? 0 : Appearance.animation.elementMoveFast.duration }
+                            }
+                            active: state.overviewInitialized
+                            asynchronous: true
+                            sourceComponent: SpotlightOverviewView {
+                                controller: state
+                                screen: panelWindow.screen
+                                availableWidth: viewHost.width
+                                availableHeight: viewHost.height
+                                captureEnabled: lowerSurface.visible && overviewLoader.visible
+                                contentShown: lowerSurface.shown && viewHost.overviewActive
+                                contentOpacity: 1
+                            }
+                        }
                     }
-                    GlobalFocusGrab.addDismissable(panelWindow);
-                }
-            }
-        }
-
-        Connections {
-            target: GlobalFocusGrab
-            function onDismissed() {
-                GlobalStates.overviewOpen = false;
-            }
-        }
-        implicitWidth: columnLayout.implicitWidth
-        implicitHeight: columnLayout.implicitHeight
-
-        function setSearchingText(text) {
-            searchWidget.setSearchingText(text);
-            searchWidget.focusFirstItem();
-        }
-
-        Column {
-            id: columnLayout
-            visible: GlobalStates.overviewOpen
-            anchors {
-                horizontalCenter: parent.horizontalCenter
-                top: parent.top
-            }
-            spacing: -8
-
-            Keys.onPressed: event => {
-                if (event.key === Qt.Key_Escape) {
-                    GlobalStates.overviewOpen = false;
-                }
-            }
-
-            SearchWidget {
-                id: searchWidget
-                anchors.horizontalCenter: parent.horizontalCenter
-                Synchronizer on searchingText {
-                    property alias source: panelWindow.searchingText
-                }
-            }
-
-            Loader {
-                id: overviewLoader
-                anchors.horizontalCenter: parent.horizontalCenter
-                active: GlobalStates.overviewOpen && (Config?.options.overview.enable ?? true)
-                sourceComponent: OverviewWidget {
-                    screen: panelWindow.screen
-                    visible: (panelWindow.searchingText == "")
+                    SpotlightContextMenu {
+                        id: contextMenu
+                        controller: state
+                        width: viewHost.width
+                        height: viewHost.height
+                        z: 20
+                    }
                 }
             }
         }
     }
 
-    function toggleClipboard() {
-        if (GlobalStates.overviewOpen && overviewScope.dontAutoCancelSearch) {
-            GlobalStates.overviewOpen = false;
-            return;
-        }
-        overviewScope.dontAutoCancelSearch = true;
-        panelWindow.setSearchingText(Config.options.search.prefix.clipboard);
-        GlobalStates.overviewOpen = true;
+    function emoji() {
+        state.show("apps");
+        LauncherSearch.ensurePrefix(Config.options.search.prefix.emojis);
+        state.engageSearch();
+        searchBar.focusInput();
     }
-
-    function toggleEmojis() {
-        if (GlobalStates.overviewOpen && overviewScope.dontAutoCancelSearch) {
-            GlobalStates.overviewOpen = false;
-            return;
-        }
-        overviewScope.dontAutoCancelSearch = true;
-        panelWindow.setSearchingText(Config.options.search.prefix.emojis);
-        GlobalStates.overviewOpen = true;
-    }
-
     IpcHandler {
         target: "search"
-
-        function toggle() {
-            GlobalStates.overviewOpen = !GlobalStates.overviewOpen;
-        }
-        function workspacesToggle() {
-            GlobalStates.overviewOpen = !GlobalStates.overviewOpen;
-        }
-        function close() {
-            GlobalStates.overviewOpen = false;
-        }
-        function open() {
-            GlobalStates.overviewOpen = true;
-        }
-        function toggleReleaseInterrupt() {
-            GlobalStates.superReleaseMightTrigger = false;
-        }
-        function clipboardToggle() {
-            overviewScope.toggleClipboard();
-        }
-    }
-
-    GlobalShortcut {
-        name: "searchToggle"
-        description: "Toggles search on press"
-
-        onPressed: {
-            GlobalStates.overviewOpen = !GlobalStates.overviewOpen;
-        }
-    }
-    GlobalShortcut {
-        name: "overviewWorkspacesClose"
-        description: "Closes overview on press"
-
-        onPressed: {
-            GlobalStates.overviewOpen = false;
+        function toggle(): void { state.toggle("apps"); }
+        function workspacesToggle(): void { state.toggle("overview"); }
+        function close(): void { state.close(); }
+        function open(): void { state.show("apps"); }
+        function toggleReleaseInterrupt(): void { GlobalStates.superReleaseMightTrigger = false; }
+        function clipboardToggle(): void { state.toggle("clipboard"); }
+        function emojiToggle(): void { root.emoji(); }
+        function cycleMode(): void { state.cycleMode(); }
+        function setQuery(text: string): void { state.edit(text); }
+        function focusSearch(): void { searchBar.focusInput(); }
+        function inspect(): string {
+            return JSON.stringify({open: state.open, mode: state.mode, nextMode: state.nextMode,
+                queryLength: state.query.length, resultsExpanded: state.resultsExpanded,
+                inputFocused: state.inputFocused,
+                focusGrabActive: focusGrab.active,
+                hiddenExpanded: state.hiddenExpanded, menuOpen: state.menuOpen,
+                presented: state.presented, presence: state.presence, windowVisible: panelWindow.visible,
+                screen: panelWindow.screen?.name, width: panelWindow.width, height: panelWindow.height,
+                surfaceWidth: lowerSurface.width, surfaceHeight: lowerSurface.height,
+                lowerSurface: lowerSurface.inspect(),
+                searchWidth: searchBar.presentedWidth, searchY: searchBar.presentedY,
+                searchContentX: searchBar.inputOffset,
+                appMotion: apps.inspect(), resultMotion: results.inspect(),
+                contextMenu: contextMenu.inspect(),
+                panelProgress: lowerSurface.progress, panelContentOpacity: lowerSurface.contentOpacity,
+                resultProgress: viewHost.resultsActive ? lowerSurface.progress : 0, panelsReady: state.panelsReady,
+                barReveal: state.barReveal, barExpanded: state.barExpanded, searchShown: state.searchShown,
+                appRowSizes: apps.rows.filter(row => row.kind === "apps" && row.section === "apps").map(row => row.apps.length),
+                indexedLetters: apps.sectionPositions.filter(section => !!section.letter).length,
+                overview: overviewLoader.item?.inspect() ?? null,
+                overviewMotion: lowerSurface.inspect(),
+                createdAppTiles: state.createdAppTiles});
         }
     }
-    GlobalShortcut {
-        name: "overviewWorkspacesToggle"
-        description: "Toggles overview on press"
-
-        onPressed: {
-            GlobalStates.overviewOpen = !GlobalStates.overviewOpen;
-        }
-    }
+    GlobalShortcut { name: "searchToggle"; onPressed: state.toggle("apps") }
+    GlobalShortcut { name: "overviewWorkspacesClose"; onPressed: state.close() }
+    GlobalShortcut { name: "overviewWorkspacesToggle"; onPressed: state.toggle("overview") }
+    GlobalShortcut { name: "overviewClipboardToggle"; onPressed: state.toggle("clipboard") }
+    GlobalShortcut { name: "overviewEmojiToggle"; onPressed: root.emoji() }
+    GlobalShortcut { name: "spotlightSuperPressed"; onPressed: state.pressSuper() }
+    GlobalShortcut { name: "spotlightSuperReleased"; onPressed: state.releaseSuper() }
     GlobalShortcut {
         name: "searchToggleRelease"
-        description: "Toggles search on release"
-
-        onPressed: {
-            GlobalStates.superReleaseMightTrigger = true;
-        }
-
+        onPressed: GlobalStates.superReleaseMightTrigger = true
         onReleased: {
-            if (!GlobalStates.superReleaseMightTrigger) {
-                GlobalStates.superReleaseMightTrigger = true;
-                return;
+            if (GlobalStates.superReleaseMightTrigger) {
+                state.toggle("apps");
             }
-            GlobalStates.overviewOpen = !GlobalStates.overviewOpen;
         }
     }
     GlobalShortcut {
         name: "searchToggleReleaseInterrupt"
-        description: "Interrupts possibility of search being toggled on release. " + "This is necessary because GlobalShortcut.onReleased in quickshell triggers whether or not you press something else while holding the key. " + "To make sure this works consistently, use binditn = MODKEYS, catchall in an automatically triggered submap that includes everything."
-
-        onPressed: {
-            GlobalStates.superReleaseMightTrigger = false;
-        }
-    }
-    GlobalShortcut {
-        name: "overviewClipboardToggle"
-        description: "Toggle clipboard query on overview widget"
-
-        onPressed: {
-            overviewScope.toggleClipboard();
-        }
-    }
-
-    GlobalShortcut {
-        name: "overviewEmojiToggle"
-        description: "Toggle emoji query on overview widget"
-
-        onPressed: {
-            overviewScope.toggleEmojis();
-        }
+        onPressed: GlobalStates.superReleaseMightTrigger = false
     }
 }

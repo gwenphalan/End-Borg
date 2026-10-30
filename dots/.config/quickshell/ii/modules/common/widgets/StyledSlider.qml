@@ -48,6 +48,22 @@ Slider {
     property real handleMargins: 4
     property real dividerMargins: 2
     property real trackDotSize: 3
+    property bool animateValue: true
+    property bool motionReady: false
+    property bool smoothSteps: true
+    property int stepMotionDuration: 160
+    property bool fineAdjusting: false
+    readonly property bool steppedMotion: smoothSteps && !fineAdjusting && stepSize>0 && snapMode===Slider.SnapAlways
+    property real displayPosition: visualPosition
+    FrameAnimation {
+        running:!root.motionReady
+        property int settledFrames:0
+        onTriggered:{settledFrames++;if(settledFrames>=2)root.motionReady=true}
+    }
+    Behavior on displayPosition {
+        enabled:root.motionReady && root.steppedMotion && !Config.options.launcher.reducedMotion
+        NumberAnimation {duration:root.stepMotionDuration;easing.type:Easing.OutCubic}
+    }
     property bool usePercentTooltip: true
     property string tooltipContent: usePercentTooltip ? `${Math.round(((value - from) / (to - from)) * 100)}%` : `${Math.round(value)}`
     property bool wavy: configuration === StyledSlider.Configuration.Wavy // If true, the progress bar will have a wavy fill effect
@@ -56,15 +72,16 @@ Slider {
     property real waveFrequency: 6
     property real waveFps: 60
 
-    leftPadding: handleMargins
-    rightPadding: handleMargins
+    leftPadding: stopIndicatorValues.length>1 ? Math.max(handleMargins,trackWidth/2) : handleMargins
+    rightPadding: stopIndicatorValues.length>1 ? Math.max(handleMargins,trackWidth/2) : handleMargins
     property real effectiveDraggingWidth: width - leftPadding - rightPadding
 
     Layout.fillWidth: true
     from: 0
     to: 1
 
-    Behavior on value { // This makes the adjusted value (like volume) shift smoothly
+    Behavior on value { // Discrete values stay exact; their visual position has its own transition.
+        enabled:root.animateValue && !root.pressed && !root.steppedMotion
         SmoothedAnimation {
             velocity: Appearance.animation.elementMoveFast.velocity
         }
@@ -76,13 +93,19 @@ Slider {
 
     component TrackDot: Rectangle {
         required property real value
-        property real normalizedValue: (value - root.from) / (root.to - root.from)
+        property real normalizedValue: root.to === root.from ? 0 : (value - root.from) / (root.to - root.from)
+        readonly property real endpointInset: Math.max(root.leftPadding, root.rightPadding, root.trackWidth / 2)
+        readonly property real valueX: root.leftPadding + normalizedValue * root.effectiveDraggingWidth
+        readonly property real centerX: Math.max(endpointInset, Math.min(root.width - endpointInset, valueX))
         anchors.verticalCenter: parent.verticalCenter
-        x: root.handleMargins + (normalizedValue * root.effectiveDraggingWidth) - (root.trackDotSize / 2)
+        x: centerX - root.trackDotSize / 2
+        visible: normalizedValue >= 0 && normalizedValue <= 1
+            && (normalizedValue === 0 || normalizedValue === 1 || valueX >= endpointInset + root.trackDotSize && valueX <= root.width - endpointInset - root.trackDotSize)
+            && Math.abs(centerX - (root.leftPadding + root.displayPosition * root.effectiveDraggingWidth)) > root.handleMargins + root.handleWidth / 2 + root.trackDotSize / 2
         width: root.trackDotSize
         height: root.trackDotSize
         radius: Appearance.rounding.full
-        color: normalizedValue > root.visualPosition ? root.dotColor : root.dotColorHighlighted
+        color: normalizedValue > root.displayPosition ? root.dotColor : root.dotColorHighlighted
 
         Behavior on color {
             animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)
@@ -92,7 +115,7 @@ Slider {
     MouseArea {
         anchors.fill: parent
         onPressed: (mouse) => mouse.accepted = false
-        cursorShape: root.pressed ? Qt.ClosedHandCursor : Qt.PointingHandCursor 
+        cursorShape: root.pressed ? Qt.ClosedHandCursor : Qt.PointingHandCursor
     }
 
     background: Item {
@@ -102,9 +125,9 @@ Slider {
         width: root.width
         implicitHeight: trackWidth
         property var normalized: root.dividerValues.map(v => (v - root.from) / (root.to - root.from))
-        property var filtered: normalized.filter(v => Math.abs(v - root.visualPosition) * effectiveDraggingWidth > handleMargins + handleWidth / 2 - dividerMargins)
-        property var leftValues: [0, ...filtered.filter(v => v < root.visualPosition), root.visualPosition]
-        property var rightValues: [root.visualPosition, ...filtered.filter(v => v > root.visualPosition), 1]
+        property var filtered: normalized.filter(v => Math.abs(v - root.displayPosition) * effectiveDraggingWidth > handleMargins + handleWidth / 2 - dividerMargins)
+        property var leftValues: [0, ...filtered.filter(v => v < root.displayPosition), root.displayPosition]
+        property var rightValues: [root.displayPosition, ...filtered.filter(v => v > root.displayPosition), 1]
         property var leftWidths: leftValues.map((v, i, a) => a[i + 1] - v).slice(0, -1)
         property var rightWidths: rightValues.map((v, i, a) => a[i + 1] - v).slice(0, -1)
 
@@ -202,7 +225,7 @@ Slider {
 
         implicitWidth: root.handleWidth
         implicitHeight: root.handleHeight
-        x: root.leftPadding + (root.visualPosition * root.effectiveDraggingWidth) - (root.handleWidth / 2)
+        x: root.leftPadding + (root.displayPosition * root.effectiveDraggingWidth) - (root.handleWidth / 2)
         anchors.verticalCenter: parent.verticalCenter
         radius: Appearance.rounding.full
         color: root.handleColor

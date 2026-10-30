@@ -272,7 +272,7 @@ Singleton {
             },
         }
     }
-    property var currentProvider: Persistent.states.booru.provider
+    property var currentProvider: Config.options.sidebar.booru.defaultProvider
 
     function getWorkingImageSource(url) {
         if (url?.includes('pximg.net')) {
@@ -280,11 +280,11 @@ Singleton {
         }
         return url;
     }
-    
+
     function setProvider(provider) {
         provider = provider.toLowerCase()
         if (providerList.indexOf(provider) !== -1) {
-            Persistent.states.booru.provider = provider
+            Config.options.sidebar.booru.defaultProvider = provider
             root.addSystemMessage(Translation.tr("Provider set to ") + providers[provider].name
                 + (provider == "zerochan" ? Translation.tr(". Notes for Zerochan:\n- You must enter a color\n- Set your zerochan username in `sidebar.booru.zerochan.username` config option. You [might be banned for not doing so](https://www.zerochan.net/api#:~:text=The%20request%20may%20still%20be%20completed%20successfully%20without%20this%20custom%20header%2C%20but%20your%20project%20may%20be%20banned%20for%20being%20anonymous.)!") : ""))
         } else {
@@ -312,9 +312,9 @@ Singleton {
         var url = baseUrl
         var tagString = tags.join(" ")
         if (!nsfw && !(["zerochan", "waifu.im", "t.alcy.cc"].includes(currentProvider))) {
-            if (currentProvider == "gelbooru") 
+            if (currentProvider == "gelbooru")
                 tagString += " rating:general";
-            else 
+            else
                 tagString += " rating:safe";
         }
         var params = []
@@ -386,7 +386,7 @@ Singleton {
                     // console.log("[Booru] Mapped response: " + JSON.stringify(response))
                     newResponse.images = response
                     newResponse.message = response.length > 0 ? "" : root.failMessage
-                    
+
                 } catch (e) {
                     console.log("[Booru] Failed to parse response: " + e)
                     newResponse.message = root.failMessage
@@ -417,7 +417,7 @@ Singleton {
             xhr.send()
         } catch (error) {
             console.log("Could not set User-Agent:", error)
-        } 
+        }
     }
 
     property var currentTagRequest: null
@@ -464,7 +464,6 @@ Singleton {
             xhr.send()
         } catch (error) {
             console.log("Could not set User-Agent:", error)
-        } 
+        }
     }
 }
-

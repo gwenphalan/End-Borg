@@ -1,38 +1,98 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Dialogs
 import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Io
 import qs.services
+import qs.modules.settings.desktop
 import qs.modules.common
 import qs.modules.common.widgets
 import qs.modules.common.functions
 
 ContentPage {
+    id: root
     forceWidth: true
+    topContentPadding: 0
+    readonly property string wallpaperPath: {
+        const revision = SettingsCatalog.revision;
+        return SettingsCatalog.get("background.wallpaperPath") || "";
+    }
+    property string randomError: ""
+
+    function selectWallpaper(path) {
+        if (!path || !path.startsWith("/"))
+            return;
+        randomError = "";
+        SettingsCatalog.write("background.wallpaperPath", path);
+    }
+
+    FileDialog {
+        id: wallpaperDialog
+        title: Translation.tr("Choose wallpaper")
+        fileMode: FileDialog.OpenFile
+        nameFilters: [Translation.tr(
+                "Images and videos (*.png *.jpg *.jpeg *.webp *.avif *.gif *.bmp *.svg *.mp4 *.webm *.mkv *.mov)"),
+            Translation.tr("All files (*)")]
+        onAccepted: root.selectWallpaper(decodeURIComponent(String(selectedFile).replace(/^file:\/\//, "")))
+    }
+
+    Connections {
+        target: SettingsCatalog
+        function onDismissPopups() {
+            wallpaperDialog.close();
+        }
+    }
+    readonly property real wallpaperContentWidth: Math.max(0, Math.min(root.width - 40, root.baseWidth))
 
     Process {
         id: randomWallProc
-        property string status: ""
+        property string downloadedPath: ""
         property string scriptPath: `${Directories.scriptPath}/colors/random/random_konachan_wall.sh`
-        command: ["bash", "-c", FileUtils.trimFileProtocol(randomWallProc.scriptPath)]
+        command: ["bash", FileUtils.trimFileProtocol(scriptPath), "--download-only"]
+        onStarted: {
+            downloadedPath = "";
+            root.randomError = "";
+        }
         stdout: SplitParser {
             onRead: data => {
-                randomWallProc.status = data.trim();
+                if (data.startsWith("WALLPAPER_PATH="))
+                    randomWallProc.downloadedPath = data.slice(15).trim();
             }
+        }
+        onExited: (exitCode, exitStatus) => {
+            if (exitCode === 0 && downloadedPath.startsWith("/"))
+                root.selectWallpaper(downloadedPath);
+            else
+                root.randomError = Translation.tr("Could not download a wallpaper. Try again.");
         }
     }
 
     component SmallLightDarkPreferenceButton: RippleButton {
         id: smallLightDarkPreferenceButton
         required property bool dark
-        property color colText: toggled ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer2
+        property color colText: dark ? "#f7f4fa" : "#211d27"
         padding: 5
         Layout.fillWidth: true
-        toggled: Appearance.m3colors.darkmode === dark
-        colBackground: Appearance.colors.colLayer2
-        onClicked: {
-            Quickshell.execDetached(["bash", "-c", `${Directories.wallpaperSwitchScriptPath} --mode ${dark ? "dark" : "light"} --noswitch`]);
+        Layout.minimumHeight: 68
+        buttonRadius: Appearance.rounding.normal
+        toggled: SettingsCatalog.appearanceMode === (dark ? "dark" : "light")
+        colBackground: dark ? "#3b3444" : "#eeeaf2"
+        colBackgroundHover: dark ? "#494153" : "#f7f4fa"
+        colBackgroundToggled: dark ? "#2d2636" : "#ffffff"
+        colBackgroundToggledHover: dark ? "#393044" : "#ffffff"
+        pointingHandCursor: true
+        Accessible.role: Accessible.RadioButton
+        Accessible.checked: toggled
+        Accessible.name: dark ? Translation.tr("Dark") : Translation.tr("Light")
+        onClicked: SettingsCatalog.setAppearanceMode(dark ? "dark" : "light")
+        Rectangle {
+            anchors.fill: parent
+            radius: smallLightDarkPreferenceButton.buttonRadius
+            color: "transparent"
+            border.width: smallLightDarkPreferenceButton.toggled ? 2 : 0
+            border.color: Appearance.m3colors.m3primary
+            z: 10
         }
         contentItem: Item {
             anchors.centerIn: parent
@@ -56,304 +116,182 @@ ContentPage {
     }
 
     // Wallpaper selection
-    ContentSection {
-        icon: "format_paint"
-        title: Translation.tr("Wallpaper & Colors")
+    ColumnLayout {
         Layout.fillWidth: true
+        spacing:8
 
-        RowLayout {
+        Item {
             Layout.fillWidth: true
+            Layout.leftMargin: 16
+            Layout.rightMargin: 16
+            Layout.preferredHeight: wallpaperControls.implicitHeight
+
+            RowLayout {
+                id: wallpaperControls
+                anchors.centerIn: parent
+                width: Math.min(parent.width, wallpaperCard.naturalWidth + 8 + 128)
+                spacing: 8
 
             Item {
-                implicitWidth: 340
-                implicitHeight: 200
-                
+                id: wallpaperCard
+                Layout.fillWidth: true
+                Layout.minimumWidth: 0
+                Layout.maximumWidth: naturalWidth
+                Layout.preferredWidth: naturalWidth
+                Layout.alignment: Qt.AlignVCenter
+                readonly property real sourceAspectRatio:wallpaperPreview.status===Image.Ready && wallpaperPreview.paintedWidth>0 && wallpaperPreview.paintedHeight>0 ? wallpaperPreview.paintedWidth/wallpaperPreview.paintedHeight : 16/9
+                readonly property real naturalWidth:Math.min(250,144*sourceAspectRatio)
+                implicitHeight:width/sourceAspectRatio
+                Layout.preferredHeight:implicitHeight
+                activeFocusOnTab: true
+                Accessible.role: Accessible.Button
+                Accessible.name: Translation.tr("Choose wallpaper")
+                Accessible.description: root.wallpaperPath ? root.wallpaperPath.split("/").pop() : Translation.tr("No wallpaper selected")
+                Accessible.onPressAction: wallpaperDialog.open()
+                Keys.onReturnPressed: event => { wallpaperDialog.open(); event.accepted = true; }
+                Keys.onSpacePressed: event => { wallpaperDialog.open(); event.accepted = true; }
+                layer.enabled: true
+                layer.effect: OpacityMask {
+                    maskSource: Rectangle {
+                        width: wallpaperCard.width
+                        height: wallpaperCard.height
+                        radius: Appearance.rounding.normal
+                    }
+                }
+
+                Rectangle { anchors.fill:parent;color:Appearance.colors.colLayer2 }
                 StyledImage {
                     id: wallpaperPreview
                     anchors.fill: parent
-                    fillMode: Image.PreserveAspectCrop
-                    source: Config.options.background.wallpaperPath
+                    fillMode: Image.PreserveAspectFit
+                    source: Qt.resolvedUrl(root.wallpaperPath)
+                    // A stable decode request avoids reloading while the card adjusts to the image ratio.
+                    sourceSize: Qt.size(250, 0)
+                    Accessible.ignored: true
                     cache: false
-                    layer.enabled: true
-                    layer.effect: OpacityMask {
-                        maskSource: Rectangle {
-                            width: 360
-                            height: 200
-                            radius: Appearance.rounding.normal
-                        }
+                }
+                ColumnLayout {
+                    anchors.centerIn: parent
+                    visible: wallpaperPreview.status !== Image.Ready
+                    spacing: 6
+                    MaterialSymbol {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: /\.(mp4|webm|mkv|mov)$/i.test(root.wallpaperPath) ? "videocam" : "wallpaper"
+                        iconSize: 32
+                        color: Appearance.colors.colSubtext
                     }
+                    StyledText {
+                        Layout.maximumWidth: wallpaperPreview.width - 24
+                        Layout.alignment: Qt.AlignHCenter
+                        text: root.wallpaperPath ? root.wallpaperPath.split("/").pop() : Translation.tr(
+                                                       "Choose a wallpaper")
+                        elide: Text.ElideMiddle
+                        color: Appearance.colors.colSubtext
+                        font.pixelSize: Appearance.font.pixelSize.small
+                    }
+                }
+                Rectangle {
+                    anchors.fill: parent
+                    color: "#000000"
+                    opacity: wallpaperMouse.containsMouse || wallpaperCard.activeFocus ? 0.45 : 0
+                    Behavior on opacity { NumberAnimation { duration: 140 } }
+                }
+                ColumnLayout {
+                    anchors.centerIn: parent
+                    visible: wallpaperMouse.containsMouse || wallpaperCard.activeFocus
+                    spacing: 5
+                    MaterialSymbol {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: "add_photo_alternate"
+                        iconSize: 30
+                        color: "white"
+                    }
+                    StyledText {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: Translation.tr("Choose file")
+                        color: "white"
+                        font.pixelSize: Appearance.font.pixelSize.small
+                    }
+                }
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.margins: 2
+                    radius: Math.max(0, Appearance.rounding.normal - 2)
+                    color: "transparent"
+                    visible: wallpaperCard.activeFocus
+                    border.width: 2
+                    border.color: Appearance.m3colors.m3primary
+                }
+                MouseArea {
+                    id: wallpaperMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: wallpaperDialog.open()
                 }
             }
 
             ColumnLayout {
-                RippleButtonWithIcon {
-                    enabled: !randomWallProc.running
-                    visible: Config.options.policies.weeb === 1
-                    Layout.fillWidth: true
-                    buttonRadius: Appearance.rounding.small
-                    materialIcon: "ifl"
-                    mainText: randomWallProc.running ? Translation.tr("Be patient...") : Translation.tr("Random: Konachan")
-                    onClicked: {
-                        randomWallProc.scriptPath = `${Directories.scriptPath}/colors/random/random_konachan_wall.sh`;
-                        randomWallProc.running = true;
-                    }
-                    StyledToolTip {
-                        text: Translation.tr("Random SFW Anime wallpaper from Konachan\nImage is saved to ~/Pictures/Wallpapers")
-                    }
+                Layout.preferredWidth: Math.min(128, Math.max(80, wallpaperControls.width - 88))
+                Layout.minimumWidth: 80
+                Layout.alignment: Qt.AlignVCenter
+                spacing: 8
+                SmallLightDarkPreferenceButton {
+                    Layout.preferredHeight: 68
+                    dark: false
                 }
-                RippleButtonWithIcon {
-                    enabled: !randomWallProc.running
-                    visible: Config.options.policies.weeb === 1
-                    Layout.fillWidth: true
-                    buttonRadius: Appearance.rounding.small
-                    materialIcon: "ifl"
-                    mainText: randomWallProc.running ? Translation.tr("Be patient...") : Translation.tr("Random: osu! seasonal")
-                    onClicked: {
-                        randomWallProc.scriptPath = `${Directories.scriptPath}/colors/random/random_osu_wall.sh`;
-                        randomWallProc.running = true;
-                    }
-                    StyledToolTip {
-                        text: Translation.tr("Random osu! seasonal background\nImage is saved to ~/Pictures/Wallpapers")
-                    }
-                }
-                RippleButtonWithIcon {
-                    Layout.fillWidth: true
-                    materialIcon: "wallpaper"
-                    StyledToolTip {
-                        text: Translation.tr("Pick wallpaper image on your system")
-                    }
-                    onClicked: {
-                        Quickshell.execDetached(`${Directories.wallpaperSwitchScriptPath}`);
-                    }
-                    mainContentComponent: Component {
-                        RowLayout {
-                            spacing: 10
-                            StyledText {
-                                font.pixelSize: Appearance.font.pixelSize.small
-                                text: Translation.tr("Choose file")
-                                color: Appearance.colors.colOnSecondaryContainer
-                            }
-                            RowLayout {
-                                spacing: 3
-                                KeyboardKey {
-                                    key: "Ctrl"
-                                }
-                                KeyboardKey {
-                                    key: Config.options.cheatsheet.superKey ?? "󰖳"
-                                }
-                                StyledText {
-                                    Layout.alignment: Qt.AlignVCenter
-                                    text: "+"
-                                }
-                                KeyboardKey {
-                                    key: "T"
-                                }
-                            }
-                        }
-                    }
-                }
-                RowLayout {
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    uniformCellSizes: true
-
-                    SmallLightDarkPreferenceButton {
-                        Layout.fillHeight: true
-                        dark: false
-                    }
-                    SmallLightDarkPreferenceButton {
-                        Layout.fillHeight: true
-                        dark: true
-                    }
+                SmallLightDarkPreferenceButton {
+                    Layout.preferredHeight: 68
+                    dark: true
                 }
             }
         }
-
-        ConfigSelectionArray {
-            currentValue: Config.options.appearance.palette.type
-            onSelected: newValue => {
-                Config.options.appearance.palette.type = newValue;
-                Quickshell.execDetached(["bash", "-c", `${Directories.wallpaperSwitchScriptPath} --noswitch`]);
+        }
+        RowLayout {
+            visible: {
+                const revision = SettingsCatalog.revision;
+                return SettingsCatalog.get("policies.weeb") === 1;
             }
-            options: [
-                {
-                    "value": "auto",
-                    "displayName": Translation.tr("Auto")
-                },
-                {
-                    "value": "scheme-content",
-                    "displayName": Translation.tr("Content")
-                },
-                {
-                    "value": "scheme-expressive",
-                    "displayName": Translation.tr("Expressive")
-                },
-                {
-                    "value": "scheme-fidelity",
-                    "displayName": Translation.tr("Fidelity")
-                },
-                {
-                    "value": "scheme-fruit-salad",
-                    "displayName": Translation.tr("Fruit Salad")
-                },
-                {
-                    "value": "scheme-monochrome",
-                    "displayName": Translation.tr("Monochrome")
-                },
-                {
-                    "value": "scheme-neutral",
-                    "displayName": Translation.tr("Neutral")
-                },
-                {
-                    "value": "scheme-rainbow",
-                    "displayName": Translation.tr("Rainbow")
-                },
-                {
-                    "value": "scheme-tonal-spot",
-                    "displayName": Translation.tr("Tonal Spot")
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredWidth: Math.min(386, root.wallpaperContentWidth - 32)
+            spacing: 8
+            RippleButtonWithIcon {
+                enabled: !randomWallProc.running
+                Layout.fillWidth: true
+                buttonRadius: Appearance.rounding.small
+                materialIcon: "ifl"
+                mainText: randomWallProc.running ? Translation.tr("Be patient...") : Translation.tr("Random: Konachan")
+                onClicked: {
+                    randomWallProc.scriptPath = `${Directories.scriptPath}/colors/random/random_konachan_wall.sh`;
+                    randomWallProc.running = true;
                 }
-            ]
-        }
-
-        ConfigSwitch {
-            buttonIcon: "ev_shadow"
-            text: Translation.tr("Transparency")
-            checked: Config.options.appearance.transparency.enable
-            onCheckedChanged: {
-                Config.options.appearance.transparency.enable = checked;
-            }
-        }
-    }
-
-    ContentSection {
-        icon: "screenshot_monitor"
-        title: Translation.tr("Bar & screen")
-
-        ConfigRow {
-            ContentSubsection {
-                title: Translation.tr("Bar position")
-                ConfigSelectionArray {
-                    currentValue: (Config.options.bar.bottom ? 1 : 0) | (Config.options.bar.vertical ? 2 : 0)
-                    onSelected: newValue => {
-                        Config.options.bar.bottom = (newValue & 1) !== 0;
-                        Config.options.bar.vertical = (newValue & 2) !== 0;
-                    }
-                    options: [
-                        {
-                            displayName: Translation.tr("Top"),
-                            icon: "arrow_upward",
-                            value: 0 // bottom: false, vertical: false
-                        },
-                        {
-                            displayName: Translation.tr("Left"),
-                            icon: "arrow_back",
-                            value: 2 // bottom: false, vertical: true
-                        },
-                        {
-                            displayName: Translation.tr("Bottom"),
-                            icon: "arrow_downward",
-                            value: 1 // bottom: true, vertical: false
-                        },
-                        {
-                            displayName: Translation.tr("Right"),
-                            icon: "arrow_forward",
-                            value: 3 // bottom: true, vertical: true
-                        }
-                    ]
+                StyledToolTip {
+                    text: Translation.tr("Random SFW Anime wallpaper from Konachan\nDownloaded wallpaper is applied when you save")
                 }
             }
-            ContentSubsection {
-                title: Translation.tr("Bar style")
-
-                ConfigSelectionArray {
-                    currentValue: Config.options.bar.cornerStyle
-                    onSelected: newValue => {
-                        Config.options.bar.cornerStyle = newValue; // Update local copy
-                    }
-                    options: [
-                        {
-                            displayName: Translation.tr("Hug"),
-                            icon: "line_curve",
-                            value: 0
-                        },
-                        {
-                            displayName: Translation.tr("Float"),
-                            icon: "page_header",
-                            value: 1
-                        },
-                        {
-                            displayName: Translation.tr("Rect"),
-                            icon: "toolbar",
-                            value: 2
-                        }
-                    ]
+            RippleButtonWithIcon {
+                enabled: !randomWallProc.running
+                Layout.fillWidth: true
+                buttonRadius: Appearance.rounding.small
+                materialIcon: "ifl"
+                mainText: randomWallProc.running ? Translation.tr("Be patient...") : Translation.tr("Random: osu! seasonal")
+                onClicked: {
+                    randomWallProc.scriptPath = `${Directories.scriptPath}/colors/random/random_osu_wall.sh`;
+                    randomWallProc.running = true;
+                }
+                StyledToolTip {
+                    text: Translation.tr("Random osu! seasonal background\nDownloaded wallpaper is applied when you save")
                 }
             }
         }
-
-        ConfigRow {
-            ContentSubsection {
-                title: Translation.tr("Screen round corner")
-
-                ConfigSelectionArray {
-                    currentValue: Config.options.appearance.fakeScreenRounding
-                    onSelected: newValue => {
-                        Config.options.appearance.fakeScreenRounding = newValue;
-                    }
-                    options: [
-                        {
-                            displayName: Translation.tr("No"),
-                            icon: "close",
-                            value: 0
-                        },
-                        {
-                            displayName: Translation.tr("Yes"),
-                            icon: "check",
-                            value: 1
-                        },
-                        {
-                            displayName: Translation.tr("When not fullscreen"),
-                            icon: "fullscreen_exit",
-                            value: 2
-                        }
-                    ]
-                }
-            }
-            
-        }
-    }
-
-    NoticeBox {
-        Layout.fillWidth: true
-        text: Translation.tr('Not all options are available in this app. You should also check the config file by hitting the "Config file" button on the topleft corner or opening %1 manually.').arg(Directories.shellConfigPath)
-
-        Item {
+        StyledText {
             Layout.fillWidth: true
-        }
-        RippleButtonWithIcon {
-            id: copyPathButton
-            property bool justCopied: false
-            Layout.fillWidth: false
-            buttonRadius: Appearance.rounding.small
-            materialIcon: justCopied ? "check" : "content_copy"
-            mainText: justCopied ? Translation.tr("Path copied") : Translation.tr("Copy path")
-            onClicked: {
-                copyPathButton.justCopied = true
-                Quickshell.clipboardText = FileUtils.trimFileProtocol(`${Directories.config}/illogical-impulse/config.json`);
-                revertTextTimer.restart();
-            }
-            colBackground: ColorUtils.transparentize(Appearance.colors.colPrimaryContainer)
-            colBackgroundHover: Appearance.colors.colPrimaryContainerHover
-            colRipple: Appearance.colors.colPrimaryContainerActive
-
-            Timer {
-                id: revertTextTimer
-                interval: 1500
-                onTriggered: {
-                    copyPathButton.justCopied = false
-                }
-            }
+            visible: root.randomError !== ""
+            text: root.randomError
+            wrapMode: Text.WordWrap
+            color: Appearance.m3colors.m3error
+            font.pixelSize: Appearance.font.pixelSize.small
+            Accessible.role: Accessible.AlertMessage
         }
     }
 }

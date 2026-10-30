@@ -10,6 +10,13 @@ import Quickshell.Hyprland
 Scope {
     id: root
     property int sidebarWidth: Appearance.sizes.sidebarWidth
+    property bool contentEverOpened: GlobalStates.sidebarRightOpen
+    Connections {
+        target: GlobalStates
+        function onSidebarRightOpenChanged() {
+            if (GlobalStates.sidebarRightOpen) root.contentEverOpened = true;
+        }
+    }
 
     PanelWindow {
         id: panelWindow
@@ -47,7 +54,7 @@ Scope {
 
         Loader {
             id: sidebarContentLoader
-            active: GlobalStates.sidebarRightOpen || Config?.options.sidebar.keepRightSidebarLoaded
+            active: GlobalStates.sidebarRightOpen || (root.contentEverOpened && Config?.options.sidebar.keepRightSidebarLoaded)
             anchors {
                 fill: parent
                 margins: Appearance.sizes.hyprlandGapsOut

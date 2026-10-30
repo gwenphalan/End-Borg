@@ -26,6 +26,7 @@ Singleton {
         "jpg", "jpeg", "png", "webp", "avif", "bmp", "svg"
     ]
     property list<string> wallpapers: [] // List of absolute file paths (without file://)
+    property var pendingRandomDarkMode: null
     readonly property bool thumbnailGenerationRunning: thumbgenProc.running
     property real thumbnailGenerationProgress: 0
 
@@ -34,7 +35,7 @@ Singleton {
     signal thumbnailGeneratedFile(filePath: string)
 
     function load () {} // For forcing initialization
-    
+
     function openFallbackPicker(darkMode = Appearance.m3colors.darkmode) {
         Quickshell.execDetached([Directories.wallpaperSwitchScriptPath, "--mode", darkMode ? "dark" : "light"]);
     }
@@ -68,11 +69,21 @@ Singleton {
     }
 
     function randomFromCurrentFolder(darkMode = Appearance.m3colors.darkmode) {
-        if (folderModel.count === 0) return;
+        if (folderModel.count === 0) {
+            root.pendingRandomDarkMode = darkMode;
+            pendingRandomExpiry.restart();
+            return;
+        }
         const randomIndex = Math.floor(Math.random() * folderModel.count);
         const filePath = folderModel.get(randomIndex, "filePath");
         print("Randomly selected wallpaper:", filePath);
         root.select(filePath, darkMode);
+    }
+
+    Timer {
+        id: pendingRandomExpiry
+        interval: 5000
+        onTriggered: root.pendingRandomDarkMode = null
     }
 
     Process {
@@ -128,6 +139,12 @@ Singleton {
             for (let i = 0; i < folderModel.count; i++) {
                 const path = folderModel.get(i, "filePath") || FileUtils.trimFileProtocol(folderModel.get(i, "fileURL"))
                 if (path && path.length) root.wallpapers.push(path)
+            }
+            if (folderModel.count > 0 && root.pendingRandomDarkMode !== null) {
+                const darkMode = root.pendingRandomDarkMode;
+                root.pendingRandomDarkMode = null;
+                pendingRandomExpiry.stop();
+                root.randomFromCurrentFolder(darkMode);
             }
         }
     }

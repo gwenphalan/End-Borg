@@ -1,0 +1,113 @@
+# yaml-language-server: $schema=../../../../../scripts/tool_app/definition.schema.json
+version: 1
+app:
+  id: org.example.ToolStarter
+  name: Tool Starter
+  icon: construction
+state:
+  hasDocument: false
+  busy: false
+  dirty: false
+  hasSelection: false
+  mode: draw
+backends:
+  worker:
+    program: /usr/bin/python
+    script: backend.py
+components:
+  profiles: qml/ProfileEditor.qml
+actions:
+  settings:
+    label: Settings
+    icon: tune
+    target: {kind: qml, handler: openSettings}
+  open:
+    label: Open
+    icon: folder_open
+    shortcut: Ctrl+O
+    target: {kind: qml, handler: openDocument}
+  save:
+    label: Save
+    icon: save
+    shortcut: Ctrl+S
+    dirtyWhen: dirty
+    enabledWhen: {all: [hasDocument, {not: busy}]}
+    target: {kind: qml, handler: saveDocument}
+  process:
+    label: Process
+    icon: play_arrow
+    enabledWhen: {all: [hasDocument, {not: busy}]}
+    target: {kind: backend, backend: worker, operation: process}
+    arguments: {count: 1}
+  draw:
+    label: Draw
+    icon: draw
+    checkedWhen: {eq: [mode, draw]}
+    target: {kind: qml, handler: drawTool}
+  edit:
+    label: Edit
+    icon: edit
+    checkedWhen: {eq: [mode, edit]}
+    target: {kind: qml, handler: editTool}
+  reset:
+    label: Reset view
+    icon: undo
+    target: {kind: qml, handler: resetView}
+  confirm:
+    label: Confirm
+    icon: check
+    visibleWhen: hasSelection
+    enabledWhen: {not: busy}
+    target: {kind: qml, handler: confirmSelection}
+toolbar:
+  - [settings]
+  - [open, save]
+  - [process]
+  - stretch
+tools: [draw, edit]
+utilities:
+  # Undo and Redo are inserted first. Bind canUndo/canRedo and handlers in QML.
+  includeHistory: true
+  actions: [reset]
+  placement: topRight
+contextActions:
+  actions: [confirm]
+  placement: belowTools
+  visibleWhen: hasSelection
+settings:
+  title: Project settings
+  groups:
+    - id: processing
+      title: Processing
+      icon: tune
+      items:
+        - kind: field
+          path: processing.enabled
+          label: Enabled
+          icon: toggle_on
+          type: bool
+          default: true
+        - kind: field
+          path: processing.amount
+          label: Amount
+          icon: straighten
+          type: real
+          default: 1.0
+          min: 0
+          max: 10
+          step: 0.1
+        - kind: field
+          path: processing.quality
+          label: Quality
+          type: string
+          default: balanced
+          choices:
+            - {name: Fast, value: fast}
+            - {name: Balanced, value: balanced}
+            - {name: Precise, value: precise}
+    - id: profiles
+      title: Profile
+      icon: bookmark
+      items:
+        - kind: component
+          component: profiles

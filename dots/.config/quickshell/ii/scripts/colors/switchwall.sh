@@ -181,7 +181,7 @@ switch() {
     cursorposy=$(bc <<< "scale=0; ($cursorposy - $screeny) * $scale / 1")
     cursorposy_inverted=$((screensizey - cursorposy))
 
-    matugen_args=(--source-color-index 0)
+    matugen_args=()
 
     if [[ "$color_flag" == "1" ]]; then
         matugen_args+=(color hex "$color")
@@ -303,7 +303,11 @@ switch() {
         [[ "$term_fg_boost" != "null" && -n "$term_fg_boost" ]] && generate_colors_material_args+=(--term_fg_boost "$term_fg_boost")
     fi
 
-    matugen "${matugen_args[@]}"
+    if ! matugen "${matugen_args[@]}"; then
+        notify-send -a "Wallpaper switcher" -u critical "Theme generation failed" \
+            "Matugen could not update the theme. Check the wallpaper and color configuration."
+        return 1
+    fi
     source "$(eval echo $ILLOGICAL_IMPULSE_VIRTUAL_ENV)/bin/activate"
     python3 "$SCRIPT_DIR/generate_colors_material.py" "${generate_colors_material_args[@]}" \
         > "$STATE_DIR"/user/generated/material_colors.scss

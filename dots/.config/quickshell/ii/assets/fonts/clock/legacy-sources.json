@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "robotoserif",
+    "filename": "RobotoSerif[GRAD,opsz,wdth,wght].ttf",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/robotoserif/RobotoSerif%5BGRAD%2Copsz%2Cwdth%2Cwght%5D.ttf",
+    "metadata_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/robotoserif/METADATA.pb",
+    "bytes": 3944924
+  },
+  {
+    "slug": "merriweather",
+    "filename": "Merriweather[opsz,wdth,wght].ttf",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/merriweather/Merriweather%5Bopsz%2Cwdth%2Cwght%5D.ttf",
+    "metadata_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/merriweather/METADATA.pb",
+    "bytes": 4628080
+  },
+  {
+    "slug": "anybody",
+    "filename": "Anybody[wdth,wght].ttf",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/anybody/Anybody%5Bwdth%2Cwght%5D.ttf",
+    "metadata_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/anybody/METADATA.pb",
+    "bytes": 201352
+  },
+  {
+    "slug": "inconsolata",
+    "filename": "Inconsolata[wdth,wght].ttf",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/inconsolata/Inconsolata%5Bwdth%2Cwght%5D.ttf",
+    "metadata_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/inconsolata/METADATA.pb",
+    "bytes": 347180
+  },
+  {
+    "slug": "sciencegothic",
+    "filename": "ScienceGothic[CTRS,slnt,wdth,wght].ttf",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/sciencegothic/ScienceGothic%5BCTRS%2Cslnt%2Cwdth%2Cwght%5D.ttf",
+    "metadata_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/sciencegothic/METADATA.pb",
+    "bytes": 2726388
+  },
+  {
+    "slug": "archivo",
+    "filename": "Archivo[wdth,wght].ttf",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/archivo/Archivo%5Bwdth%2Cwght%5D.ttf",
+    "metadata_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/archivo/METADATA.pb",
+    "bytes": 658596
+  },
+  {
+    "slug": "bricolagegrotesque",
+    "filename": "BricolageGrotesque[opsz,wdth,wght].ttf",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/bricolagegrotesque/BricolageGrotesque%5Bopsz%2Cwdth%2Cwght%5D.ttf",
+    "metadata_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/bricolagegrotesque/METADATA.pb",
+    "bytes": 408496
+  },
+  {
+    "slug": "bigshouldersinline",
+    "name": "Inline",
+    "family": "Big Shoulders Inline",
+    "italic": false,
+    "filename": "BigShouldersInline[opsz,wght].ttf",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/bigshouldersinline/BigShouldersInline%5Bopsz%2Cwght%5D.ttf",
+    "bytes": 642132,
+    "sha256": "417c1d07898a6648faa9e3a95d7302aa44ee614e2236a2b336e16922569d1fa3",
+    "license": "SIL Open Font License 1.1"
+  }
+]

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/bin/python3 "${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/ii/scripts/borg_intelligence.py" "$@"

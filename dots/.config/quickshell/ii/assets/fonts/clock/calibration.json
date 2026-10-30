@@ -1,0 +1,82 @@
+{
+  "Google Sans Flex": {
+    "weight": 400,
+    "width": 100.0,
+    "weightMin": 1.0,
+    "weightMax": 1000.0,
+    "widthMin": 25.0,
+    "widthMax": 151.0
+  },
+  "Kode Mono": {
+    "weight": 550.0,
+    "width": 100.0,
+    "weightMin": 400.0,
+    "weightMax": 700.0,
+    "widthMin": 75.0,
+    "widthMax": 125.0
+  },
+  "Bricolage Grotesque": {
+    "weight": 400,
+    "width": 87.5,
+    "weightMin": 200.0,
+    "weightMax": 800.0,
+    "widthMin": 75.0,
+    "widthMax": 100.0
+  },
+  "Fraunces": {
+    "weight": 400,
+    "width": 100,
+    "weightMin": 100.0,
+    "weightMax": 900.0,
+    "widthMin": 100,
+    "widthMax": 100
+  },
+  "Mona Sans": {
+    "weight": 400,
+    "width": 100.0,
+    "weightMin": 200.0,
+    "weightMax": 900.0,
+    "widthMin": 75.0,
+    "widthMax": 125.0
+  },
+  "Roboto Serif": {
+    "weight": 400,
+    "width": 100.0,
+    "weightMin": 100.0,
+    "weightMax": 900.0,
+    "widthMin": 50.0,
+    "widthMax": 150.0
+  },
+  "Big Shoulders Inline": {
+    "weight": 400,
+    "width": 100,
+    "weightMin": 100.0,
+    "weightMax": 900.0,
+    "widthMin": 100,
+    "widthMax": 100
+  },
+  "Science Gothic": {
+    "weight": 400,
+    "width": 100.0,
+    "weightMin": 100.0,
+    "weightMax": 900.0,
+    "widthMin": 50.0,
+    "widthMax": 200.0
+  },
+  "Poiret One": {
+    "weight": 400,
+    "width": 100,
+    "weightMin": 400,
+    "weightMax": 400,
+    "widthMin": 100,
+    "widthMax": 100
+  },
+  "Tourney": {
+    "weight": 400,
+    "width": 100.0,
+    "weightMin": 100.0,
+    "weightMax": 900.0,
+    "widthMin": 75.0,
+    "widthMax": 125.0
+  }
+}

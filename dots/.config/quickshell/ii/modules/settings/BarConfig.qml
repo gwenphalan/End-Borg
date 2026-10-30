@@ -19,7 +19,7 @@ ContentPage {
             }
         }
     }
-    
+
     ContentSection {
         icon: "spoke"
         title: Translation.tr("Positioning")
@@ -85,7 +85,7 @@ ContentPage {
         }
 
         ConfigRow {
-            
+
             ContentSubsection {
                 title: Translation.tr("Corner style")
                 Layout.fillWidth: true
@@ -153,7 +153,7 @@ ContentPage {
                 Config.options.tray.invertPinnedItems = checked;
             }
         }
-        
+
         ConfigSwitch {
             buttonIcon: "colors"
             text: Translation.tr('Tint icons')
@@ -167,6 +167,13 @@ ContentPage {
     ContentSection {
         icon: "widgets"
         title: Translation.tr("Utility buttons")
+
+        ConfigSwitch {
+            buttonIcon: "home"
+            text: Translation.tr("Home controls (when Home Assistant is enabled)")
+            checked: Config.options.homeAssistant.showBarControls
+            onCheckedChanged: Config.options.homeAssistant.showBarControls = checked
+        }
 
         ConfigRow {
             uniform: true

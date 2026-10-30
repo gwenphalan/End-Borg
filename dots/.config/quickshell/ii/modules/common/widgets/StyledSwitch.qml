@@ -43,25 +43,13 @@ Switch {
         anchors.leftMargin: root.checked ? ((root.pressed || root.down) ? (22 * root.scale) : 24 * root.scale) : ((root.pressed || root.down) ? (2 * root.scale) : 8 * root.scale)
 
         Behavior on anchors.leftMargin {
-            NumberAnimation {
-                duration: Appearance.animationCurves.expressiveFastSpatialDuration
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animationCurves.expressiveFastSpatial
-            }
+            animation: Appearance.animation.elementMoveSmall.numberAnimation.createObject(this)
         }
         Behavior on width {
-            NumberAnimation {
-                duration: Appearance.animationCurves.expressiveFastSpatialDuration
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animationCurves.expressiveFastSpatial
-            }
+            animation: Appearance.animation.elementMoveSmall.numberAnimation.createObject(this)
         }
         Behavior on height {
-            NumberAnimation {
-                duration: Appearance.animationCurves.expressiveFastSpatialDuration
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animationCurves.expressiveFastSpatial
-            }
+            animation: Appearance.animation.elementMoveSmall.numberAnimation.createObject(this)
         }
         Behavior on color {
             animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)

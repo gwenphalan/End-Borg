@@ -90,11 +90,11 @@ ColumnLayout {
 
                     onClicked: {
                         const downloadPath = FileUtils.trimFileProtocol(Directories.downloads)
-                        Quickshell.execDetached(["bash", "-c", 
+                        Quickshell.execDetached(["bash", "-c",
                             `echo '${StringUtils.shellSingleQuoteEscape(segmentContent)}' > '${downloadPath}/code.${segmentLang || "txt"}'`
                         ])
-                        Quickshell.execDetached(["notify-send", 
-                            Translation.tr("Code saved to file"), 
+                        Quickshell.execDetached(["notify-send",
+                            Translation.tr("Code saved to file"),
                             Translation.tr("Saved to %1").arg(`${downloadPath}/code.${segmentLang || "txt"}`),
                             "-a", "Shell"
                         ])
@@ -142,7 +142,7 @@ ColumnLayout {
                     topMargin: 6
                 }
                 spacing: 0
-                
+
                 Repeater {
                     model: codeTextArea.text.split("\n").length
                     Text {
@@ -182,7 +182,7 @@ ColumnLayout {
                     // contentHeight: codeTextArea.contentHeight
                     clip: true
                     ScrollBar.vertical.policy: ScrollBar.AlwaysOff
-                    
+
                     ScrollBar.horizontal: ScrollBar {
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
@@ -193,13 +193,9 @@ ColumnLayout {
                         visible: opacity > 0
 
                         Behavior on opacity {
-                            NumberAnimation {
-                                duration: Appearance.animation.elementMoveFast.duration
-                                easing.type: Appearance.animation.elementMoveFast.type
-                                easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve
-                            }
+                            FastNumberAnimation {}
                         }
-                        
+
                         contentItem: Rectangle {
                             implicitHeight: 6
                             radius: Appearance.rounding.small

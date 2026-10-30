@@ -9,6 +9,7 @@ import QtQuick.Controls
 SpinBox {
     id: root
 
+    property bool inputFocused:false
     property real baseHeight: 35
     property real radius: Appearance.rounding.small
     property real innerButtonRadius: Appearance.rounding.unsharpen
@@ -19,6 +20,8 @@ SpinBox {
     background: Rectangle {
         color: Appearance.colors.colLayer2
         radius: root.radius
+        border.width:root.visualFocus || root.inputFocused ? 2 : 0
+        border.color:Appearance.colors.colPrimary
     }
 
     contentItem: Item {
@@ -52,9 +55,9 @@ SpinBox {
         topRightRadius: root.innerButtonRadius
         bottomRightRadius: root.innerButtonRadius
 
-        color: root.down.pressed ? Appearance.colors.colLayer2Active : 
-            root.down.hovered ? Appearance.colors.colLayer2Hover : 
-            ColorUtils.transparentize(Appearance.colors.colLayer2)
+        color: root.down.pressed ? Appearance.colors.colSecondaryContainerActive :
+            root.down.hovered ? Appearance.colors.colSecondaryContainerHover :
+            Appearance.colors.colSecondaryContainer
         Behavior on color {
             animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)
         }
@@ -63,7 +66,7 @@ SpinBox {
             anchors.centerIn: parent
             text: "remove"
             iconSize: 20
-            color: Appearance.colors.colOnLayer2
+            color: Appearance.colors.colOnSecondaryContainer
         }
     }
 
@@ -79,9 +82,9 @@ SpinBox {
         topLeftRadius: root.innerButtonRadius
         bottomLeftRadius: root.innerButtonRadius
 
-        color: root.up.pressed ? Appearance.colors.colLayer2Active : 
-            root.up.hovered ? Appearance.colors.colLayer2Hover : 
-            ColorUtils.transparentize(Appearance.colors.colLayer2)
+        color: root.up.pressed ? Appearance.colors.colSecondaryContainerActive :
+            root.up.hovered ? Appearance.colors.colSecondaryContainerHover :
+            Appearance.colors.colSecondaryContainer
         Behavior on color {
             animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)
         }
@@ -90,7 +93,7 @@ SpinBox {
             anchors.centerIn: parent
             text: "add"
             iconSize: 20
-            color: Appearance.colors.colOnLayer2
+            color: Appearance.colors.colOnSecondaryContainer
         }
     }
 }

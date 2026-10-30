@@ -1,0 +1,66 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
+const source=fs.readFileSync(path.join(root,'modules/lensCalibration/CalibrationWorkspace.qml'),'utf8');
+const model={curves:[[[10,10],[20,20],[30,30]]],dimensions:[100,100],editable:true,drawing:false,panTool:false,selected:0,selectedPoint:1,allCurvePoints:true,rememberCount:0,changeCount:0,activeCurve:-1,operation:'',toasts:[],viewport:{requestPaint(){}},remember(){this.rememberCount++;},changed(){this.changeCount++;}};
+model.remember=()=>model.rememberCount++;model.changed=()=>model.changeCount++;
+const context=vm.createContext(model);
+vm.runInContext(fs.readFileSync(path.join(root,'modules/common/tool_app/ToolPointSelection.js'),'utf8').replace(/^\.pragma library\s*/,''),context);
+context.PointSelection=context;
+context.Polyline=context;
+vm.runInContext(fs.readFileSync(path.join(root,'modules/common/tool_app/ToolPolyline.js'),'utf8').replace(/^\.pragma library\s*/,'').replace(/^\.import.*$/mg,''),context);
+context.notification={show:(message,failed)=>context.toasts.push({message,failed})};
+context.operationFeedback={report:(operation,message,failed)=>{if(message && (failed || !["save","save_as"].includes(operation))) context.notification.show(message,failed);}};
+model.explicitPoints=[];
+Object.defineProperty(model,'selectedNodes',{get:()=>model.explicitPoints.length ? model.explicitPoints : model.selected<0 || model.selectedPoint<0 ? [] : model.allCurvePoints ? model.curves[model.selected].map((p,i)=>[model.selected,i]) : [[model.selected,model.selectedPoint]]});
+Object.defineProperty(model,'selectedIndices',{get:()=>model.selectedNodes.filter(node=>node[0]===model.selected).map(node=>node[1])});
+Object.defineProperty(model,'selectedPosition',{get:()=>{const points=model.selectedNodes.map(node=>model.curves[node[0]][node[1]]);return context.centroid(points,points.map((p,i)=>i));}});
+context.copy=value=>JSON.parse(JSON.stringify(value));
+for(const name of ['connectEndpoints','togglePoint','displayCoordinate','setCoordinate','translateSelection','removePointOrCurve','finishCurve','status']) {
+    const start=source.indexOf('    function '+name+'(');assert.ok(start>=0);
+    let end=source.indexOf('{',start),depth=1;
+    while(depth && ++end<source.length) {if(source[end]==='{')depth++;if(source[end]==='}')depth--;}
+    vm.runInContext(source.slice(start,end+1),context);
+}
+context.setCoordinate(0,'40');
+assert.equal(JSON.stringify(model.curves[0]),'[[30,10],[40,20],[50,30]]');
+assert.equal(model.rememberCount,1);
+assert.equal(model.changeCount,1);
+model.curves=[[[10.123456,0],[20.123456,0],[30.123456,0]]];
+const before=JSON.stringify(model.curves);
+context.setCoordinate(0,'20.123');assert.equal(JSON.stringify(model.curves),before,'merely focusing rounded average must not quantize points');
+context.translateSelection(100,0);assert.equal(model.curves[0][2][0],99);
+context.removePointOrCurve(false);assert.equal(model.curves.length,0,'delete all selected points removes their curve');
+model.curves=[[[10,10],[20,20],[30,30]],[[40,40],[50,50]]];
+model.selected=0;model.selectedPoint=0;model.allCurvePoints=false;model.explicitPoints=[];
+context.togglePoint(0,2);
+assert.equal(JSON.stringify(model.selectedNodes),'[[0,0],[0,2]]','Ctrl adds only the clicked point');
+context.togglePoint(1,1);
+assert.equal(JSON.stringify(model.selectedNodes),'[[0,0],[0,2],[1,1]]','Ctrl supports another curve');
+context.togglePoint(0,2);
+assert.equal(JSON.stringify(model.selectedNodes),'[[0,0],[1,1]]','Ctrl toggles a selected point off');
+context.translateSelection(5,0);
+assert.equal(model.curves[0][0][0],15);assert.equal(model.curves[0][1][0],20);assert.equal(model.curves[1][1][0],55);
+model.operation='save';context.status('Project saved',false);assert.equal(model.toasts.length,0);
+context.status('Save failed',true);assert.equal(model.toasts.length,1);
+model.operation='calibrate';context.status('Calculated',false);assert.equal(model.toasts.length,2);
+assert.ok(source.includes('ToolSaveButton {'));
+assert.ok(source.includes('dirty:root.dirty'));
+assert.ok(!source.includes('anchors.rightMargin:8\n                    anchors.verticalCenter:parent.verticalCenter'));
+assert.ok(!source.includes('root.viewDimensions.join(" × ")'));
+Object.defineProperty(model,'canConnectEndpoints',{get:()=>model.selectedNodes.length===2 && model.selectedNodes[0][0]!==model.selectedNodes[1][0] && model.selectedNodes.every(node=>node[1]===0 || node[1]===model.curves[node[0]].length-1)});
+for(const first of [0,1]) for(const second of [0,1]) {
+    model.curves=[[[10,0],[20,0]],[[30,0],[40,0]]];model.selected=0;model.selectedPoint=first;model.explicitPoints=[[0,first],[1,second]];
+    context.connectEndpoints();
+    assert.equal(model.curves.length,1);
+    assert.equal(JSON.stringify(model.curves[0]),JSON.stringify((first===0 ? [[20,0],[10,0]] : [[10,0],[20,0]]).concat(second===0 ? [[30,0],[40,0]] : [[40,0],[30,0]])));
+    assert.equal(model.selectedPoint,-1);
+}
+model.curves=[[[10,0],[20,0]],[[20,0],[40,0]]];model.selected=0;model.selectedPoint=1;model.explicitPoints=[[0,1],[1,0]];
+context.connectEndpoints();assert.equal(model.curves[0].length,3,'Coincident joined endpoints must not duplicate a node');
+model.curves=[[[10,0],[20,0],[30,0]]];model.selected=0;model.selectedPoint=0;model.explicitPoints=[[0,0],[0,2]];
+const unchanged=JSON.stringify(model.curves);context.connectEndpoints();assert.equal(JSON.stringify(model.curves),unchanged);
+console.log('Actual Lens Cap selection, average editing, precision preservation, group deletion, Ctrl toggling across curves, endpoint joining in all orientations, and save/toast rules passed without windows');

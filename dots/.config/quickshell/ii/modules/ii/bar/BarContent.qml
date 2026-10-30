@@ -103,7 +103,6 @@ Item { // Bar content region
         id: middleCenterGroup
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        padding: workspacesWidget.widgetPadding
 
         Workspaces {
             id: workspacesWidget

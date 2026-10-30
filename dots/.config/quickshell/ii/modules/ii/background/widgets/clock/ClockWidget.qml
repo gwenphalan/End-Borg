@@ -19,14 +19,24 @@ AbstractBackgroundWidget {
     readonly property string clockStyle: GlobalStates.screenLocked ? Config.options.background.widgets.clock.styleLocked : Config.options.background.widgets.clock.style
     readonly property bool forceCenter: (GlobalStates.screenLocked && Config.options.lock.centerClock)
     readonly property bool shouldShow: (!Config.options.background.widgets.clock.showOnlyWhenLocked || GlobalStates.screenLocked)
+    property bool bedtimeActive: GlobalStates.bedtimeLockActive
+    property string bedtimeDeadlineText: GlobalStates.bedtimeLockDeadlineText
     property bool wallpaperSafetyTriggered: false
+    property color lockTextColor: bedtimeActive && !GlobalStates.bedtimePasswordRevealed
+        ? Appearance.colors.colPrimary : colText
+    Behavior on lockTextColor {
+        ColorAnimation {
+            duration: Appearance.animation.elementMoveSmall.duration
+            easing.type: Easing.InOutCubic
+        }
+    }
     needsColText: clockStyle === "digital"
     x: forceCenter ? ((root.screenWidth - root.width) / 2) : targetX
     y: forceCenter ? ((root.screenHeight - root.height) / 2) : targetY
     visibleWhenLocked: true
 
     property var textHorizontalAlignment: {
-        if (!Config.options.background.widgets.clock.digital.adaptiveAlignment || root.forceCenter || Config.options.background.widgets.clock.digital.vertical) 
+        if (!Config.options.background.widgets.clock.digital.adaptiveAlignment || root.forceCenter || Config.options.background.widgets.clock.digital.vertical)
             return Text.AlignHCenter;
         if (root.x < root.scaledScreenWidth / 3)
             return Text.AlignLeft;
@@ -64,7 +74,7 @@ AbstractBackgroundWidget {
             shown: root.clockStyle === "digital" && (root.shouldShow)
             fade: false
             sourceComponent: DigitalClock {
-                colText: root.colText
+                colText: root.lockTextColor
                 textHorizontalAlignment: root.textHorizontalAlignment
             }
         }
@@ -85,6 +95,12 @@ AbstractBackgroundWidget {
         Rectangle {
             id: statusTextBg
             anchors.centerIn: parent
+            anchors.horizontalCenterOffset: {
+                if (!root.bedtimeActive) return 0;
+                const progress = lockStatusText.revealProgress;
+                const overshoot = progress < 0 ? progress : progress > 1 ? progress - 1 : 0;
+                return -overshoot * 60;
+            }
             clip: true
             opacity: (safetyStatusText.shown || lockStatusText.shown) ? 1 : 0
             visible: opacity > 0
@@ -93,9 +109,6 @@ AbstractBackgroundWidget {
             radius: Appearance.rounding.small
             color: ColorUtils.transparentize(Appearance.colors.colSecondaryContainer, root.clockStyle === "cookie" ? 0 : 1)
 
-            Behavior on implicitWidth {
-                animation: Appearance.animation.elementResize.numberAnimation.createObject(this)
-            }
             Behavior on implicitHeight {
                 animation: Appearance.animation.elementResize.numberAnimation.createObject(this)
             }
@@ -119,9 +132,12 @@ AbstractBackgroundWidget {
                 }
                 ClockStatusText {
                     id: lockStatusText
-                    shown: GlobalStates.screenLocked && Config.options.lock.showLockedText
+                    shown: GlobalStates.screenLocked && (Config.options.lock.showLockedText || root.bedtimeActive)
                     statusIcon: "lock"
                     statusText: Translation.tr("Locked")
+                    suffixText: root.bedtimeDeadlineText.length > 0
+                        ? Translation.tr(" Until %1").arg(root.bedtimeDeadlineText) : ""
+                    showSuffix: root.bedtimeActive && !GlobalStates.bedtimePasswordRevealed
                 }
                 Item {
                     Layout.fillWidth: root.textHorizontalAlignment !== Text.AlignRight
@@ -135,8 +151,18 @@ AbstractBackgroundWidget {
         id: statusTextRow
         property alias statusIcon: statusIconWidget.text
         property alias statusText: statusTextWidget.text
+        property string suffixText: ""
+        property bool showSuffix: false
+        property real revealProgress: showSuffix ? 1 : 0
+        Behavior on revealProgress {
+            NumberAnimation {
+                duration: Appearance.animation.elementMoveSmall.duration
+                easing.type: Easing.OutBack
+                easing.overshoot: 1.4
+            }
+        }
         property bool shown: true
-        property color textColor: root.clockStyle === "cookie" ? Appearance.colors.colOnSecondaryContainer : root.colText
+        property color textColor: root.clockStyle === "cookie" ? Appearance.colors.colOnSecondaryContainer : root.lockTextColor
         opacity: shown ? 1 : 0
         visible: opacity > 0
         Behavior on opacity {
@@ -151,17 +177,45 @@ AbstractBackgroundWidget {
             style: Text.Raised
             styleColor: Appearance.colors.colShadow
         }
-        ClockText {
-            id: statusTextWidget
-            color: statusTextRow.textColor
-            horizontalAlignment: root.textHorizontalAlignment
+        Item {
             anchors.verticalCenter: statusTextRow.verticalCenter
-            font {
-                pixelSize: Appearance.font.pixelSize.large
-                weight: Font.Normal
+            width: statusTextWidget.implicitWidth + suffixReveal.width
+            height: Math.max(statusTextWidget.implicitHeight, suffixTextWidget.implicitHeight)
+
+            ClockText {
+                id: statusTextWidget
+                animateChange: false
+                color: statusTextRow.textColor
+                anchors.verticalCenter: parent.verticalCenter
+                font {
+                    pixelSize: Appearance.font.pixelSize.large
+                    weight: Font.Normal
+                }
+                style: Text.Raised
+                styleColor: Appearance.colors.colShadow
             }
-            style: Text.Raised
-            styleColor: Appearance.colors.colShadow
+            Item {
+                id: suffixReveal
+                x: statusTextWidget.implicitWidth
+                anchors.verticalCenter: parent.verticalCenter
+                width: Math.max(0, Math.min(1, statusTextRow.revealProgress)) * suffixTextWidget.implicitWidth
+                height: suffixTextWidget.implicitHeight
+                clip: true
+                ClockText {
+                    id: suffixTextWidget
+                    text: statusTextRow.suffixText
+                    animateChange: false
+                    color: statusTextRow.textColor
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    font {
+                        pixelSize: Appearance.font.pixelSize.large
+                        weight: Font.Normal
+                    }
+                    style: Text.Raised
+                    styleColor: Appearance.colors.colShadow
+                }
+            }
         }
     }
 }

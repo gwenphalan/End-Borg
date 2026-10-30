@@ -9,17 +9,27 @@ local hyprScripts = "$HOME/.config/hypr/hyprland/scripts"
 local qsIpcCall = "qs -c $qsConfig ipc call"
 local qsIsAlive = qsIpcCall .. " TEST_ALIVE"
 
-hl.bind("SUPER + SUPER_L", hl.dsp.global("quickshell:searchToggleRelease"), { description = "Shell: Toggle search" })
-hl.bind("SUPER + SUPER_R", hl.dsp.global("quickshell:searchToggleRelease"))
-hl.bind("SUPER + SUPER_L", hl.dsp.exec_cmd(qsIsAlive .. " || pkill fuzzel || fuzzel"))
-hl.bind("SUPER + SUPER_R", hl.dsp.exec_cmd(qsIsAlive .. " || pkill fuzzel || fuzzel"))
-
-hl.bind("SUPER_L", hl.dsp.global("quickshell:workspaceNumber"), { ignore_mods = true, transparent = true })
-hl.bind("SUPER_R", hl.dsp.global("quickshell:workspaceNumber"), { ignore_mods = true, transparent = true })
-hl.bind("SUPER_L", hl.dsp.global("quickshell:workspaceNumber"),
-    { ignore_mods = true, transparent = true, release = true })
-hl.bind("SUPER_R", hl.dsp.global("quickshell:workspaceNumber"),
-    { ignore_mods = true, transparent = true, release = true })
+-- Modifier release binds can be cancelled by intervening keys, including Tab.
+-- Observe only modifier/chord state; never record or forward typed characters.
+local spotlightSuperKeys = {}
+local spotlightSuperActive = false
+hl.on("input.keyboard.key", function(code, _, state)
+    if code == 133 or code == 134 then
+        spotlightSuperKeys[code] = state == 1 or nil
+        local held = spotlightSuperKeys[133] or spotlightSuperKeys[134] or false
+        if held and not spotlightSuperActive and hl.get_current_submap() == "" then
+            spotlightSuperActive = true
+            hl.dispatch(hl.dsp.global("quickshell:spotlightSuperPressed"))
+        elseif not held and spotlightSuperActive then
+            spotlightSuperActive = false
+            hl.dispatch(hl.dsp.global("quickshell:spotlightSuperReleased"))
+        end
+    elseif state == 1 and spotlightSuperActive then
+        hl.dispatch(hl.dsp.global("quickshell:searchToggleReleaseInterrupt"))
+    end
+end)
+hl.bind("SUPER + Super_L", hl.dsp.exec_cmd(qsIsAlive .. " || pkill fuzzel || fuzzel"))
+hl.bind("SUPER + Super_R", hl.dsp.exec_cmd(qsIsAlive .. " || pkill fuzzel || fuzzel"))
 hl.bind("SUPER + Tab", hl.dsp.global("quickshell:overviewWorkspacesToggle"), { description = "Shell: Toggle overview" })
 hl.bind("SUPER + V", hl.dsp.global("quickshell:overviewClipboardToggle"))
 hl.bind("SUPER + Period", hl.dsp.global("quickshell:overviewEmojiToggle"))
@@ -149,9 +159,15 @@ hl.bind("SUPER + ALT + M", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_SOURCE@ togg
 --#!
 --##! Window
 --# Focusing
-hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Window: Move" })
-hl.bind("SUPER + mouse:274", hl.dsp.window.drag(), { mouse = true })
-hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Window: Resize" })
+local function spotlightMouseAction(dispatcher)
+    return function()
+        hl.dispatch(hl.dsp.global("quickshell:searchToggleReleaseInterrupt"))
+        hl.dispatch(dispatcher)
+    end
+end
+hl.bind("SUPER + mouse:272", spotlightMouseAction(hl.dsp.window.drag()), { mouse = true, description = "Window: Move" })
+hl.bind("SUPER + mouse:274", spotlightMouseAction(hl.dsp.window.drag()), { mouse = true })
+hl.bind("SUPER + mouse:273", spotlightMouseAction(hl.dsp.window.resize()), { mouse = true, description = "Window: Resize" })
 --#/# bind = SUPER + ←/↑/→/↓,, -- Focus in direction
 for i = 1, 4 do
     local arrowkey = { "Left", "Right", "Up", "Down" }
@@ -333,7 +349,7 @@ hl.bind("SUPER + ALT + Equal",
     hl.dsp.exec_cmd("notify-send 'Urgent notification' 'Ah hell no' -u critical -a 'Hyprland keybind'")) -- # [hidden]
 
 --##! Session
-hl.bind("SUPER + L", hl.dsp.exec_cmd("loginctl lock-session"), { description = "Session: Lock" })
+-- Lock shortcut disabled at user request
 hl.bind("SUPER + SHIFT + L", hl.dsp.exec_cmd("systemctl suspend || loginctl suspend"),
     { locked = true, description = "Session: Sleep" }) -- Sleep
 -- hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("systemctl suspend || loginctl suspend"), {locked = true} ) -- # [hidden] Suspend when laptop lid is closed, uncomment if for whatever reason it's not the default behavior

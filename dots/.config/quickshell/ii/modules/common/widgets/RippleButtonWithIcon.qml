@@ -7,14 +7,17 @@ RippleButton {
     id: buttonWithIconRoot
     property string nerdIcon
     property string materialIcon
+    property real iconSize: Appearance.font.pixelSize.larger
     property bool materialIconFill: true
+    property color contentColor: Appearance.colors.colOnSecondaryContainer
     property string mainText: "Button text"
     property Component mainContentComponent: Component {
         StyledText {
             visible: text !== ""
             text: buttonWithIconRoot.mainText
+            horizontalAlignment: Text.AlignHCenter
             font.pixelSize: Appearance.font.pixelSize.small
-            color: Appearance.colors.colOnSecondaryContainer
+            color: buttonWithIconRoot.contentColor
         }
     }
     implicitHeight: 35
@@ -24,16 +27,17 @@ RippleButton {
 
     contentItem: RowLayout {
         Item {
+            visible:!!buttonWithIconRoot.materialIcon || !!buttonWithIconRoot.nerdIcon
             Layout.fillWidth: false
             implicitWidth: Math.max(materialIconLoader.implicitWidth, nerdIconLoader.implicitWidth)
             Loader {
                 id: materialIconLoader
                 anchors.centerIn: parent
-                active: !nerdIcon
+                active: !!buttonWithIconRoot.materialIcon && !buttonWithIconRoot.nerdIcon
                 sourceComponent: MaterialSymbol {
                     text: buttonWithIconRoot.materialIcon
-                    iconSize: Appearance.font.pixelSize.larger
-                    color: Appearance.colors.colOnSecondaryContainer
+                    iconSize: buttonWithIconRoot.iconSize
+                    color: buttonWithIconRoot.contentColor
                     fill: buttonWithIconRoot.materialIconFill ? 1 : 0
                 }
             }
@@ -43,9 +47,9 @@ RippleButton {
                 active: nerdIcon
                 sourceComponent: StyledText {
                     text: buttonWithIconRoot.nerdIcon
-                    font.pixelSize: Appearance.font.pixelSize.larger
+                    font.pixelSize: buttonWithIconRoot.iconSize
                     font.family: Appearance.font.family.iconNerd
-                    color: Appearance.colors.colOnSecondaryContainer
+                    color: buttonWithIconRoot.contentColor
                 }
             }
         }

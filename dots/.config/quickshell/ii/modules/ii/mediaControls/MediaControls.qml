@@ -3,6 +3,7 @@ import qs
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.ii.sidebarRight.home
 import qs.modules.common.functions
 import QtQuick
 import QtQuick.Layouts
@@ -14,6 +15,8 @@ import Quickshell.Hyprland
 
 Scope {
     id: root
+    property bool libraryOpen:false
+    LazyLoader { active:root.libraryOpen;component:MusicLibraryWindow { onDismissed:root.libraryOpen=false } }
     property bool visible: false
     readonly property MprisPlayer activePlayer: MprisController.activePlayer
     readonly property var realPlayers: MprisController.players
@@ -23,8 +26,11 @@ Scope {
     readonly property real widgetHeight: Appearance.sizes.mediaControlsHeight
     property real popupRounding: Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1
     property list<real> visualizerPoints: []
+    readonly property var popupContent:mediaControlsLoader.item?.mediaBody || null
+
 
     function filterDuplicatePlayers(players) {
+        if (!Config.options.media.filterDuplicatePlayers) return players;
         let filtered = [];
         let used = new Set();
 
@@ -34,10 +40,10 @@ Scope {
             let p1 = players[i];
             let group = [i];
 
-            // Find duplicates by trackTitle prefix
+            // Only merge matching tracks; unrelated local players must remain selectable.
             for (let j = i + 1; j < players.length; ++j) {
                 let p2 = players[j];
-                if (p1.trackTitle && p2.trackTitle && (p1.trackTitle.includes(p2.trackTitle) || p2.trackTitle.includes(p1.trackTitle)) || (p1.position - p2.position <= 2 && p1.length - p2.length <= 2)) {
+                if (p1.trackTitle && p1.trackTitle===p2.trackTitle && p1.trackArtist && p1.trackArtist===p2.trackArtist && p1.length>0 && p2.length>0 && Math.abs(p1.length-p2.length)<=2) {
                     group.push(j);
                 }
             }
@@ -82,12 +88,13 @@ Scope {
 
         sourceComponent: PanelWindow {
             id: panelWindow
+            property alias mediaBody:playerColumnLayout
             visible: true
 
             exclusionMode: ExclusionMode.Ignore
             exclusiveZone: 0
             implicitWidth: root.widgetWidth
-            implicitHeight: playerColumnLayout.implicitHeight
+            implicitHeight: Math.min(playerColumnLayout.implicitHeight, panelWindow.screen.height - Appearance.sizes.barHeight - 40)
             color: "transparent"
             WlrLayershell.namespace: "quickshell:mediaControls"
 
@@ -105,7 +112,7 @@ Scope {
             }
 
             mask: Region {
-                item: playerColumnLayout
+                item: mediaViewport
             }
 
             Component.onCompleted: {
@@ -121,65 +128,80 @@ Scope {
                 }
             }
 
-            ColumnLayout {
-                id: playerColumnLayout
+            StyledFlickable {
+                id: mediaViewport
                 anchors.fill: parent
-                spacing: -Appearance.sizes.elevationMargin // Shadow overlap okay
+                contentHeight: playerColumnLayout.implicitHeight
+                clip: true
+                ColumnLayout {
+                    id: playerColumnLayout
+                    width: parent.width
+                    spacing:0
 
-                Repeater {
-                    model: ScriptModel {
-                        values: root.meaningfulPlayers
+                    Repeater {
+                        model:HomeAssistant.mediaPlayers
+                        delegate:PlayerControl {
+                            required property var modelData
+                            Layout.fillWidth:true
+                            homeEntity:modelData
+                            implicitWidth:root.widgetWidth
+                            radius:Appearance.rounding.normal
+                            onLibraryRequested:{GlobalStates.mediaControlsOpen=false;root.libraryOpen=true;}
+                        }
                     }
-                    delegate: PlayerControl {
-                        required property MprisPlayer modelData
-                        player: modelData
-                        visualizerPoints: root.visualizerPoints
-                        implicitWidth: root.widgetWidth
-                        implicitHeight: root.widgetHeight
-                        radius: root.popupRounding
-                    }
-                }
-
-                Item {
-                    // No player placeholder
-                    Layout.alignment: {
-                        if (panelWindow.anchors.left)
-                            return Qt.AlignLeft;
-                        if (panelWindow.anchors.right)
-                            return Qt.AlignRight;
-                        return Qt.AlignHCenter;
-                    }
-                    Layout.leftMargin: Appearance.sizes.hyprlandGapsOut
-                    Layout.rightMargin: Appearance.sizes.hyprlandGapsOut
-                    visible: root.meaningfulPlayers.length === 0
-                    implicitWidth: placeholderBackground.implicitWidth + Appearance.sizes.elevationMargin
-                    implicitHeight: placeholderBackground.implicitHeight + Appearance.sizes.elevationMargin
-
-                    StyledRectangularShadow {
-                        target: placeholderBackground
+                    Repeater {
+                        model:root.meaningfulPlayers
+                        delegate:PlayerControl {
+                            required property MprisPlayer modelData
+                            Layout.fillWidth:true
+                            player:modelData
+                            visualizerPoints:root.visualizerPoints
+                            implicitWidth:root.widgetWidth
+                            radius:Appearance.rounding.normal
+                        }
                     }
 
-                    Rectangle {
-                        id: placeholderBackground
-                        anchors.centerIn: parent
-                        color: Appearance.colors.colLayer0
-                        radius: root.popupRounding
-                        property real padding: 20
-                        implicitWidth: placeholderLayout.implicitWidth + padding * 2
-                        implicitHeight: placeholderLayout.implicitHeight + padding * 2
+                    Item {
+                        // No player placeholder
+                        Layout.alignment: {
+                            if (panelWindow.anchors.left)
+                                return Qt.AlignLeft;
+                            if (panelWindow.anchors.right)
+                                return Qt.AlignRight;
+                            return Qt.AlignHCenter;
+                        }
+                        Layout.leftMargin: Appearance.sizes.hyprlandGapsOut
+                        Layout.rightMargin: Appearance.sizes.hyprlandGapsOut
+                        visible: root.meaningfulPlayers.length === 0 && HomeAssistant.mediaPlayers.length === 0
+                        implicitWidth: placeholderBackground.implicitWidth + Appearance.sizes.elevationMargin
+                        implicitHeight: placeholderBackground.implicitHeight + Appearance.sizes.elevationMargin
 
-                        ColumnLayout {
-                            id: placeholderLayout
+                        StyledRectangularShadow {
+                            target: placeholderBackground
+                        }
+
+                        Rectangle {
+                            id: placeholderBackground
                             anchors.centerIn: parent
+                            color: Appearance.colors.colLayer0
+                            radius: root.popupRounding
+                            property real padding: 20
+                            implicitWidth: placeholderLayout.implicitWidth + padding * 2
+                            implicitHeight: placeholderLayout.implicitHeight + padding * 2
 
-                            StyledText {
-                                text: Translation.tr("No active player")
-                                font.pixelSize: Appearance.font.pixelSize.large
-                            }
-                            StyledText {
-                                color: Appearance.colors.colSubtext
-                                text: Translation.tr("Make sure your player has MPRIS support\nor try turning off duplicate player filtering")
-                                font.pixelSize: Appearance.font.pixelSize.small
+                            ColumnLayout {
+                                id: placeholderLayout
+                                anchors.centerIn: parent
+
+                                StyledText {
+                                    text: Translation.tr("No active player")
+                                    font.pixelSize: Appearance.font.pixelSize.large
+                                }
+                                StyledText {
+                                    color: Appearance.colors.colSubtext
+                                    text: Translation.tr("Make sure your player has MPRIS support\nor try turning off duplicate player filtering")
+                                    font.pixelSize: Appearance.font.pixelSize.small
+                                }
                             }
                         }
                     }
@@ -192,17 +214,17 @@ Scope {
         target: "mediaControls"
 
         function toggle(): void {
-            mediaControlsLoader.active = !mediaControlsLoader.active;
-            if (mediaControlsLoader.active)
+            GlobalStates.mediaControlsOpen = !GlobalStates.mediaControlsOpen;
+            if (GlobalStates.mediaControlsOpen)
                 Notifications.timeoutAll();
         }
 
         function close(): void {
-            mediaControlsLoader.active = false;
+            GlobalStates.mediaControlsOpen = false;
         }
 
         function open(): void {
-            mediaControlsLoader.active = true;
+            GlobalStates.mediaControlsOpen = true;
             Notifications.timeoutAll();
         }
     }

@@ -24,7 +24,7 @@ Item { // Notification item area
     property var parentDragIndex: qmlParent?.dragIndex ?? -1
     property var parentDragDistance: qmlParent?.dragDistance ?? 0
     property var dragIndexDiff: Math.abs(parentDragIndex - index)
-    property real xOffset: dragIndexDiff == 0 ? parentDragDistance : 
+    property real xOffset: dragIndexDiff == 0 ? parentDragDistance :
         Math.abs(parentDragDistance) > dragConfirmThreshold ? 0 :
         dragIndexDiff == 1 ? (parentDragDistance * 0.3) :
         dragIndexDiff == 2 ? (parentDragDistance * 0.1) : 0
@@ -73,6 +73,9 @@ Item { // Notification item area
         onClicked: (mouse) => {
             if (mouse.button === Qt.MiddleButton) {
                 root.destroyWithAnimation();
+            } else if (mouse.button === Qt.LeftButton) {
+                const defaultAction = notificationObject.actions.find(action => action.identifier === "default");
+                if (defaultAction) Notifications.attemptInvokeAction(notificationObject.notificationId, defaultAction.identifier);
             }
         }
 
@@ -89,7 +92,7 @@ Item { // Notification item area
         onDragReleased: (diffX, diffY) => {
             if (Math.abs(diffX) > root.dragConfirmThreshold)
                 root.destroyWithAnimation(diffX < 0);
-            else 
+            else
                 dragManager.resetDrag();
         }
     }
@@ -125,8 +128,8 @@ Item { // Notification item area
             }
         }
 
-        color: (expanded && !onlyNotification) ? 
-            (notificationObject.urgency == NotificationUrgency.Critical) ? 
+        color: (expanded && !onlyNotification) ?
+            (notificationObject.urgency == NotificationUrgency.Critical) ?
                 ColorUtils.mix(Appearance.colors.colSecondaryContainer, Appearance.colors.colLayer2, 0.35) :
                 (Appearance.colors.colLayer3) :
             ColorUtils.transparentize(Appearance.colors.colLayer3)
@@ -197,7 +200,7 @@ Item { // Notification item area
                     elide: Text.ElideRight
                     textFormat: Text.RichText
                     text: {
-                        return `<style>img{max-width:${expandedContentColumn.width}px;}</style>` + 
+                        return `<style>img{max-width:${expandedContentColumn.width}px;}</style>` +
                             `${NotificationUtils.processNotificationBody(notificationObject.body, notificationObject.appName || notificationObject.summary).replace(/\n/g, "<br/>")}`
                     }
 
@@ -205,7 +208,7 @@ Item { // Notification item area
                         Qt.openUrlExternally(link)
                         GlobalStates.sidebarRightOpen = false
                     }
-                    
+
                     PointingHandLinkHover {}
                 }
 
@@ -252,7 +255,7 @@ Item { // Notification item area
                                 Layout.fillWidth: true
                                 buttonText: Translation.tr("Close")
                                 urgency: notificationObject.urgency
-                                implicitWidth: (notificationObject.actions.length == 0) ? ((actionsFlickable.width - actionRowLayout.spacing) / 2) : 
+                                implicitWidth: (notificationObject.actions.length == 0) ? ((actionsFlickable.width - actionRowLayout.spacing) / 2) :
                                     (contentItem.implicitWidth + leftPadding + rightPadding)
 
                                 onClicked: {
@@ -262,7 +265,7 @@ Item { // Notification item area
                                 contentItem: MaterialSymbol {
                                     iconSize: Appearance.font.pixelSize.larger
                                     horizontalAlignment: Text.AlignHCenter
-                                    color: (notificationObject.urgency == NotificationUrgency.Critical) ? 
+                                    color: (notificationObject.urgency == NotificationUrgency.Critical) ?
                                         Appearance.m3colors.m3onSurfaceVariant : Appearance.m3colors.m3onSurface
                                     text: "close"
                                 }
@@ -286,7 +289,7 @@ Item { // Notification item area
                             NotificationActionButton {
                                 Layout.fillWidth: true
                                 urgency: notificationObject.urgency
-                                implicitWidth: (notificationObject.actions.length == 0) ? ((actionsFlickable.width - actionRowLayout.spacing) / 2) : 
+                                implicitWidth: (notificationObject.actions.length == 0) ? ((actionsFlickable.width - actionRowLayout.spacing) / 2) :
                                     (contentItem.implicitWidth + leftPadding + rightPadding)
 
                                 onClicked: {
@@ -308,12 +311,12 @@ Item { // Notification item area
                                     id: copyIcon
                                     iconSize: Appearance.font.pixelSize.larger
                                     horizontalAlignment: Text.AlignHCenter
-                                    color: (notificationObject.urgency == NotificationUrgency.Critical) ? 
+                                    color: (notificationObject.urgency == NotificationUrgency.Critical) ?
                                         Appearance.m3colors.m3onSurfaceVariant : Appearance.m3colors.m3onSurface
                                     text: "content_copy"
                                 }
                             }
-                            
+
                         }
                     }
                 }

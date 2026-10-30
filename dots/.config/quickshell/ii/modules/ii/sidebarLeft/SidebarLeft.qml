@@ -15,6 +15,20 @@ Scope { // Scope
     property Component contentComponent: SidebarLeftContent {}
     property Item sidebarContent
 
+    function ensureContent() {
+        if (root.sidebarContent) return;
+        const parentItem = root.detach ? detachedSidebarLoader.item?.contentParent : sidebarLoader.item?.contentParent;
+        if (!parentItem) return;
+        root.sidebarContent = contentComponent.createObject(parentItem, { "scopeRoot": root });
+    }
+
+    Connections {
+        target: GlobalStates
+        function onSidebarLeftOpenChanged() {
+            if (GlobalStates.sidebarLeftOpen) root.ensureContent();
+        }
+    }
+
     function toggleDetach() {
         root.detach = !root.detach;
     }
@@ -58,36 +72,32 @@ Scope { // Scope
         else root.pin = !root.pin;
     }
 
-    Component.onCompleted: {
-        root.sidebarContent = contentComponent.createObject(null, {
-            "scopeRoot": root,
-        });
-        sidebarLoader.item.contentParent.children = [root.sidebarContent];
-    }
+    Component.onCompleted: if (GlobalStates.sidebarLeftOpen) root.ensureContent()
 
     onDetachChanged: {
+        root.ensureContent();
         if (root.detach) {
             GlobalFocusGrab.removeDismissable(sidebarLoader.item) // Remove sidebar from the focus grab system
-            sidebarContent.parent = null; // Detach content from sidebar
+            if (sidebarContent) sidebarContent.parent = null; // Detach content from sidebar
             sidebarLoader.active = false; // Unload sidebar
             detachedSidebarLoader.active = true; // Load detached window
-            detachedSidebarLoader.item.contentParent.children = [sidebarContent];
+            if (sidebarContent) sidebarContent.parent = detachedSidebarLoader.item.contentParent;
         } else {
-            sidebarContent.parent = null; // Detach content from window
+            if (sidebarContent) sidebarContent.parent = null; // Detach content from window
             detachedSidebarLoader.active = false; // Unload detached window
             sidebarLoader.active = true; // Load sidebar
-            sidebarLoader.item.contentParent.children = [sidebarContent];
+            if (sidebarContent) sidebarContent.parent = sidebarLoader.item.contentParent;
         }
     }
 
     Loader {
         id: sidebarLoader
         active: true
-        
+
         sourceComponent: PanelWindow { // Window
             id: panelWindow
             visible: GlobalStates.sidebarLeftOpen
-            
+
             property bool extend: false
             property real sidebarWidth: panelWindow.extend ? Appearance.sizes.sidebarWidthExtended : Appearance.sizes.sidebarWidth
             property var contentParent: sidebarLeftBackground
@@ -182,7 +192,7 @@ Scope { // Scope
             onVisibleChanged: {
                 if (!visible) GlobalStates.sidebarLeftOpen = false;
             }
-            
+
             Rectangle {
                 id: detachedSidebarBackground
                 anchors.fill: parent

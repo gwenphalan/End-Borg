@@ -1,0 +1,163 @@
+#!/usr/bin/env python3
+"""Publish Quickshell's committed Material palette as a live T3 Code theme."""
+
+import argparse
+import colorsys
+import json
+import os
+from pathlib import Path
+import re
+import sys
+import tempfile
+
+
+# T3 derives roles not listed here from the canvas and accent seeds.
+ROLE_MAP = {
+    "canvas": "background",
+    "chrome": "surface_container_lowest",
+    "toolbar": "surface_container_low",
+    "toolbarForeground": "on_surface",
+    "toolbarBorder": "outline_variant",
+    "toolbarControl": "surface_container",
+    "toolbarControlForeground": "on_surface",
+    "toolbarControlHover": "surface_container_highest",
+    "surface": "surface",
+    "surfaceRaised": "surface_container_high",
+    "surfaceOverlay": "surface_container_highest",
+    "text": "on_surface",
+    "textMuted": "on_surface_variant",
+    "border": "outline_variant",
+    "input": "surface_container_highest",
+    "focus": "primary",
+    "accent": "primary",
+    "accentForeground": "on_primary",
+    "secondary": "secondary_container",
+    "secondaryForeground": "on_secondary_container",
+    "muted": "surface_container_high",
+    "mutedForeground": "on_surface_variant",
+    "placeholder": "on_surface_variant",
+    "secondaryLabel": "on_surface_variant",
+    "iconMuted": "on_surface_variant",
+    "error": "error",
+    "errorForeground": "on_error_container",
+    "errorSurface": "error_container",
+    "accentSurface": "primary_container",
+    "accentSurfaceForeground": "on_primary_container",
+    "messageSurface": "surface_container",
+    "messageForeground": "on_surface",
+    # T3 maps its primary buttons and switches to messageAction.
+    "messageAction": "primary",
+    "messageActionForeground": "on_primary",
+    "messageActionHover": "primary",
+    "codeBackground": "surface_container_lowest",
+    "codeForeground": "on_surface",
+    "searchMatchBackground": "secondary_container",
+    "searchMatchForeground": "on_secondary_container",
+    "searchMatchActiveBackground": "primary_container",
+    "searchMatchActiveForeground": "on_primary_container",
+    "sidebar": "surface_container_low",
+    "sidebarForeground": "on_surface",
+    "sidebarMutedForeground": "on_surface_variant",
+    "sidebarControlSurface": "surface_container",
+    "sidebarRowHover": "surface_container_high",
+    "sidebarRowActive": "surface_container_highest",
+    "sidebarRowSelected": "secondary_container",
+    "sidebarBorder": "outline_variant",
+    "terminalBackground": "surface_container_lowest",
+    "terminalForeground": "on_surface",
+    "terminalCursor": "primary",
+    "terminalSelection": "secondary_container",
+    "terminalScrollbar": "surface_container_high",
+    "terminalScrollbarHover": "outline",
+}
+HEX_COLOR = re.compile(r"#[0-9a-fA-F]{6}\Z")
+
+
+def convert(palette):
+    if not isinstance(palette, dict):
+        raise ValueError("palette must be a JSON object")
+    for role in ("background", "primary", "on_surface"):
+        if role not in palette:
+            raise ValueError(f"missing required Material role: {role}")
+    for role in set(ROLE_MAP.values()):
+        if role in palette and (
+            not isinstance(palette[role], str) or not HEX_COLOR.fullmatch(palette[role])
+        ):
+            raise ValueError(f"invalid hex color for Material role: {role}")
+    background = palette["background"]
+    rgb = [int(background[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    lightness = colorsys.rgb_to_hls(*rgb)[1]
+    appearance = "dark" if lightness < 0.5 else "light"
+    colors = {
+        target: palette[source]
+        for target, source in ROLE_MAP.items()
+        if source in palette
+    }
+    # T3 uses error as the Stop button fill and hardcodes its icon to white.
+    # Blend the dark-mode container toward the pale error color for a brighter
+    # red fill with a clear white icon. Light-mode error is already dark.
+    if appearance == "dark" and "error_container" in palette and "error" in palette:
+        colors["error"] = "#" + "".join(
+            f"{round(int(palette['error_container'][i:i + 2], 16) * 0.55 + int(palette['error'][i:i + 2], 16) * 0.45):02x}"
+            for i in (1, 3, 5)
+        )
+    if "on_primary" in palette:
+        # Material hover state: an 8% foreground layer over the primary fill.
+        colors["messageActionHover"] = "#" + "".join(
+            f"{round(int(palette['primary'][i:i + 2], 16) * 0.92 + int(palette['on_primary'][i:i + 2], 16) * 0.08):02x}"
+            for i in (1, 3, 5)
+        )
+    return {
+        "version": 1,
+        "name": "Quickshell",
+        "appearance": appearance,
+        "canvas": background,
+        "accent": palette["primary"],
+        "colors": colors,
+    }
+
+
+def publish(source, destination):
+    theme = convert(json.loads(source.read_text(encoding="utf-8")))
+    content = (json.dumps(theme, indent=2) + "\n").encode("utf-8")
+    if destination.exists() and destination.read_bytes() == content:
+        return False
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            dir=destination.parent, prefix=f".{destination.name}.", suffix=".tmp", delete=False
+        ) as stream:
+            temporary = Path(stream.name)
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, destination)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+    return True
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--source", type=Path,
+        default=Path.home() / ".local/state/quickshell/user/generated/colors.json",
+    )
+    parser.add_argument(
+        "--destination", type=Path,
+        default=Path.home() / ".t3/userdata/themes/quickshell.json",
+    )
+    args = parser.parse_args()
+    try:
+        changed = publish(args.source, args.destination)
+    except (OSError, ValueError) as error:
+        print(f"Quickshell theme sync failed: {error}", file=sys.stderr)
+        return 1
+    print(f"Quickshell theme {'updated' if changed else 'unchanged'}: {args.destination}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

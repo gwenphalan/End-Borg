@@ -25,7 +25,8 @@ Singleton {
     property string scriptPath: Quickshell.shellPath("scripts")
     property string favicons: FileUtils.trimFileProtocol(`${Directories.cache}/media/favicons`)
     property string coverArt: FileUtils.trimFileProtocol(`${Directories.cache}/media/coverart`)
-    property string tempImages: "/tmp/quickshell/media/images"
+    readonly property string previewTempRoot: Quickshell.env("QS_SETTINGS_PREVIEW_ROOT")
+    property string tempImages: previewTempRoot ? `${previewTempRoot}/images` : "/tmp/quickshell/media/images"
     property string booruPreviews: FileUtils.trimFileProtocol(`${Directories.cache}/media/boorus`)
     property string booruDownloads: FileUtils.trimFileProtocol(Directories.pictures  + "/homework")
     property string booruDownloadsNsfw: FileUtils.trimFileProtocol(Directories.pictures + "/homework/🌶️")
@@ -39,8 +40,8 @@ Singleton {
     property string notificationsPath: FileUtils.trimFileProtocol(`${Directories.cache}/notifications/notifications.json`)
     property string generatedMaterialThemePath: FileUtils.trimFileProtocol(`${Directories.state}/user/generated/colors.json`)
     property string generatedWallpaperCategoryPath: FileUtils.trimFileProtocol(`${Directories.state}/user/generated/wallpaper/category.txt`)
-    property string cliphistDecode: FileUtils.trimFileProtocol(`/tmp/quickshell/media/cliphist`)
-    property string screenshotTemp: "/tmp/quickshell/media/screenshot"
+    property string cliphistDecode: previewTempRoot ? `${previewTempRoot}/cliphist` : FileUtils.trimFileProtocol(`/tmp/quickshell/media/cliphist`)
+    property string screenshotTemp: previewTempRoot ? `${previewTempRoot}/screenshot` : "/tmp/quickshell/media/screenshot"
     property string wallpaperSwitchScriptPath: FileUtils.trimFileProtocol(`${Directories.scriptPath}/colors/switchwall.sh`)
     property string defaultAiPrompts: Quickshell.shellPath("defaults/ai/prompts")
     property string userAiPrompts: FileUtils.trimFileProtocol(`${Directories.shellConfig}/ai/prompts`)

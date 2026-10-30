@@ -10,6 +10,7 @@ RippleButton {
     id: root
 
     property string buttonText
+    property string textFontFamily: ""
     padding: 14
     implicitHeight: 36
     implicitWidth: buttonTextWidget.implicitWidth + padding * 2
@@ -18,8 +19,8 @@ RippleButton {
     property color colEnabled: Appearance?.colors.colPrimary ?? "#65558F"
     property color colDisabled: Appearance?.m3colors.m3outline ?? "#8D8C96"
     colBackground: ColorUtils.transparentize(Appearance.colors.colLayer3)
-    colBackgroundHover: Appearance.colors.colLayer3Hover
-    colRipple: Appearance.colors.colLayer3Active
+    colBackgroundHover: flat ? ColorUtils.transparentize(colEnabled, 0.92) : Appearance.colors.colLayer3Hover
+    colRipple: flat ? ColorUtils.transparentize(colEnabled, 0.88) : Appearance.colors.colLayer3Active
     property alias colText: buttonTextWidget.color
 
     contentItem: StyledText {
@@ -30,6 +31,7 @@ RippleButton {
         text: buttonText
         horizontalAlignment: Text.AlignHCenter
         font.pixelSize: Appearance?.font.pixelSize.small ?? 12
+        font.family: root.textFontFamily || Appearance.font.family.main
         color: root.enabled ? root.colEnabled : root.colDisabled
 
         Behavior on color {

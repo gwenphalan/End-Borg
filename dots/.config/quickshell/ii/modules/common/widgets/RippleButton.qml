@@ -31,10 +31,10 @@ Button {
     property color colRippleToggled: Appearance?.colors.colPrimaryActive ?? "#D6CEE2"
 
     readonly property bool isHovered: buttonMouseArea.containsMouse || root.hovered
-    property color buttonColor: ColorUtils.transparentize(root.toggled ? 
-        (root.isHovered ? colBackgroundToggledHover : 
+    property color buttonColor: ColorUtils.transparentize(root.toggled ?
+        (root.isHovered ? colBackgroundToggledHover :
             colBackgroundToggled) :
-        (root.isHovered ? colBackgroundHover : 
+        (root.isHovered ? colBackgroundHover :
             colBackground), root.enabled ? 0 : 1)
     property color rippleColor: root.toggled ? colRippleToggled : colRipple
 
@@ -63,7 +63,7 @@ Button {
         anchors.fill: parent
         cursorShape: root.pointingHandCursor ? Qt.PointingHandCursor : Qt.ArrowCursor
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-        onPressed: (event) => { 
+        onPressed: (event) => {
             if(event.button === Qt.RightButton) {
                 if (root.altAction) root.altAction(event);
                 return;
@@ -182,6 +182,16 @@ Button {
         }
     }
 
+    Rectangle {
+        anchors.fill:parent
+        anchors.margins:2
+        radius:Math.max(0,root.buttonEffectiveRadius-2)
+        z:100
+        visible:root.visualFocus && root.enabled
+        color:"transparent"
+        border.width:2
+        border.color:Appearance.colors.colPrimary
+    }
     contentItem: StyledText {
         text: root.buttonText
     }

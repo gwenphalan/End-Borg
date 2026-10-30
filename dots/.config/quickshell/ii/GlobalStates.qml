@@ -22,6 +22,11 @@ Singleton {
     property bool regionSelectorOpen: false
     property bool searchOpen: false
     property bool screenLocked: false
+    property bool bedtimeLockActive: false
+    property string bedtimeLockDeadlineText: ""
+    property bool bedtimePasswordRevealed: false
+    // Set once after a secure lock to let each display save its real QML layers.
+    property string lockSnapshotDirectory: ""
     property bool screenLockContainsCharacters: false
     property bool screenUnlockFailed: false
     property bool screenTranslatorOpen: false

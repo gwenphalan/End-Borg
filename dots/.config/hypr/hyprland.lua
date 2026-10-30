@@ -42,3 +42,5 @@ end
 
 -- Shell overrides --
 require("hyprland.shellOverrides.main")
+
+hl.bind("ALT + SUPER + T", hl.dsp.global("com.t3tools.T3Code:capture-window"))

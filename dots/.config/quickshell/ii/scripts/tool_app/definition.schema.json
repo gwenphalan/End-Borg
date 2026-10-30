@@ -1,0 +1,858 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quickshell.local/tool-app/definition-v1.schema.json",
+  "title": "Quickshell tool-app definition v1",
+  "description": "Editor completion for strict app.yaml definitions. The Python compiler additionally validates references, paths, conditions, defaults, duplicate shortcuts, and pill placement conflicts.",
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "app": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "icon": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "icon"
+      ],
+      "additionalProperties": false
+    },
+    "state": {
+      "type": "object",
+      "propertyNames": {
+        "allOf": [
+          {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+          },
+          {
+            "not": {
+              "pattern": "^settings\\."
+            }
+          }
+        ]
+      }
+    },
+    "backends": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/backend"
+      }
+    },
+    "components": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "\\.[qQ][mM][lL]$"
+      }
+    },
+    "actions": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/action"
+      }
+    },
+    "toolbar": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "const": "stretch"
+          },
+          {
+            "$ref": "#/$defs/actionList"
+          }
+        ]
+      }
+    },
+    "tools": {
+      "$ref": "#/$defs/actionList"
+    },
+    "utilities": {
+      "type": "object",
+      "properties": {
+        "includeHistory": {
+          "type": "boolean",
+          "default": true
+        },
+        "actions": {
+          "$ref": "#/$defs/actionList"
+        },
+        "placement": {
+          "enum": [
+            "topRight",
+            "bottomLeft"
+          ],
+          "default": "topRight"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "contextActions": {
+      "type": "object",
+      "properties": {
+        "actions": {
+          "$ref": "#/$defs/actionList"
+        },
+        "placement": {
+          "enum": [
+            "topRight",
+            "belowTools"
+          ],
+          "default": "belowTools"
+        },
+        "visibleWhen": {
+          "$ref": "#/$defs/condition"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/group"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "version",
+    "app"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "condition": {
+      "description": "A boolean, declared host-state name, settings.<declared field path>, or an explicit logical predicate. No expressions are evaluated.",
+      "oneOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "all": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/condition"
+              }
+            }
+          },
+          "required": [
+            "all"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "any": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/condition"
+              }
+            }
+          },
+          "required": [
+            "any"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "not": {
+              "$ref": "#/$defs/condition"
+            }
+          },
+          "required": [
+            "not"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "eq": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+                },
+                {}
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "eq"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "actionList": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+      },
+      "uniqueItems": true
+    },
+    "backend": {
+      "type": "object",
+      "properties": {
+        "program": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "script": {
+          "type": "string",
+          "pattern": "\\.[pP][yY]$"
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "program",
+        "script"
+      ],
+      "additionalProperties": false
+    },
+    "target": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "qml"
+            },
+            "handler": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            }
+          },
+          "required": [
+            "kind",
+            "handler"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "backend"
+            },
+            "backend": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "operation": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            }
+          },
+          "required": [
+            "kind",
+            "backend",
+            "operation"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "action": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "icon": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "tooltip": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "shortcut": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "target": {
+          "$ref": "#/$defs/target"
+        },
+        "arguments": {
+          "type": "object"
+        },
+        "checkedWhen": {
+          "$ref": "#/$defs/condition"
+        },
+        "enabledWhen": {
+          "$ref": "#/$defs/condition"
+        },
+        "visibleWhen": {
+          "$ref": "#/$defs/condition"
+        },
+        "dirtyWhen": {
+          "$ref": "#/$defs/condition"
+        }
+      },
+      "required": [
+        "label",
+        "icon",
+        "target"
+      ],
+      "additionalProperties": false
+    },
+    "group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "icon": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "visibleWhen": {
+          "$ref": "#/$defs/condition"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/settingItem"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "icon",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "settingItem": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/field"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "action"
+            },
+            "action": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "enabledWhen": {
+              "$ref": "#/$defs/condition"
+            },
+            "visibleWhen": {
+              "$ref": "#/$defs/condition"
+            }
+          },
+          "required": [
+            "kind",
+            "action"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "component"
+            },
+            "component": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "enabledWhen": {
+              "$ref": "#/$defs/condition"
+            },
+            "visibleWhen": {
+              "$ref": "#/$defs/condition"
+            }
+          },
+          "required": [
+            "kind",
+            "component"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "field": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "field"
+            },
+            "path": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "icon": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "default": {
+              "type": "boolean"
+            },
+            "enabledWhen": {
+              "$ref": "#/$defs/condition"
+            },
+            "visibleWhen": {
+              "$ref": "#/$defs/condition"
+            },
+            "type": {
+              "const": "bool"
+            },
+            "readOnly": {
+              "type": "boolean"
+            },
+            "choices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "value": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "path",
+            "label",
+            "type",
+            "default"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "field"
+            },
+            "path": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "icon": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "default": {
+              "type": "integer"
+            },
+            "enabledWhen": {
+              "$ref": "#/$defs/condition"
+            },
+            "visibleWhen": {
+              "$ref": "#/$defs/condition"
+            },
+            "type": {
+              "const": "int"
+            },
+            "readOnly": {
+              "type": "boolean"
+            },
+            "min": {
+              "type": "integer"
+            },
+            "max": {
+              "type": "integer"
+            },
+            "step": {
+              "type": "integer",
+              "exclusiveMinimum": 0
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "choices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "value": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "path",
+            "label",
+            "type",
+            "default"
+          ],
+          "additionalProperties": false,
+          "anyOf": [
+            {
+              "required": [
+                "min",
+                "max"
+              ]
+            },
+            {
+              "required": [
+                "choices"
+              ],
+              "properties": {
+                "choices": {
+                  "minItems": 1
+                }
+              }
+            }
+          ],
+          "description": "Numeric controls require explicit min/max unless a nonempty choice list defines their values."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "field"
+            },
+            "path": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "icon": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "default": {
+              "type": "number"
+            },
+            "enabledWhen": {
+              "$ref": "#/$defs/condition"
+            },
+            "visibleWhen": {
+              "$ref": "#/$defs/condition"
+            },
+            "type": {
+              "const": "real"
+            },
+            "readOnly": {
+              "type": "boolean"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "step": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "choices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "path",
+            "label",
+            "type",
+            "default"
+          ],
+          "additionalProperties": false,
+          "anyOf": [
+            {
+              "required": [
+                "min",
+                "max"
+              ]
+            },
+            {
+              "required": [
+                "choices"
+              ],
+              "properties": {
+                "choices": {
+                  "minItems": 1
+                }
+              }
+            }
+          ],
+          "description": "Numeric controls require explicit min/max unless a nonempty choice list defines their values."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "field"
+            },
+            "path": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "icon": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "default": {
+              "type": "string"
+            },
+            "enabledWhen": {
+              "$ref": "#/$defs/condition"
+            },
+            "visibleWhen": {
+              "$ref": "#/$defs/condition"
+            },
+            "type": {
+              "const": "string"
+            },
+            "readOnly": {
+              "type": "boolean"
+            },
+            "choices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "path",
+            "label",
+            "type",
+            "default"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "field"
+            },
+            "path": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "icon": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "default": {
+              "type": "string"
+            },
+            "enabledWhen": {
+              "$ref": "#/$defs/condition"
+            },
+            "visibleWhen": {
+              "$ref": "#/$defs/condition"
+            },
+            "type": {
+              "const": "label"
+            },
+            "readOnly": {
+              "const": true
+            },
+            "choices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "path",
+            "label",
+            "type",
+            "default"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

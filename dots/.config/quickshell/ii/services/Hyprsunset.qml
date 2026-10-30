@@ -13,11 +13,12 @@ import Quickshell.Hyprland
  */
 Singleton {
     id: root
+    readonly property bool settingsPreview: Quickshell.env("QS_SETTINGS_PREVIEW") === "1"
     signal gammaChangeAttempt()
 
     readonly property real gammaLowerLimit: 25
 
-    property string from: Config.options?.light?.night?.from ?? "19:00" 
+    property string from: Config.options?.light?.night?.from ?? "19:00"
     property string to: Config.options?.light?.night?.to ?? "06:30"
     property bool automatic: Config.options?.light?.night?.automatic && (Config?.ready ?? true)
     property int colorTemperature: Config.options?.light?.night?.colorTemperature ?? 5000
@@ -84,6 +85,7 @@ Singleton {
     }
 
     function startHyprsunset() {
+        if (settingsPreview) return;
         Quickshell.execDetached(["bash", "-c", `pidof hyprsunset || hyprsunset`]);
     }
 
@@ -103,6 +105,7 @@ Singleton {
     }
 
     function enableTemperature() {
+        if (settingsPreview) return;
         root.temperatureActive = true;
 
         // console.log("[Hyprsunset] Enabling");
@@ -111,12 +114,14 @@ Singleton {
     }
 
     function disableTemperature() {
+        if (settingsPreview) return;
         root.temperatureActive = false;
         // console.log("[Hyprsunset] Disabling");
         Quickshell.execDetached(["bash", "-c", `hyprctl hyprsunset temperature ${root.defaultColorTemperature}`]);
     }
 
     function setGamma(gamma) {
+        if (settingsPreview) return;
         root.gamma = Math.max(root.gammaLowerLimit, Math.min(100, gamma));
 
         root.gammaChangeAttempt();
@@ -165,7 +170,7 @@ Singleton {
     Connections {
         target: Config.options.light.night
         function onColorTemperatureChanged() {
-            if (!root.temperatureActive) return;
+            if (root.settingsPreview || !root.temperatureActive) return;
             Quickshell.execDetached(["hyprctl", "hyprsunset", "temperature", `${Config.options.light.night.colorTemperature}`]);
         }
     }

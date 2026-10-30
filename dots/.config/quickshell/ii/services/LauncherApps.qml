@@ -7,6 +7,21 @@ import Quickshell
 Singleton {
     id: root
 
+    function uninstall(app) {
+        if (!app?.id) return;
+        Quickshell.execDetached(["python3", Quickshell.shellPath("scripts/app_uninstall.py"), app.id, app.name]);
+    }
+
+    function isHidden(appId) {
+        return Config.options.launcher.hiddenApps.indexOf(appId) !== -1;
+    }
+
+    function toggleHidden(appId) {
+        const hidden = Config.options.launcher.hiddenApps;
+        Config.options.launcher.hiddenApps = root.isHidden(appId)
+            ? hidden.filter(id => id !== appId) : hidden.concat([appId]);
+    }
+
     function isPinned(appId) {
         return Config.options.launcher.pinnedApps.indexOf(appId) !== -1;
     }

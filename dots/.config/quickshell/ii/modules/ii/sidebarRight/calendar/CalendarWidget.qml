@@ -6,6 +6,13 @@ import QtQuick
 import QtQuick.Layouts
 
 Item {
+    id: calendarRoot
+    readonly property var displayLocale: {
+        const code = String(Config.options.calendar.locale || "").trim();
+        if (!code || code === "auto") return Qt.locale();
+        const locale = Qt.locale(code.replace(/-/g, "_"));
+        return locale.name === "C" ? Qt.locale() : locale;
+    }
     // Layout.topMargin: 10
     anchors.topMargin: 10
     property int monthShift: 0
@@ -47,7 +54,7 @@ Item {
             spacing: 5
             CalendarHeaderButton {
                 clip: true
-                buttonText: `${monthShift != 0 ? "• " : ""}${viewingDate.toLocaleDateString(Qt.locale(), "MMMM yyyy")}`
+                buttonText: `${monthShift != 0 ? "• " : ""}${viewingDate.toLocaleDateString(calendarRoot.displayLocale, "MMMM yyyy")}`
                 tooltipText: (monthShift === 0) ? "" : Translation.tr("Jump to current month")
                 downAction: () => {
                     monthShift = 0;
@@ -92,7 +99,8 @@ Item {
             Repeater {
                 model: CalendarLayout.weekDays
                 delegate: CalendarDayButton {
-                    day: Translation.tr(modelData.day)
+                    // Keep the existing Monday-first grid; only localize its labels.
+                    day: new Date(2024, 0, index + 1).toLocaleDateString(calendarRoot.displayLocale, "ddd")
                     isToday: modelData.today
                     bold: true
                     enabled: false

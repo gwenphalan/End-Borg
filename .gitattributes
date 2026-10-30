@@ -1,0 +1,2 @@
+# Keep third-party font licenses byte-for-byte, including their whitespace.
+dots/.config/quickshell/ii/assets/fonts/clock/**/OFL.txt -whitespace
