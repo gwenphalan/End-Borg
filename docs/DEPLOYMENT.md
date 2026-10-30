@@ -1,6 +1,6 @@
 # Staging and deployment
 
-The repository is staging. Do not run upstream `setup` to deploy this fork. Do not reload Quickshell, Hyprland, lock the session, launch a second shell, or enable services while preparing it. This environment cannot verify the running desktop, physical unlock, monitor behavior, audio behavior or visible UI fidelity. Deployment remains blocked until those runtime checks have been completed in a suitable isolated session.
+The repository is the source tree; the running desktop uses separate copies. Do not run upstream `setup` to deploy this fork. Keep staging separate from the live session. Reload or activate only after an explicit deployment instruction, and verify both shell and compositor are unlocked before restarting a shell. Do not force lock/authentication, audio, alarm, or light trials as incidental checks. Host runtime commands must use the active desktop's session environment; a sandbox process listing alone cannot establish whether the desktop is running. The completed deployment and remaining test limits are recorded in [DEPLOYED.md](DEPLOYED.md).
 
 `tools/deploy.py` manages only `dots/.config/quickshell/ii` and `dots/.config/hypr`. It copies changed files only and never removes existing live-only files. It excludes backup/cache artifacts and generated Hyprlock configuration, lock wallpapers and generated color files. Personal settings under `~/.config/illogical-impulse`, Secret Service credentials and all XDG state/data/cache stores are outside its scope. Supporting theme services and helper installations require separate reviewed deployment.
 
@@ -54,3 +54,18 @@ leaves these existing installations in place. Do not activate them by running
 arbitrary source scripts as root. Lens Cap's generated icon stays in the local
 icon store. Dependencies and user settings must be provisioned separately on a
 new host; this consolidation is not a universal installer.
+
+## Explicit deployment with incomplete runtime checks
+
+When the user explicitly authorizes deployment before a complete runtime trial,
+`deploy --apply --allow-partial-runtime --validated REPORT` accepts a report with
+`static_passed: true`, `runtime_smoke_passed: true`, and the exact source digest.
+It does not require or rewrite `runtime_validated: true`. The transaction journal
+records the incomplete verification and explicit partial-runtime authorization.
+The ordinary path still requires complete validation. Both paths retain all
+source-digest, drift, backup, copy-verification, and rollback protections.
+
+Use this only to carry out an explicit deployment instruction, after reviewing
+the missing checks and the actual code differences. Record what was checked
+before and after activation; never describe partial evidence as a complete
+physical lock, audio, device, or exported-artifact trial.

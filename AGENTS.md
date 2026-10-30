@@ -9,8 +9,10 @@ Read docs/CONSOLIDATION.md and docs/VALIDATION.md before desktop work.
 - Work in this repo, never directly in ~/.config to implement a change.
 - The production trees are copies, not symlinks. Never run upstream `setup` to
   deploy this fork. Use the scoped migration procedure in docs/DEPLOYMENT.md.
-- Never reload/restart/lock/unlock the desktop or enable services as a test.
-  The user explicitly requires an undisturbed running desktop.
+- Keep the desktop undisturbed during staging. Activate changes only when the
+  user authorizes deployment. Verify both compositor and shell are unlocked
+  before any shell restart; never force lock/unlock, audio or alarm trials as
+  incidental checks. Preserve open applications and existing user settings.
 - Preserve the selected locker, disabled hypridle, current input bindings,
   monitor topology, sleep/Bed Lock behavior, and existing Settings UX.
 - Never publish config.json, keys, tokens, keyring contents, runtime state,

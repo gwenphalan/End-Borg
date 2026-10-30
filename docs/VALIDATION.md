@@ -108,3 +108,40 @@ One existing launcher assertion was stale: it expected the scrollbar to depend
 only on active/scrolling state. It now checks the existing interaction state and
 linger timer, preserving the current delayed-hide behavior without changing the
 runtime component.
+
+## Deployment verification — 2026-10-30
+
+The final source run again passed all 409 Python tests and static checks above.
+The allowlist now also includes `tests/test_sleep_integration.mjs`, bringing the
+JavaScript harness count to eight. Its ten cases exercise wake-day/bedtime-day
+roundtrips, week boundaries, invalid intervals, disabled days, and disabled-plan
+acknowledgements. Run it directly with `node tests/test_sleep_integration.mjs`.
+The migration suite now has 14 passing tests, including an explicitly authorized
+partial-runtime deployment path that retains digest/drift checks and records
+incomplete runtime verification truthfully.
+
+In a private bwrap filesystem/network/session-bus sandbox, KWin's virtual output
+allowed `toolAppTest.qml` to report `TOOL APP TOTAL {passed:7,failed:0}`. Eight
+additional headless QML/controller and real Process transport pytest tests passed.
+The longer Lens Cap harnesses and full shell reached `Configuration Loaded`, but
+the private KWin compositor then crashed; no Lens TOTAL or stable isolated shell
+result is claimed. Expected missing isolated-service warnings are separate from
+actual application failures. No test compositor or test window was attached to
+the host desktop.
+
+Live verification followed explicit deployment authorization. The main shell and
+open Settings processes hot-reloaded successfully. Hyprland's installed binary
+accepted the staged configuration with `--verify-config` in isolation, and the
+live compositor reported no config errors after reload. Actual notification
+creation and immediate dismissal passed after the stale-timer guard repair.
+The final reload log contained no TypeError, ReferenceError, or undefined-binding
+assignment diagnostics; an absent optional generated translation file and toolkit
+focus diagnostics remain separate, nonfatal messages.
+
+Read-only host checks confirmed Home Assistant REST/websocket availability,
+fresh Bed Lock data, Music Assistant service discovery, Borg model discovery,
+launcher IPC responsiveness, unchanged monitor geometry/modes, unchanged volume,
+and byte-identical user preferences/generated lock files. Runtime state changed
+only through cache refreshes and Settings navigation. Physical authentication,
+alarm/light/audio actions, reboot behavior, and full Lens Cap UI/export behavior
+were not exercised. See [DEPLOYED.md](DEPLOYED.md) for rollback and scope.

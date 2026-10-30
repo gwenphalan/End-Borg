@@ -47,9 +47,10 @@ credential signatures without printing values; it is not a credential guarantee.
 
 ## Runtime and deployment limits
 
-This execution environment exposes no active Hyprland/Quickshell process or
-compositor socket. Do not infer the user's desktop is stopped. No session
-reload, restart, lock, input, audio/monitor command, or service action was run.
+Initial sandbox checks exposed no active Hyprland/Quickshell process or
+compositor socket. Host-level access later established that both were running.
+No production action occurred during the initial consolidation; the subsequent
+explicitly authorized deployment is documented in [DEPLOYED.md](DEPLOYED.md).
 
 The Lua entrypoint, settings source, tests, dependencies and source structure can
 be inspected here. Physical lock/unlock, startup, Bed Lock, monitor topology,
@@ -67,3 +68,10 @@ rather than an absolute home path; its generated icon remains local icon state.
 The installed uninstall helper and Polkit policy were compared byte-for-byte
 with their corresponding scripts and policy in this repo; they match. Installing
 these system-wide files remains a separate privileged operation, outside deploy.
+
+The deployment reconciliation also preserved newer live Sleep integration work:
+`sleep_integration.js`, the updated Home Assistant contract, loopback delay-sync
+acknowledgements, disabled weekdays/fully disabled plans, and off-phase/replay
+validation. These live changes arrived during staging and verification and were
+incorporated into the fork before final source comparison. The original baseline
+and subsequent reviewed snapshots remain private under `local/`.

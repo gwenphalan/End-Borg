@@ -96,6 +96,37 @@ class DeploymentTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Validation"):
             self.apply()
 
+    def test_explicit_partial_runtime_deployment_keeps_truthful_journal(self):
+        plan = self.validate(runtime=False)
+        self.report.write_text(json.dumps({"passed": False, "runtime_validated": False,
+                                          "static_passed": True, "runtime_smoke_passed": True,
+                                          "source_manifest_sha256": plan["source_manifest_sha256"]}))
+        with self.assertRaisesRegex(ValueError, "Validation"):
+            self.apply()
+        result = deploy.apply(self.source, self.target, self.baseline, self.report, self.backup,
+                              allow_partial_runtime=True)
+        self.assertEqual(result["validation"], {"runtime_validated": False,
+                                              "partial_runtime_authorized": True})
+        deploy.rollback(self.backup, True)
+        self.assertEqual((self.target / "hypr/custom/rules.lua").read_text(), "before")
+
+    def test_partial_runtime_authorization_does_not_bypass_checks_or_drift(self):
+        plan = self.validate(runtime=False)
+        report = {"passed": False, "runtime_validated": False,
+                  "static_passed": True, "runtime_smoke_passed": True,
+                  "source_manifest_sha256": plan["source_manifest_sha256"]}
+        for missing in ["static_passed", "runtime_smoke_passed", "source_manifest_sha256"]:
+            self.report.write_text(json.dumps({k: v for k, v in report.items() if k != missing}))
+            with self.assertRaisesRegex(ValueError, "Validation"):
+                deploy.apply(self.source, self.target, self.baseline, self.report, self.backup,
+                             allow_partial_runtime=True)
+        self.report.write_text(json.dumps(report))
+        self.put(self.target, "hypr/custom/rules.lua", "concurrent live edit")
+        with self.assertRaisesRegex(ValueError, "Live drift"):
+            deploy.apply(self.source, self.target, self.baseline, self.report, self.backup,
+                         allow_partial_runtime=True)
+        self.assertFalse(self.backup.exists())
+
     def test_rollback_refuses_drift_before_any_restore(self):
         self.put(self.source, "quickshell/ii/new.qml", "new")
         self.validate()

@@ -28,17 +28,26 @@ Existing Fish, Kitty, and KDE changes are preserved in the fork's history.
 
 ## Current status
 
-**Source consolidation is complete; deployment to the current desktop is pending.**
-The original checkout and running configuration were left untouched.
+**Deployed to the current desktop on 2026-10-30.** Quickshell reloaded
+successfully and Hyprland accepted the deployed configuration. The deployment
+preserved desktop preferences, generated lock appearance, monitor modes and
+volume, with verified backups and rollback journals.
 
-The recorded staging checks passed 409 Python tests, seven JavaScript harnesses,
-and parsing checks across 741 QML files. Another 12 tests cover deployment,
-rollback, and drift protection. See [validation details](docs/VALIDATION.md) for
-commands, dependencies, parser exceptions, and excluded tests.
+Live checks passed for Home Assistant, fresh Bed Lock data, Music Assistant
+service discovery, Borg model discovery, notifications, and launcher IPC. The
+bar and Settings were inspected on the running desktop. Two null-handling bugs
+found in media bindings and notification timers were repaired during verification.
 
-These results cover source validation and isolated offline tests. UI fidelity,
-actual lock/unlock, startup, monitor and audio behavior, and external service
-connectivity still need runtime verification before migration.
+Automated checks passed 409 source Python tests, 14 deployment/rollback tests,
+eight JavaScript harnesses, and parsing checks across 741 QML files. Isolated
+runtime tests added seven shared-tool UI checks and eight QML/controller/process
+tests. See [validation details](docs/VALIDATION.md) and the
+[deployment record](docs/DEPLOYED.md) for scope and evidence.
+
+Physical authentication, alarm/light/audio actions, reboot behavior, and complete
+Lens Cap GUI/export workflows were not exercised as part of deployment. The
+private virtual compositor crashed during the longer Lens Cap tests; successful
+QML loading is recorded separately from completed UI testing.
 
 ## Working with the source
 

@@ -145,12 +145,16 @@ def atomic_copy(source, destination, expected):
             temp.unlink()
 
 
-def apply(source, target, baseline, report, backup):
+def apply(source, target, baseline, report, backup, allow_partial_runtime=False):
     proposed = plan(source, target, baseline)
     validation = json.loads(Path(report).read_text())
-    if not (validation.get("passed") is True and validation.get("runtime_validated") is True
+    fully_verified = validation.get("passed") is True and validation.get("runtime_validated") is True
+    authorized_partial = (allow_partial_runtime and validation.get("static_passed") is True
+                          and validation.get("runtime_smoke_passed") is True)
+    if not ((fully_verified or authorized_partial)
             and validation.get("source_manifest_sha256") == proposed["source_manifest_sha256"]):
-        raise ValueError("Validation must pass static and runtime checks for this exact source digest")
+        raise ValueError("Validation must pass static and runtime checks for this exact source digest; "
+                         "an explicitly authorized partial runtime deployment also requires static and smoke checks")
     if proposed["drift"]:
         raise ValueError("Live drift: " + ", ".join(proposed["drift"]))
     backup = Path(backup).resolve()
@@ -159,7 +163,10 @@ def apply(source, target, baseline, report, backup):
         if backup == protected or protected in backup.parents:
             raise ValueError("Backup must be outside source and target")
     backup.mkdir(parents=True, exist_ok=False)
-    transaction = dict(proposed, status="backing-up")
+    transaction = dict(proposed, status="backing-up", validation={
+        "runtime_validated": validation.get("runtime_validated") is True,
+        "partial_runtime_authorized": bool(authorized_partial and not fully_verified),
+    })
     journal = backup / "transaction.json"
     write_json(journal, transaction)
     for change in proposed["changes"]:
@@ -222,7 +229,12 @@ def main():
     parser.add_argument("--backup", type=Path)
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--validated", type=Path, help="JSON report for the exact source digest; static and runtime checks must pass")
+    parser.add_argument("--allow-partial-runtime", action="store_true",
+                        help="Explicitly authorized deployment with passing static and smoke checks; "
+                             "records incomplete runtime verification in the journal")
     args = parser.parse_args()
+    if args.allow_partial_runtime and not (args.action == "deploy" and args.apply):
+        parser.error("--allow-partial-runtime requires deploy --apply")
     try:
         if args.action == "snapshot":
             if args.baseline.exists():
@@ -238,7 +250,8 @@ def main():
             if args.action != "deploy" or args.validated is None:
                 raise ValueError("Applying requires deploy --apply --validated REPORT")
             backup = args.backup or Path.home() / ".local/state/end-borg/backups" / datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
-            result = apply(args.source, args.target, args.baseline, args.validated, backup)
+            result = apply(args.source, args.target, args.baseline, args.validated, backup,
+                           allow_partial_runtime=args.allow_partial_runtime)
             result["backup"] = str(backup)
         else:
             result = plan(args.source, args.target, args.baseline)
