@@ -15,11 +15,12 @@ Item {
     readonly property MprisPlayer activePlayer: MprisController.activePlayer
     readonly property var homePlayer: DesktopMedia.remotePlayer
     readonly property bool useHomePlayer: DesktopMedia.useRemote
-    readonly property string displayTitle: useHomePlayer ? (homePlayer.attributes.media_title || HomeAssistant.name(homePlayer)) : cleanedTitle
-    readonly property string displayArtist: useHomePlayer ? (homePlayer.attributes.media_artist || HomeAssistant.name(homePlayer)) : (activePlayer?.trackArtist || "")
-    readonly property bool playing: useHomePlayer ? homePlayer.state === "playing" : (activePlayer?.isPlaying || false)
+    readonly property string displayTitle: useHomePlayer ? (homePlayer?.attributes?.media_title || HomeAssistant.name(homePlayer)) : cleanedTitle
+    readonly property string displayArtist: useHomePlayer ? (homePlayer?.attributes?.media_artist || HomeAssistant.name(homePlayer)) : (activePlayer?.trackArtist || "")
+    readonly property bool playing: useHomePlayer ? homePlayer?.state === "playing" : (activePlayer?.isPlaying || false)
     function mediaAction(service, localAction) {
         if (useHomePlayer) {
+            if (!homePlayer) return;
             if (service === "media_play_pause") HomeAssistant.activate(homePlayer);
             else if (HomeAssistant.hasFeature(homePlayer, service === "media_previous_track" ? 16 : 32)) HomeAssistant.callService(homePlayer, service);
         }
@@ -67,7 +68,7 @@ Item {
             id: mediaCircProg
             Layout.alignment: Qt.AlignVCenter
             lineWidth: Appearance.rounding.unsharpen
-            value: root.useHomePlayer ? (HomeAssistant.mediaPosition(root.homePlayer) / (root.homePlayer.attributes.media_duration || 1)) : ((activePlayer?.position || 0) / (activePlayer?.length || 1))
+            value: root.useHomePlayer ? (HomeAssistant.mediaPosition(root.homePlayer) / (root.homePlayer?.attributes?.media_duration || 1)) : ((activePlayer?.position || 0) / (activePlayer?.length || 1))
             implicitSize: 20
             colPrimary: Appearance.colors.colOnSecondaryContainer
             enableAnimation: false

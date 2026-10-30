@@ -20,19 +20,19 @@ Singleton {
         id: wrapper
         required property int notificationId // Could just be `id` but it conflicts with the default prop in QtObject
         property Notification notification
-        property list<var> actions: notification?.actions.map((action) => ({
+        property list<var> actions: notification ? notification.actions.map((action) => ({
             "identifier": action.identifier,
             "text": action.text,
-        })) ?? []
+        })) : []
         property bool popup: false
-        property bool isTransient: notification?.hints.transient ?? false
-        property string appIcon: notification?.appIcon ?? ""
-        property string appName: notification?.appName ?? ""
-        property string body: notification?.body ?? ""
-        property string image: notification?.image ?? ""
-        property string summary: notification?.summary ?? ""
+        property bool isTransient: notification ? (notification.hints.transient ?? false) : false
+        property string appIcon: notification ? (notification.appIcon || "") : ""
+        property string appName: notification ? (notification.appName || "") : ""
+        property string body: notification ? (notification.body || "") : ""
+        property string image: notification ? (notification.image || "") : ""
+        property string summary: notification ? (notification.summary || "") : ""
         property double time
-        property string urgency: notification?.urgency.toString() ?? "normal"
+        property string urgency: notification ? notification.urgency.toString() : "normal"
         property Timer timer
 
         onNotificationChanged: {
@@ -67,8 +67,10 @@ Singleton {
             const index = root.list.findIndex((notif) => notif.notificationId === notificationId);
             const notifObject = root.list[index];
             print("[Notifications] Notification timer triggered for ID: " + notificationId + ", transient: " + notifObject?.isTransient);
-            if (notifObject.isTransient) root.discardNotification(notificationId);
-            else root.timeoutNotification(notificationId);
+            if (notifObject) {
+                if (notifObject.isTransient) root.discardNotification(notificationId);
+                else root.timeoutNotification(notificationId);
+            }
             destroy()
         }
     }
