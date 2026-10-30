@@ -189,6 +189,8 @@ def safe_tests(env: dict[str, str], python: str, lens_python: str | None) -> lis
             "scripts/tool_app/tests/test_runtime.mjs",
         ]:
             tests.append((relative, [node, str(SHELL_ROOT / relative)], SHELL_ROOT))
+        tests.append(("tests/test_sleep_integration.mjs",
+                      [node, str(ROOT / "tests/test_sleep_integration.mjs")], ROOT))
     else:
         tests.append(("scripts/settings/test_sleep_schedule.mjs (node missing)", [], SHELL_ROOT))
     results = []

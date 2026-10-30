@@ -37,22 +37,25 @@ ContentPage {
     readonly property bool canEdit: HomeAssistant.connected && !!sleepItem && !!windItem
                               && !HomeAssistant.sleepScheduleLoading && !saving
     readonly property bool canOpenEditor: HomeAssistant.connected && !saving
-    readonly property bool tonightActive: HomeAssistant.states["input_boolean.tonight_sleep_override_active"]?.state === "on"
-    readonly property var tonightBedtime: tonightActive ? helperDate("input_text.tonight_bedtime") : null
-    readonly property var tonightWake: tonightActive ? helperDate("input_text.tonight_wake_up") : null
+    readonly property bool tonightActive: !!HomeAssistant.sleepPlan.tonight_override
+    readonly property var tonightBedtime: tonightActive ? planDate(HomeAssistant.sleepPlan.tonight_override?.bedtime) : null
+    readonly property var tonightWake: tonightActive ? planDate(HomeAssistant.sleepPlan.tonight_override?.wakeup) : null
     readonly property bool allDaysUsed: groups.reduce((count, group) => count + group.days.length, 0) >= 7
-    readonly property int windMinutes: helperValue("input_number.bedtime_wind_down_minutes", 30)
-    readonly property int delayMinutes: helperValue("input_number.bedtime_delay_length", 30)
-    readonly property int maxDelays: helperValue("input_number.bedtime_max_delays", 3)
-    readonly property int delaysUsed: helperValue("counter.bedtime_delays_used", 0)
+    readonly property int windMinutes: Number(HomeAssistant.sleepPlan.weekly?.[Sleep.days[nowDate.getDay()]]?.wind_down_minutes ?? 30)
+    readonly property int delayMinutes: Number(HomeAssistant.sleepPlan.delay_minutes ?? 30)
+    readonly property int maxDelays: Number(HomeAssistant.sleepPlan.max_delays ?? 3)
+    readonly property int delaysUsed: Number(HomeAssistant.sleepPlan.delays_used ?? 0)
     readonly property var nextBaseline: Sleep.nextPeriod(groups, nowDate)
     readonly property var nextBedtime: {
         if (tonightWake && tonightWake > nowDate && tonightBedtime) return tonightBedtime;
-        const remote = Date.parse(HomeAssistant.states["sensor.current_bedtime"]?.state || "");
+        const remote = Date.parse(HomeAssistant.sleepPlan.bedtime || "");
         return Number.isFinite(remote) && remote > nowDate.getTime()
                 ? new Date(remote) : nextBaseline?.bed || null;
     }
     readonly property var nextWake: {
+        const effective=planDate(HomeAssistant.sleepPlan.wakeup);
+        const effectiveBed=planDate(HomeAssistant.sleepPlan.bedtime);
+        if(effective && effectiveBed && nextBedtime?.getTime()===effectiveBed.getTime() && effective>nowDate)return effective;
         if (tonightWake && tonightWake > nowDate) return tonightWake;
         const scheduled = Sleep.wakeForBedtime(groups, nextBedtime,
                                                 Math.max(maxDelays, delaysUsed) * delayMinutes);
@@ -61,12 +64,8 @@ ContentPage {
                 ? nextBaseline.wake : null;
     }
 
-    function helperValue(entityId, fallback) {
-        const n = Number(HomeAssistant.states[entityId]?.state);
-        return Number.isInteger(n) ? n : fallback;
-    }
-    function helperDate(entityId) {
-        const value = HomeAssistant.states[entityId]?.state || "";
+    function planDate(value) {
+        value = value || "";
         const date = new Date(value.replace(" ", "T"));
         return Number.isFinite(date.getTime()) ? date : null;
     }
@@ -211,20 +210,8 @@ ContentPage {
     }
     function setWindMinutes(value) {
         if (!canEdit || numberSaving || value === windMinutes) return;
-        const previous = windMinutes;
-        numberSaving = true;
-        HomeAssistant.setSleepNumber("input_number.bedtime_wind_down_minutes", value, (success, error) => {
-            numberSaving = false;
-            if (!success) {
-                showFeedback(error || Translation.tr("Could not save Wind Down."), true);
-                return;
-            }
-            const next = groups.map(group => ({bed: group.bed, wake: group.wake, days: group.days.slice()}));
-            writeSchedules(next, value, saved => {
-                if (!saved) HomeAssistant.setSleepNumber("input_number.bedtime_wind_down_minutes", previous,
-                    () => {});
-            });
-        });
+        const next=groups.map(group=>({bed:group.bed,wake:group.wake,days:group.days.slice()}));
+        writeSchedules(next,value);
     }
     function dateText(date) {
         if (!date) return "—";
@@ -524,7 +511,7 @@ ContentPage {
                         unit: Translation.tr("min")
                         Accessible.name: Translation.tr("Delay length")
                         enabled: root.canEdit && !root.numberSaving && !root.saving
-                        onEdited: number => root.setNumber("input_number.bedtime_delay_length", number)
+                        onEdited: number => root.setNumber("delay_minutes", number)
                     }
                 }
                 RowLayout {
@@ -538,7 +525,7 @@ ContentPage {
                         integral: true
                         Accessible.name: Translation.tr("Maximum delays")
                         enabled: root.canEdit && !root.numberSaving && !root.saving
-                        onEdited: number => root.setNumber("input_number.bedtime_max_delays", number)
+                        onEdited: number => root.setNumber("max_delays", number)
                     }
                 }
                 ConfigSwitch {

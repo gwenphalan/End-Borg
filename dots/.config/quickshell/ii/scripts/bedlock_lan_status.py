@@ -38,16 +38,32 @@ def validate(payload, now, previous_night=0, previous_generated=0, previous_used
     used = payload.get("delaysUsed")
     maximum = payload.get("maxDelays")
     delay_minutes = payload.get("delayMinutes")
+    if payload.get("phase") == "off":
+        if (type(night) is not int or night != 0 or type(generated) is not int
+                or not valid_epoch(generated) or generated < now - 90 or generated > now + 5
+                or (valid_epoch(previous_generated) and generated <= previous_generated)):
+            raise ValueError("stale or replayed disabled plan")
+        if (payload.get("bedtime") is not None or payload.get("wakeup") is not None
+                or type(used) is not int or used != 0 or type(remaining) is not int or remaining != 0
+                or type(maximum) is not int or not 0 <= maximum <= 10
+                or type(delay_minutes) is not int or not 1 <= delay_minutes <= 120):
+            raise ValueError("invalid disabled plan")
+        return {"phase": "off", "nightStartEpoch": 0, "generatedAtEpoch": generated,
+                "delaysRemaining": 0, "delaysUsed": 0, "maxDelays": maximum,
+                "delayMinutes": delay_minutes, "bedtimeEpoch": 0, "wakeEpoch": 0}
     if type(night) is not int or type(generated) is not int \
             or not valid_epoch(night) or not valid_epoch(generated):
         raise ValueError("invalid epoch")
+    if valid_epoch(previous_generated) and (generated < previous_generated
+            or (previous_night == 0 and generated <= previous_generated)):
+        raise ValueError("snapshot predates the current plan")
     if type(used) is not int or not 0 <= used <= 10:
         raise ValueError("invalid delays used")
     if type(maximum) is not int or not 0 <= maximum <= 10:
         raise ValueError("invalid max delays")
     if type(remaining) is not int or remaining != max(0, maximum - used):
         raise ValueError("invalid delays remaining")
-    if type(delay_minutes) is not int or not 5 <= delay_minutes <= 120:
+    if type(delay_minutes) is not int or not 1 <= delay_minutes <= 120:
         raise ValueError("invalid delay length")
     if generated < now - 90 or generated > now + 5:
         raise ValueError("stale or future response")

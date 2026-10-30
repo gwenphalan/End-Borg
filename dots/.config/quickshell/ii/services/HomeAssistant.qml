@@ -6,6 +6,8 @@ import Quickshell
 import Quickshell.Io
 import qs.modules.common
 import "home_assistant.js" as HA
+import "sleep_integration.js" as SleepIntegration
+import "../modules/settings/sleep_schedule.js" as SleepSchedule
 
 Singleton {
     id: root
@@ -24,6 +26,9 @@ Singleton {
     readonly property bool savingToken:save.running
     signal tokenSaveFinished(bool succeeded)
     property var states: ({})
+    readonly property var sleepPlan: states["sensor.sleep_plan"]?.attributes || ({})
+    readonly property string sleepWeeklyDayBasis: "wake"
+    property bool delaySyncBusy: false
     property var sleepScheduleItems: []
     property bool sleepScheduleLoading: false
     property bool sleepScheduleSaving: false
@@ -63,6 +68,7 @@ Singleton {
     readonly property bool bedLockDelayAllowed: bedLockActive && !bedLockDelayPending
         && bedLockDelaysRemaining > 0 && bedLockDelaySeconds > 0
         && bedLockBedtimeEpoch + bedLockDelaySeconds > sleepClock
+        && bedLockBedtimeEpoch + bedLockDelaySeconds < bedLockWakeEpoch
     signal bedLockScheduleRefreshed(bool active, real nightEpoch, real wakeEpoch)
     readonly property int bedtimeDelaysRemaining: sleepCache.sleepDelaysRemaining
     readonly property int bedtimeDelaysUsed: sleepCache.sleepDelaysUsed
@@ -77,105 +83,55 @@ Singleton {
     readonly property bool bedtimeDelayAllowed: Persistent.ready && cachedBedtimeActive
         && sleepCache.sleepDelaysRemaining > 0 && bedtimeDelaySeconds > 0
         && sleepCache.sleepBedtimeEpoch + bedtimeDelaySeconds > sleepClock
+        && sleepCache.sleepBedtimeEpoch + bedtimeDelaySeconds < sleepCache.sleepWakeEpoch
         && sleepClock - sleepCache.sleepNightStartEpoch <= 86400
         && sleepClock - sleepCache.sleepCacheUpdatedEpoch <= 129600
     signal sleepScheduleRefreshed(bool active, real nightEpoch, real wakeEpoch)
 
-    function scheduledWakeEpoch(bedtime) {
-        let schedule;
-        try { schedule = JSON.parse(sleepCache.sleepScheduleJson); }
-        catch (e) { return 0; }
-        if (!schedule || typeof schedule !== "object") return 0;
-        const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-        const target = bedtime * 1000;
-        const firstDay = new Date(target);
-        firstDay.setHours(0, 0, 0, 0);
-        const intervals = [];
-        for (let offset = -1; offset <= 2; offset++) {
-            const day = new Date(firstDay);
-            day.setDate(day.getDate() + offset);
-            const blocks = schedule[days[day.getDay()]] || [];
-            for (const block of blocks) {
-                const start = String(block.from || "").split(":").map(Number);
-                const end = String(block.to || "").split(":").map(Number);
-                if (start.length < 2 || end.length < 2 || !start.every(Number.isFinite) || !end.every(Number.isFinite)) continue;
-                const from = new Date(day); from.setHours(start[0], start[1], start[2] || 0, 0);
-                const to = new Date(day); to.setHours(end[0], end[1], end[2] || 0, 0);
-                if (to <= from) to.setDate(to.getDate() + 1);
-                intervals.push([from.getTime(), to.getTime()]);
-            }
-        }
-        intervals.sort((a, b) => a[0] - b[0]);
-        let wake = 0;
-        for (const interval of intervals) {
-            // HA's computed bedtime can precede the Sleep schedule block.
-            // Associate it with the next block when that starts tonight.
-            if (!wake && interval[0] <= target && target < interval[1]) wake = interval[1];
-            else if (!wake && interval[0] > target && interval[0] - target <= 6 * 3600000)
-                wake = interval[1];
-            else if (wake && interval[0] - wake <= 60000) wake = Math.max(wake, interval[1]);
-            else if (wake) break;
-        }
-        return wake / 1000;
-    }
-
     // Keep only nonsecret schedule data on disk. It remains usable when the
     // login keyring is locked and the websocket token cannot be reloaded.
     function cacheSleepSchedule() {
-        if (!connected || !Persistent.ready) return;
-        const nightState = states["input_datetime.bedtime_night_started"];
-        const night = Number(nightState?.attributes?.timestamp)
-            || Date.parse(nightState?.state || "") / 1000;
-        const bedtime = Date.parse(states["sensor.current_bedtime"]?.state || "") / 1000;
-        const overrideActive = states["input_boolean.tonight_sleep_override_active"]?.state === "on";
-        const overrideWake = overrideActive
-            ? Date.parse((states["input_text.tonight_wake_up"]?.state || "").replace(" ", "T")) / 1000
-            : NaN;
-        const wake = states["schedule.sleep_schedule"]?.state === "on"
-            ? Date.parse(states["schedule.sleep_schedule"]?.attributes?.next_event || "") / 1000 : NaN;
-        const rawRemaining = Number(states["sensor.current_bedtime"]?.attributes?.delays_remaining);
-        const rawUsed = Number(states["sensor.current_bedtime"]?.attributes?.delays_used);
-        const maxDelays = Number(states["sensor.current_bedtime"]?.attributes?.max_delays);
-        const delayMinutes = states["sensor.current_bedtime"]?.attributes?.delay_minutes;
-        if (!isFinite(night) || night <= 0 || !isFinite(bedtime) || bedtime <= 0
-                || !Number.isInteger(rawUsed) || rawUsed < 0 || rawUsed > 10
-                || !Number.isInteger(maxDelays) || maxDelays < 0 || maxDelays > 10
-                || !Number.isInteger(rawRemaining) || rawRemaining !== Math.max(0, maxDelays - rawUsed)
-                || !Number.isInteger(delayMinutes) || delayMinutes < 5 || delayMinutes > 120) return;
-
-        const isNewNight = Math.abs(night - sleepCache.sleepNightStartEpoch) > 60;
+        if (!connected || !Persistent.ready || !SleepIntegration.validPlan(sleepPlan)) return;
+        const plan=sleepPlan;
+        if(plan.phase==="off") {
+            // An authoritative all-disabled plan must retire offline deadlines,
+            // including a queued delay for a period that no longer exists.
+            sleepCache.sleepNightStartEpoch=0;
+            sleepCache.sleepBedtimeEpoch=0;
+            sleepCache.sleepWakeEpoch=0;
+            sleepCache.sleepDelaysUsed=0;
+            sleepCache.sleepDelaysRemaining=0;
+            sleepCache.sleepMaxDelays=plan.max_delays;
+            sleepCache.sleepDelayMinutes=plan.delay_minutes;
+            sleepCache.sleepPendingDelayCount=0;
+            sleepCache.sleepCacheUpdatedEpoch=sleepClock;
+            sleepScheduleRefreshed(false,0,0);
+            return false;
+        }
+        const night=Number(plan.nightStartEpoch);
+        const bedtime=Date.parse(plan.bedtime)/1000,wake=Date.parse(plan.wakeup)/1000;
+        if (!Number.isFinite(night) || night<=0 || !Number.isFinite(wake) || wake<=bedtime) return;
+        const isNewNight=Math.abs(night-sleepCache.sleepNightStartEpoch)>1;
         if (isNewNight) {
-            sleepCache.sleepNightStartEpoch = night;
-            sleepCache.sleepPendingDelayCount = 0;
-            sleepCache.sleepWakeEpoch = 0;
+            sleepCache.sleepNightStartEpoch=night;
+            sleepCache.sleepPendingDelayCount=0;
         }
-        const localUsed = sleepCache.sleepDelaysUsed;
-        if (isNewNight || sleepCache.sleepPendingDelayCount === 0 || rawUsed >= localUsed) {
-            sleepCache.sleepBedtimeEpoch = bedtime;
-            sleepCache.sleepDelaysRemaining = rawRemaining;
-            sleepCache.sleepDelaysUsed = rawUsed;
-            sleepCache.sleepPendingDelayCount = 0;
+        const localUsed=sleepCache.sleepDelaysUsed;
+        if (isNewNight || sleepCache.sleepPendingDelayCount===0 || plan.delays_used>=localUsed) {
+            sleepCache.sleepBedtimeEpoch=bedtime;
+            sleepCache.sleepDelaysRemaining=plan.delays_remaining;
+            sleepCache.sleepDelaysUsed=plan.delays_used;
+            sleepCache.sleepPendingDelayCount=0;
         } else {
-            // A local delay is pending: an older HA state must not move the
-            // lock back to the original bedtime or restore a spent delay.
-            sleepCache.sleepBedtimeEpoch = Math.max(sleepCache.sleepBedtimeEpoch, bedtime);
-            sleepCache.sleepDelaysRemaining = Math.max(0, maxDelays - localUsed);
+            sleepCache.sleepBedtimeEpoch=Math.max(sleepCache.sleepBedtimeEpoch,bedtime);
+            sleepCache.sleepDelaysRemaining=Math.max(0,plan.max_delays-localUsed);
         }
-        sleepCache.sleepMaxDelays = maxDelays;
-        sleepCache.sleepDelayMinutes = delayMinutes;
-        const scheduledWake = scheduledWakeEpoch(sleepCache.sleepBedtimeEpoch);
-        // HA's next_event can be the midnight boundary of a split overnight
-        // block. The contiguous schedule interval carries the actual wake time.
-        sleepCache.sleepWakeEpoch = isFinite(overrideWake) && overrideWake > sleepCache.sleepBedtimeEpoch
-            ? overrideWake
-            : Math.max(isFinite(wake) && wake > sleepCache.sleepBedtimeEpoch ? wake : 0,
-                       scheduledWake > sleepCache.sleepBedtimeEpoch ? scheduledWake : 0);
-        sleepCache.sleepCacheUpdatedEpoch = sleepClock;
-        const activeNow = sleepCache.sleepBedtimeEpoch > 0
-            && sleepCache.sleepWakeEpoch > sleepCache.sleepBedtimeEpoch
-            && sleepClock >= sleepCache.sleepBedtimeEpoch && sleepClock < sleepCache.sleepWakeEpoch;
+        sleepCache.sleepMaxDelays=plan.max_delays;
+        sleepCache.sleepDelayMinutes=plan.delay_minutes;
+        sleepCache.sleepWakeEpoch=wake;
+        sleepCache.sleepCacheUpdatedEpoch=sleepClock;
         flushPendingBedtimeDelay();
-        return activeNow;
+        return sleepCache.sleepBedtimeEpoch>0 && sleepClock>=sleepCache.sleepBedtimeEpoch && sleepClock<wake;
     }
 
     function delayBedtime() {
@@ -190,11 +146,20 @@ Singleton {
     }
 
     function flushPendingBedtimeDelay() {
-        if (!Persistent.ready || sleepCache.sleepPendingDelayCount <= 0
-                || sleepCache.sleepNightStartEpoch <= 0 || delaySync.running) return;
-        delaySync.command = ["python3", Quickshell.shellPath("scripts/sleep_delay_webhook.py"),
-            String(sleepCache.sleepDelaysUsed), String(sleepCache.sleepNightStartEpoch)];
-        delaySync.running = true;
+        if (!Persistent.ready || sleepCache.sleepPendingDelayCount<=0 || sleepCache.sleepNightStartEpoch<=0
+                || delaySync.running || delaySyncBusy) return;
+        if (connected && SleepIntegration.validPlan(sleepPlan)
+                && Math.abs(Number(sleepPlan.nightStartEpoch)-sleepCache.sleepNightStartEpoch)<1) {
+            delaySyncBusy=true;
+            send("call_service",{domain:"sleep",service:"set_delays",service_data:{night:sleepPlan.night,used:sleepCache.sleepDelaysUsed}},(result,failure)=>{
+                delaySyncBusy=false;
+                if(!failure) delayRefresh.restart();
+            });
+            return;
+        }
+        delaySync.command=["python3",Quickshell.shellPath("scripts/sleep_delay_webhook.py"),
+            String(sleepCache.sleepDelaysUsed),String(sleepCache.sleepNightStartEpoch)];
+        delaySync.running=true;
     }
 
     function refreshBedLockLan() {
@@ -219,6 +184,26 @@ Singleton {
     function acceptBedLockLanSnapshot(snapshot) {
         if (!Persistent.ready) return;
         const now = Date.now() / 1000;
+        if(snapshot?.phase==="off") {
+            if(snapshot.nightStartEpoch!==0 || snapshot.bedtimeEpoch!==0 || snapshot.wakeEpoch!==0
+                    || snapshot.delaysUsed!==0 || snapshot.delaysRemaining!==0
+                    || !Number.isInteger(snapshot.maxDelays) || snapshot.maxDelays<0 || snapshot.maxDelays>10
+                    || !Number.isInteger(snapshot.delayMinutes) || snapshot.delayMinutes<1 || snapshot.delayMinutes>120
+                    || !Number.isInteger(snapshot.generatedAtEpoch) || snapshot.generatedAtEpoch<now-90
+                    || snapshot.generatedAtEpoch>now+5 || snapshot.generatedAtEpoch<=bedLockCacheUpdatedEpoch) return;
+            sleepCache.bedLockCacheUpdatedEpoch=0;
+            sleepCache.bedLockNightStartEpoch=0;
+            sleepCache.bedLockBedtimeEpoch=0;
+            sleepCache.bedLockWakeEpoch=0;
+            sleepCache.bedLockDelaysUsed=0;
+            sleepCache.bedLockDelaysRemaining=0;
+            sleepCache.bedLockMaxDelays=snapshot.maxDelays;
+            sleepCache.bedLockDelayMinutes=snapshot.delayMinutes;
+            bedLockDelayPending=false;bedLockPendingUsed=0;bedLockPendingTimeout.stop();
+            sleepCache.bedLockCacheUpdatedEpoch=snapshot.generatedAtEpoch;
+            bedLockScheduleRefreshed(false,0,0);
+            return;
+        }
         if (!snapshot || !isFinite(snapshot.nightStartEpoch)
                 || !isFinite(snapshot.generatedAtEpoch)
                 || !isFinite(snapshot.bedtimeEpoch) || !isFinite(snapshot.wakeEpoch)
@@ -229,8 +214,10 @@ Singleton {
                 || snapshot.maxDelays < 0 || snapshot.maxDelays > 10
                 || snapshot.delaysRemaining !== Math.max(0, snapshot.maxDelays - snapshot.delaysUsed)
                 || !Number.isInteger(snapshot.delayMinutes)
-                || snapshot.delayMinutes < 5 || snapshot.delayMinutes > 120
-                || snapshot.generatedAtEpoch < now - 90 || snapshot.generatedAtEpoch > now + 5)
+                || snapshot.delayMinutes < 1 || snapshot.delayMinutes > 120
+                || snapshot.generatedAtEpoch < now - 90 || snapshot.generatedAtEpoch > now + 5
+                || snapshot.generatedAtEpoch < bedLockCacheUpdatedEpoch
+                || (bedLockNightStartEpoch===0 && bedLockCacheUpdatedEpoch>0 && snapshot.generatedAtEpoch<=bedLockCacheUpdatedEpoch))
             return;
         // Make intermediate writes non-authoritative until the whole snapshot
         // is in place; individual QML property handlers may fire between them.
@@ -351,9 +338,9 @@ Singleton {
                 sleepScheduleLoading:root.sleepScheduleLoading,
                 sleepScheduleError:root.sleepScheduleError,
                 sleepScheduleIds:root.sleepScheduleItems.map(item => item.id),
-                tonightActive:root.states["input_boolean.tonight_sleep_override_active"]?.state,
-                tonightBedtime:root.states["input_text.tonight_bedtime"]?.state,
-                tonightWake:root.states["input_text.tonight_wake_up"]?.state,
+                tonightActive:!!root.sleepPlan.tonight_override,
+                tonightBedtime:root.sleepPlan.tonight_override?.bedtime,
+                tonightWake:root.sleepPlan.tonight_override?.wakeup,
                 pendingDelays:root.sleepCache.sleepPendingDelayCount});
         }
     }
@@ -417,7 +404,7 @@ Singleton {
         if (data.new_state) updated[data.entity_id]=data.new_state;
         else delete updated[data.entity_id];
         states=updated;
-        if ((data.entity_id === "schedule.sleep_schedule" || data.entity_id === "schedule.wind_down")
+        if (data.entity_id === "sensor.sleep_plan"
                 && !sleepScheduleSaving) scheduleRefreshTimer.restart();
     }
     function send(type, data, callback) {
@@ -427,48 +414,26 @@ Singleton {
         socket.sendTextMessage(JSON.stringify(Object.assign({id:id,type:type},data || {})));
     }
     function loadSleepSchedules(callback, force) {
-        if (!connected) {
-            sleepScheduleError = Translation.tr("Home Assistant is not connected");
-            if (callback) callback(false, sleepScheduleError);
-            return;
-        }
-        if (!force && sleepScheduleItems.length === 2) {
-            if (callback) callback(true, "");
-            return;
-        }
-        if (callback) sleepScheduleWaiters.push(callback);
-        if (sleepScheduleLoading) return;
-        sleepScheduleLoading = true;
-        sleepScheduleError = "";
-        send("schedule/list", {}, (result, failure) => {
-            sleepScheduleLoading = false;
-            const finish = (success, message) => {
-                const waiters = sleepScheduleWaiters;
-                sleepScheduleWaiters = [];
-                for (const waiter of waiters) waiter(success, message);
-            };
-            if (failure || !Array.isArray(result)) {
-                sleepScheduleError = failure || Translation.tr("Could not read the sleep schedule.");
-                finish(false, sleepScheduleError);
-                return;
-            }
-            const sleep = result.find(item => item.id === "sleep_schedule");
-            const wind = result.find(item => item.id === "wind_down");
-            if (!sleep || !wind) {
-                sleepScheduleError = Translation.tr("Sleep or Wind Down schedule is missing.");
-                finish(false, sleepScheduleError);
-                return;
-            }
-            sleepScheduleItems = [sleep, wind];
-            if (Persistent.ready) {
-                const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
-                const blocks = ({});
-                for (const day of days) blocks[day] = sleep[day] || [];
-                sleepCache.sleepScheduleJson = JSON.stringify(blocks);
+        if (!connected) {sleepScheduleError=Translation.tr("Home Assistant is not connected");if(callback)callback(false,sleepScheduleError);return;}
+        if (!force && sleepScheduleItems.length===2) {if(callback)callback(true,"");return;}
+        if(callback)sleepScheduleWaiters.push(callback);
+        if(sleepScheduleLoading)return;
+        sleepScheduleLoading=true;sleepScheduleError="";
+        send("call_service",{domain:"sleep",service:"get_plan",return_response:true},(result,failure)=>{
+            sleepScheduleLoading=false;
+            const plan=result?.response || result;
+            try {
+                if(failure)throw Error(failure);
+                if(!SleepIntegration.validPlan(plan))throw Error(Translation.tr("Sleep integration returned an invalid plan."));
+                sleepScheduleItems=SleepIntegration.weeklyToItems(plan.weekly,sleepWeeklyDayBasis);
+                const updated=Object.assign({},states);
+                updated["sensor.sleep_plan"]={entity_id:"sensor.sleep_plan",state:plan.phase,attributes:plan};
+                states=updated;
+                if(Persistent.ready)sleepCache.sleepScheduleJson=JSON.stringify(sleepScheduleItems[0]);
                 cacheSleepSchedule();
-            }
-            if (error.includes("schedule.get_schedule")) error = "";
-            finish(true, "");
+            }catch(problem){sleepScheduleError=String(problem.message||problem);}
+            const waiters=sleepScheduleWaiters;sleepScheduleWaiters=[];
+            for(const waiter of waiters)waiter(!sleepScheduleError,sleepScheduleError);
         });
     }
     function saveTonightSleepSchedule(bed, wake, callback) {
@@ -486,8 +451,8 @@ Singleton {
             return;
         }
         tonightSaveBusy = true;
-        send("call_service", {domain:"script", service:"set_tonight_sleep_schedule",
-            service_data:{bedtime:bed, wake_up:wake}}, (result, failure) => {
+        send("call_service", {domain:"sleep", service:"set_tonight",
+            service_data:{bedtime:new Date(times[0]).toISOString(), wakeup:new Date(times[1]).toISOString(), wind_down_minutes:sleepPlan.tonight_override?.wind_down_minutes ?? sleepPlan.weekly?.[SleepIntegration.days[new Date(times[1]).getDay()]]?.wind_down_minutes ?? 30}}, (result, failure) => {
             if (failure) {
                 tonightSaveBusy = false;
                 if (callback) callback(false, failure);
@@ -501,7 +466,7 @@ Singleton {
             return;
         }
         tonightSaveBusy = true;
-        send("call_service", {domain:"script", service:"clear_tonight_sleep_schedule"}, (result, failure) => {
+        send("call_service", {domain:"sleep", service:"clear_tonight"}, (result, failure) => {
             if (failure) {
                 tonightSaveBusy = false;
                 if (callback) callback(false, failure);
@@ -515,86 +480,57 @@ Singleton {
         tonightVerifyTimer.start();
     }
     function verifyTonightState() {
-        const expected = tonightVerifyExpected;
-        if (!expected) return;
+        const expected=tonightVerifyExpected;if(!expected)return;
         tonightVerifyAttempts++;
-        send("get_states", {}, (result, failure) => {
-            const get = id => Array.isArray(result)
-                ? result.find(item => item.entity_id === id)?.state : undefined;
-            const matches = !failure && get("input_boolean.tonight_sleep_override_active") === expected.active
-                && get("input_text.tonight_bedtime") === expected.bed
-                && get("input_text.tonight_wake_up") === expected.wake;
-            if (matches || failure || tonightVerifyAttempts >= 5) {
-                const callback = tonightVerifyCallback;
-                tonightVerifyExpected = null;
-                tonightVerifyCallback = null;
-                tonightSaveBusy = false;
-                if (callback) callback(matches, failure || (matches ? ""
-                    : Translation.tr("Home Assistant did not apply tonight's schedule. Check its script log.")));
-            } else tonightVerifyTimer.restart();
+        send("call_service",{domain:"sleep",service:"get_plan",return_response:true},(result,failure)=>{
+            const plan=result?.response || result;
+            const override=plan?.tonight_override;
+            const matches=!failure && (expected.active==="off"?!override:!!override
+                && Date.parse(override.bedtime)===Date.parse(expected.bed.replace(" ","T"))
+                && Date.parse(override.wakeup)===Date.parse(expected.wake.replace(" ","T")));
+            if(matches || failure || tonightVerifyAttempts>=5){
+                const callback=tonightVerifyCallback;tonightVerifyExpected=null;tonightVerifyCallback=null;tonightSaveBusy=false;
+                if(matches)refresh();
+                if(callback)callback(matches,failure || (matches?"":Translation.tr("Sleep did not apply tonight's schedule. Refresh and try again.")));
+            }else tonightVerifyTimer.restart();
         });
     }
     function saveSleepSchedules(sleepItem, windItem, callback) {
-        if (sleepScheduleSaving || sleepScheduleLoading) { if (callback) callback(false, Translation.tr("Schedule refresh or save is already running.")); return; }
-        const previousSleep = sleepScheduleItems.find(item => item.id === "sleep_schedule");
-        const previousWind = sleepScheduleItems.find(item => item.id === "wind_down");
-        if (!connected || !previousSleep || !previousWind || sleepItem?.id !== "sleep_schedule" || windItem?.id !== "wind_down") {
-            if (callback) callback(false, Translation.tr("Refresh the sleep schedule before saving."));
-            return;
-        }
-        const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
-        const payload = item => {
-            const data = {schedule_id:item.id, name:item.name};
-            if (item.icon) data.icon = item.icon;
-            for (const day of days) data[day] = item[day] || [];
-            return data;
-        };
-        const matches = (actual, wanted) => actual && days.every(day => JSON.stringify(actual[day] || []) === JSON.stringify(wanted[day] || []));
-        sleepScheduleSaving = true;
-        scheduleRefreshTimer.stop();
-        sleepScheduleError = "";
-        send("schedule/update", payload(sleepItem), (sleepResult, sleepFailure) => {
-            if (sleepFailure) {
-                sleepScheduleSaving = false;
-                sleepScheduleError = sleepFailure;
-                if (callback) callback(false, sleepFailure);
-                return;
-            }
-            send("schedule/update", payload(windItem), (windResult, windFailure) => {
-                if (windFailure) {
-                    send("schedule/update", payload(previousSleep), (rollbackResult, rollbackFailure) => {
-                        sleepScheduleSaving = false;
-                        const saveError = rollbackFailure
-                            ? Translation.tr("Wind Down save failed and Sleep rollback failed: ") + rollbackFailure
-                            : windFailure;
-                        loadSleepSchedules(null, true);
-                        sleepScheduleError = saveError;
-                        if (callback) callback(false, saveError);
-                    });
-                    return;
-                }
-                loadSleepSchedules((loaded, readError) => {
-                    sleepScheduleSaving = false;
-                    const currentSleep = sleepScheduleItems.find(item => item.id === "sleep_schedule");
-                    const currentWind = sleepScheduleItems.find(item => item.id === "wind_down");
-                    if (!loaded || !matches(currentSleep, sleepItem) || !matches(currentWind, windItem)) {
-                        sleepScheduleError = readError || Translation.tr("Schedule saved but readback did not match. Refresh before editing again.");
-                        if (callback) callback(false, sleepScheduleError);
-                        return;
-                    }
-                    refresh();
-                    if (callback) callback(true, "");
-                }, true);
-            });
+        if(sleepScheduleSaving || sleepScheduleLoading){if(callback)callback(false,Translation.tr("Schedule refresh or save is already running."));return;}
+        if(!connected || sleepItem?.id!=="sleep_schedule" || windItem?.id!=="wind_down"){if(callback)callback(false,Translation.tr("Refresh the sleep schedule before saving."));return;}
+        let weekly;
+        try {
+            const parsed=SleepSchedule.readGroups(sleepItem);
+            if(parsed.error)throw Error(parsed.error);
+            // The existing UI exposes a single Wind Down duration. Recover it
+            // from its submitted ranges, including across midnight.
+            let windMinutes=0;
+            for(const day of SleepIntegration.days)for(const block of windItem[day] || [])
+                windMinutes+=SleepSchedule.timeMinutes(block.to)-SleepSchedule.timeMinutes(block.from);
+            const scheduledDays=parsed.groups.reduce((count,group)=>count+group.days.length,0);
+            windMinutes=scheduledDays>0?Math.round(windMinutes/scheduledDays):0;
+            weekly=SleepIntegration.groupsToWeekly(parsed.groups,windMinutes,sleepWeeklyDayBasis);
+        }catch(problem){if(callback)callback(false,String(problem.message||problem));return;}
+        sleepScheduleSaving=true;scheduleRefreshTimer.stop();sleepScheduleError="";
+        send("call_service",{domain:"sleep",service:"set_schedule",service_data:{weekly:weekly}},(result,failure)=>{
+            if(failure){sleepScheduleSaving=false;sleepScheduleError=failure;if(callback)callback(false,failure);return;}
+            loadSleepSchedules((loaded,readError)=>{
+                sleepScheduleSaving=false;
+                const matches=loaded && SleepIntegration.sameWeekly(sleepPlan.weekly,weekly);
+                sleepScheduleError=matches?"":readError || Translation.tr("Schedule saved but readback did not match. Refresh before editing again.");
+                if(callback)callback(matches,sleepScheduleError);
+            },true);
         });
     }
-    function setSleepNumber(entityId, value, callback) {
-        if (!connected || !["input_number.bedtime_delay_length", "input_number.bedtime_max_delays", "input_number.bedtime_wind_down_minutes"].includes(entityId)) {
-            if (callback) callback(false, Translation.tr("Sleep setting is not available."));
-            return;
-        }
-        send("call_service", {domain:"input_number", service:"set_value", service_data:{value:value}, target:{entity_id:entityId}}, (result, failure) => {
-            if (callback) callback(!failure, failure || "");
+    function setSleepNumber(option, value, callback) {
+        if(!connected || !["delay_minutes","max_delays"].includes(option)){if(callback)callback(false,Translation.tr("Sleep setting is not available."));return;}
+        const options={};options[option]=value;
+        send("call_service",{domain:"sleep",service:"configure",service_data:{options:options}},(result,failure)=>{
+            if(failure){if(callback)callback(false,failure);return;}
+            loadSleepSchedules((loaded,readError)=>{
+                const matches=loaded && sleepPlan.options?.[option]===value;
+                if(callback)callback(matches,readError || (matches?"":Translation.tr("Sleep setting readback did not match.")));
+            },true);
         });
     }
     function refresh() {
