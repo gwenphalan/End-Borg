@@ -1,0 +1,5931 @@
+[
+  {
+    "path": "dots/.config/quickshell/ii/GlobalStates.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/appUninstallDialog.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/apps/lensCap/LensCapWindow.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/anybody/Anybody[wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/anybody/METADATA.pb",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/anybody/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/archivo/Archivo[wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/archivo/METADATA.pb",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/archivo/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/bigshouldersinline/BigShouldersInline[opsz,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/bigshouldersinline/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/bricolagegrotesque/BricolageGrotesque[opsz,wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/bricolagegrotesque/METADATA.pb",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/bricolagegrotesque/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/bungeeinline/BungeeInline-Regular.ttf",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/bungeeinline/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/calibration.json",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/font-audit.json",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/fraunces/Fraunces[SOFT,WONK,opsz,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/fraunces/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/googlesansflex/GoogleSansFlex[ROND,opsz,slnt,wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/googlesansflex/METADATA.pb",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/googlesansflex/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/inconsolata/Inconsolata[wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/inconsolata/METADATA.pb",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/inconsolata/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/kodemono/KodeMono[ROND,wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/kodemono/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/legacy-sources.json",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/merriweather/METADATA.pb",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/merriweather/Merriweather[opsz,wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/merriweather/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/monasans/MonaSans[wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/monasans/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/nupuram/Nupuram.ttf",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/nupuram/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/playfair/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/playfair/PlayfairRomanVF.ttf",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/poiretone/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/poiretone/PoiretOne-Regular.ttf",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/pressstart2p/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/pressstart2p/PressStart2P[BLED,JITT,ROND,wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/pressstart2pitalic/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/pressstart2pitalic/PressStart2P-Italic[BLED,JITT,ROND,wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/robotoserif/METADATA.pb",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/robotoserif/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/robotoserif/RobotoSerif[GRAD,opsz,wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/sciencegothic/METADATA.pb",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/sciencegothic/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/sciencegothic/ScienceGothic[CTRS,slnt,wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/sources.json",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/tiny5/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/tiny5/Tiny5[BLED,JITT,ROND,wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/tiny5duo/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/tiny5duo/Tiny5Duo[BLED,JITT,ROND,wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/tiny5mono/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/tiny5mono/Tiny5Mono[BLED,JITT,ROND,wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/tourney/OFL.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/fonts/clock/tourney/Tourney[wdth,wght].ttf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/ai-openai-symbolic.svg",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/cachyos-logo.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/README.md",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/add-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/add.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/alert-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/alert-off-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/alert-off.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/alert-snooze-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/alert-snooze.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/alert.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/app-generic-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/app-generic.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/apps-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/apps.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-clockwise-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-clockwise.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-counterclockwise-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-counterclockwise.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-enter-left-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-enter-left.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-left-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-left.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-right-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-right.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-sync.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-up-left-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/arrow-up-left.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/auto-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/auto.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-0.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-1.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-2.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-3.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-4.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-5.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-6.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-7.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-8.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-9.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-charge.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-full.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-saver.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/battery-warning.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/bluetooth-connected-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/bluetooth-connected.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/bluetooth-disabled-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/bluetooth-disabled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/bluetooth-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/bluetooth-searching.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/bluetooth.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/calculator-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/calculator.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/calendar-add-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/calendar-add.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/camera-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/camera.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/caret-down-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/caret-down.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/caret-up-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/caret-up.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/checkmark-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/checkmark.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/chevron-down-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/chevron-down.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/chevron-left-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/chevron-left.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/chevron-right-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/chevron-right.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/chevron-up-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/chevron-up.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/cloudflare-filled.svg",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/cloudflare.svg",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/corporation.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/crop-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/crop.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/cut-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/cut.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/dark-theme-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/dark-theme.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/desktop-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/desktop-speaker-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/desktop-speaker.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/desktop.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/device-eq-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/device-eq.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/dismiss.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/drink-coffee-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/drink-coffee.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/empty.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/ethernet-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/ethernet.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/eye-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/eye-off-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/eye-off.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/eye.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/eyedropper-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/eyedropper.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/fire-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/fire.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/flash-off-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/flash-off.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/flash-on-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/flash-on.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/games-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/games.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/globe-search-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/globe-search.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/globe-shield-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/globe-shield.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/headphones-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/headphones.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/image-copy-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/image-copy.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/image-edit-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/image-edit.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/image-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/image.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/keyboard-dock-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/keyboard-dock.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/keyboard-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/keyboard.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/leaf-two-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/leaf-two.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/library-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/library.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/lock-closed-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/lock-closed.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/lock-open-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/lock-open.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/mic-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/mic-off-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/mic-off.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/mic-on.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/mic.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/more-horizontal-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/more-horizontal.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/music-note-2-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/music-note-2.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/news-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/news.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/next-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/next.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/open-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/open.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/options-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/options.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/pause-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/pause.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/people-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/people-settings-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/people-settings.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/people-team-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/people-team.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/people.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/phone-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/phone.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/pin-off.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/pin.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/play-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/play.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/power-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/power.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/previous-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/previous.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/record-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/record.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/scan-text-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/scan-text.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/search-visual-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/search-visual.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/server-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/server.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/settings-cog-multiple-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/settings-cog-multiple.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/settings.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/shield-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/shield-lock-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/shield-lock.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/shield.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/speaker-0.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/speaker-1.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/speaker-2-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/speaker-mute-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/speaker-mute.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/speaker-none.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/speaker-off.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/speaker-settings.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/speaker.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/start-here-pressed.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/start-here.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/stop-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/stop.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/store-microsoft-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/store-microsoft.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/subtract-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/subtract.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/system-search-checked-dark.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/system-search-checked-light.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/system-search-dark.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/system-search-light.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/task-view-dark.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/task-view-light.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/task-view-pressed-dark.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/task-view-pressed-light.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/temperature-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/temperature.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/video-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/video.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wand-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wand.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/weather-moon-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/weather-moon-off-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/weather-moon-off.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/weather-moon.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/weather-sunny-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/weather-sunny.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/widgets.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-1-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-1.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-2-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-2.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-3-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-3.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-4-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-4.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-lock-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-lock.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-off-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-off.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-warning-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/wifi-warning.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/window-shield-filled.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/fluent/window-shield.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/google-gemini-symbolic.svg",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/homepod.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/illogical-impulse-logo.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/assets/icons/lens-calibration.svg",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/killDialog.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/lensCalibration.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/lensCalibrationTest.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/lensStartupTest.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/lockPreview.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/BarUtilities.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/ClockFonts.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/Config.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/Directories.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/Persistent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/functions/Session.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/models/AnimatedTabIndexPair.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/panels/lock/LockContext.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/panels/lock/LockScreen.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/AGENTS.md",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/DECLARATIVE.md",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/README.md",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolActionBar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolActionButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolActionController.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolActionLabel.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolActionPill.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolActionStrip.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolApp.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolAppWindow.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolBackendProcess.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolBarButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolBarSeparator.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolCanvasArea.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolCanvasFooter.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolConfiguredApp.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolConfirmDialog.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolCursorCoordinates.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolDefinition.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolDefinitionLoader.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolDocumentController.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolFilePicker.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolFileType.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolHoverGroup.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolIconButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolLengthInput.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolMenu.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolModal.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolModePicker.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolMouseHint.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolOperationFeedback.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolOperationsBar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolPill.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolPointCoordinates.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolPointSelection.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolPolyline.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolProfilePicker.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolProjectSettingsDialog.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolSaveButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolSaveChangesDialog.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolSettingsDialog.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolSettingsForm.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolSettingsStore.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolShortcutHints.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolStartupDialog.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolStatusBar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolTextInputDialog.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolToast.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolTopBar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/ToolZoomControl.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/examples/starter/README.md",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/examples/starter/Starter.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/examples/starter/app.yaml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/examples/starter/backend.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/tool_app/examples/starter/qml/ProfileEditor.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/utils/ScreenshotAction.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/AdaptiveAppIcon.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/AppWindow.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/CalendarView.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/ClockAppearanceEditor.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/ClockFace.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/ColorPicker.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/ColorPickerDialog.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/CommittedSlider.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/CompactTextField.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/ConfigSlider.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/ConfigSpinBox.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/ContentPage.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/ContentSection.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/DialogButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/DragReorderAnimation.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/DragReorderController.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/DragReorderHandle.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/ExpandingLoader.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/FastNumberAnimation.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/FastPropertyAnimation.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/G2Squircle.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/MaterialTextArea.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/MaterialTextField.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/NotificationItem.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/NumberInput.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/OverlayTransition.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/PointingHandInteraction.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/Revealer.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/RippleButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/RippleButtonWithIcon.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/SaveChangesDialog.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/SearchField.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/SelectionIndicator.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/SteppedXYControl.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/StyledComboBox.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/StyledRadioButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/StyledSlider.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/StyledSpinBox.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/StyledSwitch.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/TimeInput.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/TypographyPad.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/TypographyScrubField.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/UnboundedNumberInput.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/WeekRow.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shaders/clock-roundness.frag",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shaders/clock-roundness.frag.qsb",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/.gitignore",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/LICENSE",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/README.md",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/ShapeCanvas.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/example-squircle.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/example.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/geometry/offset.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/graphics/matrix.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/material-shapes.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/shapes/corner-rounding.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/shapes/cubic.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/shapes/feature-mapping.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/shapes/feature.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/shapes/float-mapping.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/shapes/morph.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/shapes/point.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/shapes/polygon-measure.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/shapes/rounded-corner.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/shapes/rounded-polygon.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/widgets/shapes/shapes/utils.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/background/Background.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/background/widgets/clock/ClockWidget.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/background/widgets/clock/ClockWidgetPreview.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/background/widgets/clock/DigitalClock.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/bar/BarContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/bar/Media.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/bar/UtilButtons.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/lock/Lock.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/lock/LockSurface.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/mediaControls/MediaControls.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/mediaControls/MusicLibrary.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/mediaControls/MusicLibraryWindow.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/mediaControls/PlayerControl.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/notificationPopup/NotificationPopup.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/Overview.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/OverviewWidget.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/OverviewWindow.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SearchBar.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SearchItem.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SearchWidget.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightAppTile.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightContentMotion.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightContextMenu.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightController.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightLogic.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightMaterial.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightOverviewView.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightPanel.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightResults.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightRevealMotion.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightScrollBar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightScrollMotion.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightSearchBar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightSectionHeader.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightSectionRail.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightSurface.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/polkit/PolkitContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarLeft/Anime.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarLeft/SidebarLeft.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarLeft/aiChat/MessageCodeBlock.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarLeft/aiChat/MessageThinkBlock.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarLeft/anime/BooruImage.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/BottomWidgetGroup.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/QuickSliders.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/SidebarRight.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/SidebarRightContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/calendar/CalendarWidget.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/home/HomeAction.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/home/HomeColorPicker.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/home/HomeDeviceControl.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/home/HomeEntityRow.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/home/HomeMediaControl.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/home/HomeModeSelector.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/home/HomeQuickToggles.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/home/HomeServiceActions.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/home/HomeSetupCard.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/home/HomeWidget.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/home/home_actions.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/todo/TaskList.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/sidebarRight/todo/TodoWidget.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/lensCalibration/CalibrationWorkspace.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/lensCalibration/CurveDiagnostics.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/lensCalibration/CurveGeometry.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/lensCalibration/LensOperations.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/lensCalibration/ModeOperations.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/lensCalibration/NativeRegionEditor.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/lensCalibration/RegionGeometry.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/lensCalibration/SpatialEditor.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/About.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/BarConfig.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/BorgIntelligenceConfig.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/GeneralConfig.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/HomeAssistantConfig.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/InterfaceConfig.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/QuickConfig.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/SleepConfig.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/SteamGridDbConfig.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/LocaleChoices.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingRow.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsAccentPicker.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsAppListGrid.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsAppPicker.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsAppearancePreview.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsBarUtilityEditor.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsCatalog.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsChoiceEditor.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsChoicePicker.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsClockAppearanceEditor.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsClockThumbnail.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsContent.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsDefaults.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsFontPicker.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsGroup.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsIconCharacterPicker.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsListEditor.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsLocalePicker.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsNumberInput.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsNumericEditor.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsOskLayoutPicker.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsOverviewPreview.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsPositionEditor.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsPresentation.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsPresetDropdown.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsTimeInput.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/TranslationTools.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/settings_layout.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/settings_schema.js",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/sleep_schedule.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/README.md",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/ActionCenterContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/ActionCenterContext.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/ExpandableChoiceButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/HeaderRow.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/MediaPaneContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/SectionText.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/ToggleItem.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/WaffleActionCenter.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/bluetooth/BluetoothControl.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/bluetooth/BluetoothDeviceItem.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/mainPage/MainPageBody.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/mainPage/MainPageBodySliders.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/mainPage/MainPageBodyToggles.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/mainPage/MainPageFooter.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/nightLight/NightLightControl.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/toggles/ActionCenterToggleButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/toggles/ActionCenterTogglesDelegateChooser.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/toggles/WNetworkToggle.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/volumeControl/VolumeControl.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/volumeControl/VolumeEntry.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/wifi/WWifiNetworkItem.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/actionCenter/wifi/WifiControl.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/background/WaffleBackground.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/AppButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/BarButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/BarIconButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/BarMenu.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/BarPopup.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/BarToolTip.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/SearchButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/StartButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/SystemButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/TaskViewButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/TimeButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/UpdatesButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/WaffleBar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/WaffleBarContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/WidgetsButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/tasks/TaskAppButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/tasks/TaskPreview.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/tasks/Tasks.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/tasks/WindowPreview.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/tray/Tray.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/tray/TrayButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/bar/tray/TrayOverflowMenu.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/lock/WaffleLock.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/AcrylicButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/AcrylicRectangle.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/BodyRectangle.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/CloseButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/FluentIcon.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/FooterRectangle.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/Looks.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/VerticalPageIndicator.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WAmbientShadow.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WAppIcon.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WBarAttachedPanelContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WBorderedButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WBorderlessButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WChoiceButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WFadeLoader.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WIcons.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WIndeterminateProgressBar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WListView.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WMenu.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WMenuItem.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WMouseAreaButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WPane.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WPanelIconButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WPanelPageColumn.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WPanelSeparator.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WPopupToolTip.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WProgressBar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WRectangularShadow.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WRectangularShadowThis.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WScrollBar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WSlider.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WStackView.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WSwitch.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WText.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WTextButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WTextField.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WTextInput.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WTextWithFixedWidth.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WToolTip.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WToolTipContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WToolbar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WToolbarButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WToolbarIconButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WToolbarIconTabButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WToolbarSeparator.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WToolbarTabBar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/looks/WUserAvatar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/CalendarWidget.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/DateHeader.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/FocusFooter.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/NotificationCenterContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/NotificationHeaderButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/NotificationPaneContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/SmallBorderedIconAndTextButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/SmallBorderedIconButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/WNotificationAppIcon.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/WNotificationDismissAnim.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/WNotificationGroup.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/WSingleNotification.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationCenter/WaffleNotificationCenter.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/notificationPopup/WaffleNotificationPopup.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/onScreenDisplay/BrightnessOSD.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/onScreenDisplay/OSDValue.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/onScreenDisplay/VolumeOSD.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/onScreenDisplay/WaffleOSD.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/polkit/WPolkitContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/polkit/WafflePolkit.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/screenSnip/WRectangularSelection.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/screenSnip/WRegionSelectionPanel.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/screenSnip/WScreenSnip.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/sessionScreen/PowerButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/sessionScreen/SessionScreenContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/sessionScreen/WSessionScreenTextButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/sessionScreen/WaffleSessionScreen.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/SearchBar.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/StartMenuContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/StartMenuContext.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/WaffleStartMenu.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/searchPage/SearchEntryIcon.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/searchPage/SearchPageContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/searchPage/SearchResultButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/searchPage/SearchResults.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/searchPage/TagStrip.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/startPage/AggregatedAppCategoryModel.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/startPage/AllAppsGrid.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/startPage/AppCategoryGrid.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/startPage/BigAppGrid.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/startPage/StartAppButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/startPage/StartPageApps.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/startPage/StartPageContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/startMenu/startPage/StartUserButton.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/taskView/TaskViewContent.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/taskView/TaskViewWindow.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/taskView/TaskViewWorkspace.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/taskView/WaffleTaskView.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/waffle/taskView/window-layout.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/panelFamilies/WaffleFamily.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": true,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/adaptive_icon_modes/__init__.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/adaptive_icon_modes/_badge.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/adaptive_icon_modes/_native_v2.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/adaptive_icon_modes/_palette.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/adaptive_icon_modes/_structure.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/adaptive_icon_modes/_v2.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/adaptive_icon_modes/candidate.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/adaptive_icon_modes/lab_support.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/adaptive_icon_modes/native.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/adaptive_icon_policy.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/app_uninstall.policy",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/app_uninstall.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/app_uninstall_helper.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/app_uninstall_test.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/assemble-lock-snapshot.sh",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/bedlock_lan_status.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/borg-intelligence",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/borg_intelligence/__init__.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/borg_intelligence/client.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/borg_intelligence/test_client.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/borg_intelligence.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/borg_launcher.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/colors/code/material-code-set-color.sh",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/colors/random/random_konachan_wall.sh",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/colors/random/random_osu_wall.sh",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/colors/scheme_for_image.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/colors/switchwall.sh",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/colors/test_scheme_for_image.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/generate_all_app_icons.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/generate_game_icons.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/global_app_icons.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/home_assistant_socket.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/home_assistant_token.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/icon_families.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/icon_geometry.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/images/notify-screenshot.sh",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/README.md",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/backend.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/blender_export.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/blender_import.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/blender_read.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/blender_recalibrate.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/blender_recalibrate_scene.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/blender_scene.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/file_picker.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/fixtures/bed_vision_traces.json",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/geometry.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/history.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/prepare_staged_fixtures.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/prepare_test_fixtures.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/profiles.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/requirements.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/simulate_labelme_save.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/spatial.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_backend_blender.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_backend_diagnostics.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_blender_export.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_blender_import.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_blender_recalibrate.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_calibration_diagnostics.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_context_hints.mjs",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_curve_diagnostics.mjs",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_curve_geometry.mjs",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_distorted_labelme_export.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_geometry.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_history.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_labelme_handoff.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_normalize_vertices.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_profiles.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_region_geometry.mjs",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_selection_headless.mjs",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lens_calibration/test_spatial.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/lock-snapshot-once.sh",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/process_all_icons.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/requirements-icons.txt",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/settings/appearance_preview.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/settings/calibrate_clock_fonts.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/settings/generate_catalog.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/settings/nerd_symbols.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/settings/settings_metadata.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/settings/test_sleep_schedule.mjs",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/settings/verify_clock_fonts.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/sleep_delay_webhook.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/steamgriddb_credentials.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/steamgriddb_icons.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/steamgriddb_source.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/test_bedlock_lan_status.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tests/test_adaptive_icons.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tests/test_generated_icon_names.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tests/test_icon_families.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tests/test_icon_modes.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tests/test_icon_publication.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tests/test_launcher_helpers.py",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tests/test_steamgriddb.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tests/test_steamgriddb_qml.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/__init__.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/definition.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/definition.schema.json",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/files.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/history.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/native_picker.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/profile_store.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/protocol.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/registration.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/test_tool_app.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/tests/__init__.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/tests/compile_qml.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/tests/test_backend_transport.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/tests/test_definition.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/tests/test_headless_qml.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/tests/test_protocol_profiles.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tool_app/tests/test_runtime.mjs",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/AppSearch.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/Booru.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/BorgIntelligence.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/Cliphist.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/DesktopMedia.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/HomeAssistant.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/Hyprsunset.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/LauncherApps.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/LauncherSearch.qml",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/MaterialThemeLoader.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/MprisController.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/MusicAssistant.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/SteamGridDb.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/Wallpapers.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/services/home_assistant.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/settings.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/shell.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/stagedRibbonTest.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/toolAppTest.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/quickshell/ii/welcome.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/custom/env.lua",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/custom/rules.lua",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/custom/variables.lua",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hypridle.conf",
+    "legacyChanged": true,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "conflict"
+  },
+  {
+    "path": "dots/.config/hypr/hyprland/colors.lua",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprland/execs.lua",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprland/execs.lua.codex-before-disable-lock",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprland/keybinds.lua",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprland/keybinds.lua.codex-before-disable-lock",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprland/rules.lua",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprland.conf",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprland.lua",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/backups/20261025-quickshell-match/GeneralConfig.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/backups/20261025-quickshell-match/LockScreen.qml",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/backups/20261025-quickshell-match/colors.conf",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/backups/20261025-quickshell-match/hypridle.conf",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/backups/20261025-quickshell-match/hyprlock-colors.conf",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/backups/20261025-quickshell-match/hyprlock.conf",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/backups/20261025-quickshell-match/settings_layout.js",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/backups/end4-restore-20261027-014209/hyprlock.conf",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/backups/end4-restore-20261027-014209/launch.sh",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/colors.conf",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/launch.sh",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/lock-session.sh",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/hyprlock/sync.py",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/monitors.conf.new",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  },
+  {
+    "path": "dots/.config/hypr/workspaces.conf.new",
+    "legacyChanged": false,
+    "liveChanged": true,
+    "liveMissing": false,
+    "result": "merged"
+  }
+]

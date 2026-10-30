@@ -1,0 +1,106 @@
+[
+  {
+    "path": "dots/.config/quickshell/ii/modules/common/Config.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/Overview.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/OverviewWindow.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SearchItem.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/ii/overview/SpotlightPanel.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/BorgIntelligenceConfig.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/HomeAssistantConfig.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingRow.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsCatalog.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsChoiceEditor.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsContent.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsDefaults.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsGroup.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsListEditor.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/SettingsNumericEditor.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/TranslationTools.qml",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/settings_layout.js",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/modules/settings/desktop/settings_schema.js",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/adaptive_icon_policy.py",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/borg_launcher.py",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/generate_game_icons.py",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/process_all_icons.py",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/settings/generate_catalog.py",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tests/test_adaptive_icons.py",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/quickshell/ii/scripts/tests/test_launcher_helpers.py",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  },
+  {
+    "path": "dots/.config/hypr/hypridle.conf",
+    "decision": "Use later live implementation; all legacy untracked files are present live. Preserve legacy-only upstream resources separately."
+  }
+]

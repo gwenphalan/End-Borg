@@ -15,3 +15,14 @@ __pycache__/
 
 # Emacs auto backup file
 *~
+
+# End-Borg machine-local state and migration snapshots
+/local/
+.pytest_cache/
+*.bak*
+*.before-*
+*.codex-before-*
+*.t3-capture-backup-*
+/dots/.config/hypr/hyprlock.conf
+/dots/.config/hypr/hyprlock/colors.conf
+/dots/.config/hypr/hyprlock/current-wallpaper.*

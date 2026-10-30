@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Lens Cap
+Comment=Calibrate lenses and reference planes; annotate corrected images with LabelMe
+Exec=lens-cap %f
+Icon=quickshell-generated-lens-calibration
+Terminal=false
+Categories=Graphics;Photography;
+StartupWMClass=org.quickshell
+MimeType=application/x-lens-calibration-project;

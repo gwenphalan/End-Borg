@@ -1,0 +1,12 @@
+#!/bin/sh
+lens_config="$HOME/.config/quickshell/ii/lensCalibration.qml"
+if [ "$#" -gt 0 ]; then
+    lens_result=$(qs ipc -p "$lens_config" call lensCalibration openProject "$1" 2>/dev/null)
+    if [ "$lens_result" = "true" ]; then
+        exit 0
+    fi
+    QS_LENS_PROJECT="$1"
+    export QS_LENS_PROJECT
+    exec qs -p "$lens_config"
+fi
+exec qs -n -p "$lens_config"
