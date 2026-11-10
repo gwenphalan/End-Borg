@@ -165,16 +165,59 @@ Singleton {
         return Appearance.colors.colSecondaryContainer;
     }
 
-    // DesktopEntries reports a new values snapshot after launcher changes. Keep
-    // its order while removing duplicate IDs in one pass.
-    readonly property list<DesktopEntry> list: {
-        const seen = new Set();
-        return Array.from(DesktopEntries.applications.values).filter(app => {
-            if (seen.has(app.id)) return false;
-            seen.add(app.id);
-            return true;
-        });
+    function normalizeAppName(name) {
+        if (!name) return "";
+        return name.toLowerCase()
+            .replace(/\s*\([^)]*(?:\d+|nightly|beta|alpha|rc|git)[^)]*\)/gi, "")
+            .replace(/\s*v?\d+(\.\d+)+[-a-z0-9._]*/gi, "")
+            .trim();
     }
+
+    function normalizeAppId(id) {
+        if (!id) return "";
+        return id.toLowerCase()
+            .replace(/^appimagekit_[a-f0-9]+[-_]/i, "")
+            .replace(/\.desktop$/i, "")
+            .replace(/[-_](?:v?\d+|nightly|beta|alpha|rc)[-_a-z0-9.]*$/i, "")
+            .replace(/[-_]/g, "");
+    }
+
+    // Deduped list to fix duplicate shortcuts and double icons.
+    // When AppImages update, they often create version-stamped entries (e.g.,
+    // 'T3 Code (Nightly) (0.1.8-nightly...)' alongside 'T3 Code' or with appimagekit IDs).
+    // This normalizes app names and IDs to ensure only a single, canonical entry is shown.
+    readonly property list<DesktopEntry> list: (() => {
+        const apps = Array.from(DesktopEntries.applications.values);
+        const map = new Map();
+
+        for (const app of apps) {
+            if (!app || !app.id) continue;
+            const normName = normalizeAppName(app.name);
+            const normId = normalizeAppId(app.id);
+            const key = normName || normId || app.id;
+
+            if (!map.has(key)) {
+                map.set(key, app);
+            } else {
+                const existing = map.get(key);
+                const existingName = (existing.name || "").toLowerCase().trim();
+                const currentName = (app.name || "").toLowerCase().trim();
+
+                // Prefer the entry with a cleaner canonical name (e.g. "T3 Code" over "T3 Code (Nightly)...")
+                const existingIsClean = existingName === normName;
+                const currentIsClean = currentName === normName;
+
+                if (!existingIsClean && currentIsClean) {
+                    map.set(key, app);
+                } else if (!existingIsClean && !currentIsClean) {
+                    if (currentName.length < existingName.length) {
+                        map.set(key, app);
+                    }
+                }
+            }
+        }
+        return Array.from(map.values());
+    })()
 
     // The model provides a whole list, not a changed-entry signal. Rebuild the
     // lightweight wrapper list but only prepare fuzzy text for new/renamed apps.

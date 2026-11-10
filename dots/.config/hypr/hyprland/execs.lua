@@ -22,4 +22,7 @@ hl.on("hyprland.start", function ()
 
     -- Cursor
     hl.exec_cmd("hyprctl setcursor Bibata-Modern-Classic 24")
+
+    -- AppImage auto-integration watcher
+    hl.exec_cmd("systemctl --user start appimage-watch.service 2>/dev/null || $HOME/.local/bin/appimage-watch &")
 end)

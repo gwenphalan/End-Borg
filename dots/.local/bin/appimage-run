@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# appimage-run — Automatic integration and execution wrapper for AppImages
+#
+# Usage:
+#   appimage-run <path/to/AppImage> [arguments...]
+#
+# Features:
+#   • Automatically marks AppImage executable (chmod +x)
+#   • Automatically integrates/updates the desktop entry and purges duplicates
+#   • Runs the AppImage seamlessly (with automatic fallback to --appimage-extract-and-run if FUSE is unavailable)
+
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: appimage-run <path/to/AppImage> [args...]" >&2
+    exit 1
+fi
+
+APPIMAGE_PATH="$(realpath "$1")"
+shift
+
+if [[ ! -f "$APPIMAGE_PATH" ]]; then
+    echo "appimage-run: file not found: $APPIMAGE_PATH" >&2
+    exit 1
+fi
+
+chmod +x "$APPIMAGE_PATH"
+
+# Auto-integrate / update shortcut in background to remove any duplicates
+INTEGRATE_CMD="${HOME}/.local/bin/appimage-integrate"
+if [[ -x "$INTEGRATE_CMD" ]]; then
+    "$INTEGRATE_CMD" "$APPIMAGE_PATH" >/dev/null 2>&1 &
+fi
+
+# Check if libfuse2 is available for classic AppImages
+NEEDS_EXTRACT=false
+if ! ldconfig -p 2>/dev/null | grep -q "libfuse\.so\.2"; then
+    if [[ ! -f /usr/lib/libfuse.so.2 && ! -f /usr/lib64/libfuse.so.2 && ! -f /lib/x86_64-linux-gnu/libfuse.so.2 ]]; then
+        NEEDS_EXTRACT=true
+    fi
+fi
+
+if [[ "$NEEDS_EXTRACT" == "true" ]]; then
+    exec "$APPIMAGE_PATH" --appimage-extract-and-run "$@"
+else
+    # Try direct execution; if it fails on startup with FUSE/mount error, fallback to extract-and-run
+    exec "$APPIMAGE_PATH" "$@"
+fi

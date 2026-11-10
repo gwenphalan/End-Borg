@@ -1,0 +1,382 @@
+#!/usr/bin/env bash
+# appimage-integrate — Register and manage AppImages with deduplicated shortcuts.
+#
+# Usage:
+#   appimage-integrate <path/to/App.AppImage>  [--name <DisplayName>]
+#   appimage-integrate --remove <path/to/App.AppImage>
+#   appimage-integrate --scan [<dir>]           # scan dir for unregistered/updated AppImages
+#   appimage-integrate --clean                  # remove stale entries and duplicate shortcuts
+#
+# Features:
+#   • Extracts icons and metadata from the AppImage
+#   • Enforces a stable ~/.local/share/applications/<slug>.desktop
+#     (keyed on normalized app name, so updates NEVER produce duplicate shortcuts)
+#   • Purges old version-stamped desktop files (e.g., appimagekit_* or nightly entries)
+#   • Cleans stale shortcuts whose AppImage files have been deleted or replaced
+#   • Runs update-desktop-database automatically
+
+set -euo pipefail
+
+APPS_DIR="${HOME}/Applications"
+DESKTOP_DIR="${HOME}/.local/share/applications"
+ICON_DIR="${HOME}/.local/share/icons/appimages"
+REGISTRY="${XDG_CONFIG_HOME:-$HOME/.config}/appimage-integrate/registry.tsv"
+
+log()  { printf '\e[36m[appimage-integrate]\e[0m %s\n' "$*"; }
+warn() { printf '\e[33m[appimage-integrate] WARNING:\e[0m %s\n' "$*" >&2; }
+die()  { printf '\e[31m[appimage-integrate] ERROR:\e[0m %s\n' "$*" >&2; exit 1; }
+
+slugify() {
+    local s="${1,,}"
+    s="${s//[^a-z0-9]/-}"
+    s="${s//--*/-}"
+    s="${s#-}"; s="${s%-}"
+    printf '%s' "$s"
+}
+
+normalize_app_name() {
+    local name="$1"
+    # Strip (Nightly), (Beta), version numbers, hashes, and dates
+    name="$(echo "$name" | sed -E \
+        -e 's/\([^)0-9]*(nightly|beta|alpha|rc|git)[^)]*\)//gi' \
+        -e 's/\([^)]*[0-9]+[^)]*\)//g' \
+        -e 's/\s+v?[0-9]+(\.[0-9]+)+[-a-z0-9.]*//gi' \
+        -e 's/^[[:space:]]+//; s/[[:space:]]+$//')"
+    printf '%s' "$name"
+}
+
+registry_set() {
+    local slug="$1" path="$2"
+    mkdir -p "$(dirname "$REGISTRY")"
+    if [[ -f "$REGISTRY" ]]; then
+        grep -v "^${slug}	" "$REGISTRY" > "${REGISTRY}.tmp" 2>/dev/null || true
+        mv -f "${REGISTRY}.tmp" "$REGISTRY"
+    fi
+    printf '%s\t%s\n' "$slug" "$path" >> "$REGISTRY"
+}
+
+registry_get_slug_for_path() {
+    local path="$1"
+    [[ -f "$REGISTRY" ]] || return 0
+    grep "	${path}$" "$REGISTRY" | cut -f1 | head -1
+}
+
+# ---------------------------------------------------------------------------
+# Remove duplicates and stale desktop files for a given app slug / name
+# ---------------------------------------------------------------------------
+purge_duplicates() {
+    local target_slug="$1"
+    local app_name="$2"
+    local canonical_file="${DESKTOP_DIR}/${target_slug}.desktop"
+    local norm_target
+    norm_target="$(slugify "$(normalize_app_name "$app_name")")"
+
+    [[ -d "$DESKTOP_DIR" ]] || return 0
+
+    while IFS= read -r f; do
+        [[ -f "$f" ]] || continue
+        [[ "$f" == "$canonical_file" ]] && continue
+
+        local should_remove=false
+        local f_name f_exec f_base
+        f_base="$(basename "$f" .desktop)"
+        f_name="$(grep -m1 '^Name=' "$f" 2>/dev/null | cut -d= -f2- | tr -d '\r' || true)"
+        f_exec="$(grep -m1 '^Exec=' "$f" 2>/dev/null | cut -d= -f2- | tr -d '\r' || true)"
+
+        # 1. Match by normalized app name
+        if [[ -n "$f_name" ]]; then
+            local f_norm
+            f_norm="$(slugify "$(normalize_app_name "$f_name")")"
+            if [[ "$f_norm" == "$norm_target" || "$f_norm" == "$target_slug" ]]; then
+                should_remove=true
+            fi
+        fi
+
+        # 2. Match by AppImageLauncher appimagekit prefix or filename slug
+        local clean_base
+        clean_base="$(echo "$f_base" | sed -E 's/^appimagekit[-_][a-f0-9]+[-_]//i' | tr '_' '-')"
+        clean_base="$(slugify "$(normalize_app_name "$clean_base")")"
+        if [[ "$clean_base" == "$norm_target" || "$clean_base" == "$target_slug" ]]; then
+            should_remove=true
+        fi
+
+        # 3. Match if Exec line points to an AppImage with matching slug/name
+        if [[ "$f_exec" =~ \.(AppImage|appimage) ]]; then
+            local exec_bin
+            exec_bin="$(echo "$f_exec" | awk '{print $1}' | tr -d '"'"'")"
+            local exec_base
+            exec_base="$(slugify "$(normalize_app_name "$(basename "$exec_bin")")")"
+            if [[ "$exec_base" == *"$target_slug"* || "$exec_base" == *"$norm_target"* ]]; then
+                should_remove=true
+            fi
+            # Also remove if target AppImage no longer exists
+            if [[ ! -f "$exec_bin" ]]; then
+                should_remove=true
+            fi
+        fi
+
+        if $should_remove; then
+            log "Removing duplicate shortcut: $(basename "$f")"
+            rm -f "$f"
+        fi
+    done < <(find "$DESKTOP_DIR" -maxdepth 1 -name '*.desktop' 2>/dev/null)
+}
+
+# ---------------------------------------------------------------------------
+# Core: integrate one AppImage
+# ---------------------------------------------------------------------------
+integrate_one() {
+    local appimage_path
+    appimage_path="$(realpath "$1")"
+    local override_name="${2:-}"
+
+    [[ -f "$appimage_path" ]] || die "File not found: $appimage_path"
+    chmod +x "$appimage_path"
+
+    log "Integrating: $appimage_path"
+
+    local tmp_dir
+    tmp_dir="$(mktemp -d)"
+    # shellcheck disable=SC2064
+    trap "rm -rf '$tmp_dir'" RETURN
+
+    local desktop_file="" icon_name="" raw_name="" categories=""
+
+    # Attempt metadata extraction
+    if command -v 7z >/dev/null 2>&1; then
+        7z e -o"${tmp_dir}/sq" "$appimage_path" '*.desktop' '*.png' '*.svg' -r -y >/dev/null 2>&1 || true
+        desktop_file="$(find "${tmp_dir}/sq" -name '*.desktop' -not -path '*/usr/share/mime/*' 2>/dev/null | head -1)"
+    elif command -v unsquashfs >/dev/null 2>&1; then
+        unsquashfs -dest "${tmp_dir}/sq" -no-progress "$appimage_path" '*.desktop' '*.png' '*.svg' >/dev/null 2>&1 || true
+        desktop_file="$(find "${tmp_dir}/sq" -name '*.desktop' -not -path '*/usr/share/mime/*' 2>/dev/null | head -1)"
+    fi
+
+    if [[ -z "$desktop_file" ]] && [[ -x "$appimage_path" ]]; then
+        # Try AppImage built-in extraction flag
+        pushd "$tmp_dir" >/dev/null 2>&1
+        "$appimage_path" --appimage-extract '*.desktop' >/dev/null 2>&1 || true
+        "$appimage_path" --appimage-extract '*.png' >/dev/null 2>&1 || true
+        "$appimage_path" --appimage-extract '*.svg' >/dev/null 2>&1 || true
+        popd >/dev/null 2>&1
+        desktop_file="$(find "$tmp_dir" -name '*.desktop' -not -path '*/usr/share/mime/*' 2>/dev/null | head -1)"
+    fi
+
+    if [[ -n "$desktop_file" && -f "$desktop_file" ]]; then
+        raw_name="$(grep -m1 '^Name=' "$desktop_file" | cut -d= -f2- | tr -d '\r')"
+        icon_name="$(grep -m1 '^Icon=' "$desktop_file" | cut -d= -f2- | tr -d '\r')"
+        categories="$(grep -m1 '^Categories=' "$desktop_file" | cut -d= -f2- | tr -d '\r')"
+    fi
+
+    # Determine display name and canonical slug
+    local final_name="${override_name:-$raw_name}"
+    if [[ -z "$final_name" ]]; then
+        final_name="$(basename "$appimage_path" | sed -E 's/-[0-9].*//; s/\.(AppImage|appimage)$//')"
+    fi
+    local clean_name
+    clean_name="$(normalize_app_name "$final_name")"
+    [[ -z "$clean_name" ]] && clean_name="$final_name"
+
+    local slug
+    slug="$(slugify "$clean_name")"
+    [[ -z "$categories" ]] && categories="Application;Utility;"
+
+    # Extract or locate icon
+    mkdir -p "$ICON_DIR"
+    local final_icon="${slug}"
+    local found_icon=""
+
+    if [[ -n "$icon_name" ]]; then
+        found_icon="$(find "$tmp_dir" \( -name "${icon_name}.png" -o -name "${icon_name}.svg" \) 2>/dev/null | sort -t/ -k4 -rn | head -1 || true)"
+    fi
+    if [[ -z "$found_icon" ]]; then
+        found_icon="$(find "$tmp_dir" \( -name '*.png' -o -name '*.svg' \) 2>/dev/null | grep -v '/usr/share/mime/' | sort -t/ -k4 -rn | head -1 || true)"
+    fi
+
+    if [[ -n "$found_icon" && -f "$found_icon" ]]; then
+        local ext="${found_icon##*.}"
+        cp -f "$found_icon" "${ICON_DIR}/${slug}.${ext}"
+        final_icon="${ICON_DIR}/${slug}.${ext}"
+    fi
+
+    # Purge any old/duplicate desktop entries for this app
+    purge_duplicates "$slug" "$clean_name"
+
+    # Write the canonical desktop file
+    mkdir -p "$DESKTOP_DIR"
+    local desktop_out="${DESKTOP_DIR}/${slug}.desktop"
+    local runner="${HOME}/.local/bin/appimage-run"
+    local exec_cmd
+    if [[ -x "$runner" ]]; then
+        exec_cmd="${runner} \"${appimage_path}\""
+    else
+        exec_cmd="\"${appimage_path}\""
+    fi
+
+    cat > "$desktop_out" <<EOF
+[Desktop Entry]
+Type=Application
+Name=${clean_name}
+Exec=${exec_cmd}
+Icon=${final_icon}
+Categories=${categories}
+Terminal=false
+StartupNotify=true
+X-AppImage-Path=${appimage_path}
+X-AppImage-Integrated=true
+EOF
+    chmod 644 "$desktop_out"
+    log "Registered shortcut: $desktop_out (Name: $clean_name)"
+
+    registry_set "$slug" "$appimage_path"
+    update-desktop-database "$DESKTOP_DIR" 2>/dev/null || true
+}
+
+# ---------------------------------------------------------------------------
+# Remove integration
+# ---------------------------------------------------------------------------
+remove_one() {
+    local appimage_path
+    appimage_path="$(realpath "$1")"
+    local slug
+    slug="$(registry_get_slug_for_path "$appimage_path")"
+
+    if [[ -z "$slug" ]]; then
+        local base
+        base="$(basename "$appimage_path" | sed -E 's/-[0-9].*//; s/\.(AppImage|appimage)$//')"
+        slug="$(slugify "$base")"
+    fi
+
+    purge_duplicates "$slug" "$slug"
+    rm -f "${DESKTOP_DIR}/${slug}.desktop"
+    rm -f "${ICON_DIR}/${slug}".* 2>/dev/null || true
+
+    if [[ -f "$REGISTRY" ]]; then
+        grep -v "^${slug}	" "$REGISTRY" > "${REGISTRY}.tmp" 2>/dev/null || true
+        mv -f "${REGISTRY}.tmp" "$REGISTRY"
+    fi
+
+    update-desktop-database "$DESKTOP_DIR" 2>/dev/null || true
+    log "Removed integration for: $(basename "$appimage_path")"
+}
+
+# ---------------------------------------------------------------------------
+# Clean stale desktop files & purge all duplicates
+# ---------------------------------------------------------------------------
+clean_stale() {
+    log "Cleaning stale AppImage entries and removing duplicates..."
+    local removed=0
+
+    # 1. Check registry
+    if [[ -f "$REGISTRY" ]]; then
+        while IFS='	' read -r slug path; do
+            [[ -z "$slug" ]] && continue
+            if [[ ! -f "$path" ]]; then
+                warn "AppImage missing: $path — removing $slug.desktop"
+                rm -f "${DESKTOP_DIR}/${slug}.desktop"
+                grep -v "^${slug}	" "$REGISTRY" > "${REGISTRY}.tmp" 2>/dev/null || true
+                mv -f "${REGISTRY}.tmp" "$REGISTRY"
+                ((removed++)) || true
+            fi
+        done < "$REGISTRY"
+    fi
+
+    # 2. Inspect all desktop files in DESKTOP_DIR
+    if [[ -d "$DESKTOP_DIR" ]]; then
+        while IFS= read -r f; do
+            [[ -f "$f" ]] || continue
+            local is_appimage=false
+            local app_path=""
+
+            if grep -q '^X-AppImage-Path=' "$f" 2>/dev/null; then
+                is_appimage=true
+                app_path="$(grep -m1 '^X-AppImage-Path=' "$f" | cut -d= -f2- | tr -d '\r')"
+            elif grep -q '^Exec=.*\.AppImage' "$f" 2>/dev/null || grep -q '^Exec=.*\.appimage' "$f" 2>/dev/null; then
+                is_appimage=true
+                app_path="$(grep -m1 '^Exec=' "$f" | awk '{print $1}' | cut -d= -f2- | tr -d '"'"'")"
+            fi
+
+            if $is_appimage && [[ -n "$app_path" && ! -f "$app_path" ]]; then
+                warn "Removing stale AppImage desktop file: $(basename "$f") (Target not found: $app_path)"
+                rm -f "$f"
+                ((removed++)) || true
+            fi
+        done < <(find "$DESKTOP_DIR" -maxdepth 1 -name '*.desktop' 2>/dev/null)
+    fi
+
+    update-desktop-database "$DESKTOP_DIR" 2>/dev/null || true
+    log "Clean complete. Removed $removed stale entries."
+}
+
+# ---------------------------------------------------------------------------
+# Scan directory for AppImages
+# ---------------------------------------------------------------------------
+scan_dir() {
+    local dirs=()
+    if [[ $# -gt 0 && -n "${1:-}" ]]; then
+        dirs+=("$1")
+    else
+        [[ -d "$APPS_DIR" ]] && dirs+=("$APPS_DIR")
+        [[ -d "${HOME}/Downloads" ]] && dirs+=("${HOME}/Downloads")
+        [[ -d "${HOME}/.t3" ]] && dirs+=("${HOME}/.t3")
+    fi
+
+    local found=0
+    for dir in "${dirs[@]}"; do
+        [[ -d "$dir" ]] || continue
+        log "Scanning $dir for AppImages..."
+        while IFS= read -r ai; do
+            [[ -f "$ai" ]] || continue
+            integrate_one "$ai"
+            ((found++)) || true
+        done < <(find "$dir" -maxdepth 2 \( -name '*.AppImage' -o -name '*.appimage' \) 2>/dev/null | sort)
+    done
+
+    clean_stale
+    log "Scan complete. Processed $found AppImage(s)."
+}
+
+# ---------------------------------------------------------------------------
+# CLI Entrypoint
+# ---------------------------------------------------------------------------
+main() {
+    local mode="integrate"
+    local display_name=""
+    local positional=()
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --scan)    mode="scan"; shift ;;
+            --clean)   mode="clean"; shift ;;
+            --remove)  mode="remove"; shift ;;
+            --name)    display_name="$2"; shift 2 ;;
+            -h|--help)
+                echo "Usage:"
+                echo "  appimage-integrate <path.AppImage> [--name <Name>]"
+                echo "  appimage-integrate --remove <path.AppImage>"
+                echo "  appimage-integrate --scan [<dir>]"
+                echo "  appimage-integrate --clean"
+                exit 0
+                ;;
+            *) positional+=("$1"); shift ;;
+        esac
+    done
+
+    case "$mode" in
+        integrate)
+            [[ ${#positional[@]} -gt 0 ]] || die "No AppImage specified."
+            integrate_one "${positional[0]}" "$display_name"
+            ;;
+        remove)
+            [[ ${#positional[@]} -gt 0 ]] || die "No AppImage specified."
+            remove_one "${positional[0]}"
+            ;;
+        scan)
+            scan_dir "${positional[0]:-}"
+            ;;
+        clean)
+            clean_stale
+            ;;
+    esac
+}
+
+main "$@"

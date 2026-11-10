@@ -13,7 +13,7 @@ import qs.modules.waffle.looks
 Rectangle {
     id: root
     property AggregatedAppCategoryModel aggregatedCategory
-    property list<DesktopEntry> desktopEntries: [...DesktopEntries.applications.values.filter(app => {
+    property list<DesktopEntry> desktopEntries: [...AppSearch.list.filter(app => {
         const appCategories = app.categories;
         const gridCategories = root.aggregatedCategory.categories;
         return appCategories.some(cat => gridCategories.indexOf(cat) !== -1);

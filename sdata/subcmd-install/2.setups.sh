@@ -44,8 +44,10 @@ if [[ -d /run/systemd/system ]]; then
       # When $DBUS_SESSION_BUS_ADDRESS and $XDG_RUNTIME_DIR are empty, it commonly means that the current user has been logged in with `su - user` or `ssh user@hostname`. In such case `systemctl --user enable <service>` is not usable. It should be `sudo systemctl --machine=$(whoami)@.host --user enable <service>` instead.
       if [[ ! -z "${DBUS_SESSION_BUS_ADDRESS}" ]]; then
         v systemctl --user enable ydotool --now
+        try systemctl --user enable appimage-watch --now
       else
         v sudo systemctl --machine=$(whoami)@.host --user enable ydotool --now
+        try sudo systemctl --machine=$(whoami)@.host --user enable appimage-watch --now
       fi
     fi
     v sudo systemctl enable bluetooth --now
