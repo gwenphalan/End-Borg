@@ -16,6 +16,12 @@ case "${SKIP_MISCCONF}" in
       fi
     done
     install_dir "dots/.local/share/konsole" "${XDG_DATA_HOME}"/konsole
+    if [ -d "dots/.local/bin" ]; then
+      install_dir "dots/.local/bin" "${XDG_BIN_HOME}"
+    fi
+    if [ -d "dots/.local/share/applications" ]; then
+      install_dir "dots/.local/share/applications" "${XDG_DATA_HOME}"/applications
+    fi
     ;;
 esac
 

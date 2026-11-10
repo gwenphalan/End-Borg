@@ -1,0 +1,14 @@
+[Unit]
+Description=AppImage auto-integration watcher
+Documentation=https://github.com/end-4/dots-hyprland
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/appimage-watch %h/Applications
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical-session.target

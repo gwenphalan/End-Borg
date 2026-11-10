@@ -43,7 +43,10 @@ packages = [
   "jq",
   "xdg-utils",
   "rsync",
-  "yq"
+  "yq",
+  "fuse",
+  "inotify-tools",
+  "squashfs-tools"
 ]
 
 # Cursor themes
