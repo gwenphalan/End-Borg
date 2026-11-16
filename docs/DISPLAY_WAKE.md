@@ -61,7 +61,14 @@ Use canonical `tools/deploy.py rollback --backup BACKUP` to review, then add
 Restart only Hypridle with its session environment to load the restored config.
 Restore the canonical source config/startup reconciliation and remove the new
 helper only if their hashes still match this task's writes. Preserve unrelated
-source work. Exact paths and results are appended after deployment.
+source work. The live transaction covers only the config and helper; its rollback
+leaves Hypridle startup unchanged. Restoring the original source
+`hyprland/execs.lua`, however, removes `hl.exec_cmd("hypridle")`. After a later
+source deployment and login, Hypridle may then fail to start, leaving its idle,
+lock and sleep hooks inactive. To roll back only the wake fix while preserving
+current idle/lock behavior, retain that startup line or provide another Hypridle
+startup mechanism, then verify exactly one instance is running after login.
+Exact paths and results are appended after deployment.
 
 ## Deployed and physically checked — 2026-11-16
 
